@@ -1,0 +1,2 @@
+# ChessInsights
+ 
