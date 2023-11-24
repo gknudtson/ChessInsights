@@ -1,5 +1,10 @@
+README.md
 setup.py
+chess/chess_board.py
+chess/enum_square.py
+chess/white_pawn.py
 chess_insights.egg-info/PKG-INFO
 chess_insights.egg-info/SOURCES.txt
 chess_insights.egg-info/dependency_links.txt
 chess_insights.egg-info/top_level.txt
+test/test_chess_board.py

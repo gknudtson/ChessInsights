@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="" />
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chess_insights/enum_square.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_board.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights.egg-info/SOURCES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights.egg-info/SOURCES.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights.egg-info/top_level.txt" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights.egg-info/top_level.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_chess_board.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,21 +26,37 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2YVHhOF3jFb3RMRlHjtQoK8QLdv" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "settings.editor.selected.configurable": "terminal"
   }
 }]]></component>
-  <component name="RunManager" selected="Python tests.Python tests for test_chess_board.TestChessBoard.test_remove_white_pawn">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess_insights\chess_pieces" />
+      <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python tests.Python tests for test_chess_board.TestChessBoard">
     <configuration name="Python tests for test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="ChessInsights" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -57,20 +85,6 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_chess_board.TestChessBoard.test_get_white_pawns_returns_array" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="ChessInsights" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_chess_board.TestChessBoard.test_get_white_pawns_returns_array&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="Python tests for test_chess_board.TestChessBoard.test_remove_white_pawn" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="ChessInsights" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -85,12 +99,41 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_chess_board.TestChessBoard.test_white_pawn_movement_invalid_two_forward" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="ChessInsights" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_chess_board.TestChessBoard.test_white_pawn_movement_invalid_two_forward&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_chess_board.TestChessBoard.test_white_pawn_movement_valid_two_forward" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="ChessInsights" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_chess_board.TestChessBoard.test_white_pawn_movement_valid_two_forward&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
+        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard.test_white_pawn_movement_invalid_two_forward" />
+        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard.test_white_pawn_movement_valid_two_forward" />
         <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard.test_remove_white_pawn" />
         <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard.test_add_white_pawn" />
-        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
-        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard.test_get_white_pawns_returns_array" />
       </list>
     </recent_temporary>
   </component>
@@ -104,5 +147,19 @@
       <updated>1700603944666</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
