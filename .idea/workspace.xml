@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chess_insights/enum_square.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chess_insights/locations.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_board.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights.egg-info/SOURCES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights.egg-info/SOURCES.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights.egg-info/top_level.txt" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights.egg-info/top_level.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test_chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_chess_board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +39,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "settings.editor.selected.configurable": "terminal"
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="RecentsManager">
