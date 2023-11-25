@@ -1,19 +1,43 @@
-from chess_insights.locations import Locations
-
-
 class ChessBoard:
-    locations = None
-
     def __init__(self):
-        if ChessBoard.locations is None:
-            raise ValueError("Locations is not set. Call set_locations to set it.")
+        self.__is_whites_turn = True
+        self.__all_pieces = 0
+        self.__white_pieces = 0
+        self.__black_pieces = 0
+        self.__white_pawns = 0
+        self.__white_knights = 0
+        self.__white_bishops = 0
+        self.__white_rooks = 0
+        self.__white_queens = 0
+        self.__white_king = 0
+        self.__black_pawns = 0
+        self.__black_knights = 0
+        self.__black_bishops = 0
+        self.__black_rooks = 0
+        self.__black_queens = 0
+        self.__black_king = 0
 
-    @classmethod
-    def set_chess_board(cls, locations: Locations):
-        cls.locations = locations
+    def is_whites_turn(self) -> bool:
+        return self.__is_whites_turn
+
+    def change_turn(self):
+        self.__is_whites_turn = not self.is_whites_turn()
+
+    def is_square_occupied(self, square) -> bool:
+        return self.is_white_pawn_on_square(square)
+
+    def is_white_pawn_on_square(self, square) -> bool:
+        return self.__white_pawns & 2 ** square == 2 ** square
+
+    @staticmethod
+    def is_white_pawn_on_starting_rank(pawn_square) -> bool:
+        return 8 <= pawn_square <= 15
+
+    def get_white_pawns(self):
+        return self.__white_pawns
 
     def add_white_pawn(self, square: int):
-        self.locations.white_pawns = self.locations.white_pawns | 1 << square
+        self.__white_pawns = self.__white_pawns | 1 << square
 
     def remove_white_pawn(self, square):
-        self.locations.white_pawns = self.locations.white_pawns & ~(1 << square)
+        self.__white_pawns = self.__white_pawns & ~(1 << square)
