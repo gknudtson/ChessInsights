@@ -3,7 +3,7 @@ from chess_insights.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_pawn import WhitePawn
 
 
-class TestChessBoard(unittest.TestCase):
+class TestWhitePawn(unittest.TestCase):
     def setUp(self):
         self.chess_board = ChessBoard()
         self.white_pawn = WhitePawn(self.chess_board)
@@ -25,7 +25,7 @@ class TestChessBoard(unittest.TestCase):
         self.assertFalse(self.chess_board.is_square_occupied(square_to_move))
 
     def test_white_pawn_movement_invalid_square_to_move(self):
-        pawn_square = 10
+        pawn_square = 101
         square_to_move = pawn_square - 8
         self.chess_board.add_white_pawn(pawn_square)
         self.white_pawn.move(pawn_square, square_to_move)

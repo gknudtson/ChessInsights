@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/run_tests_with_coverage.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_chess_board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,8 +42,13 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "coverage"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "CommandLine"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -52,35 +57,7 @@
       <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_chess_board.TestChessBoard">
-    <configuration name="Python tests for test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="ChessInsights" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_chess_board.TestChessBoard&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_white_pawn.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="ChessInsights" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_white_pawn.TestChessBoard&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Python tests for tests.test_chess_board.TestChessBoard">
     <configuration name="Python tests for tests.test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="ChessInsights" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -151,13 +128,41 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for tests.test_white_pawn.TestWhitePawn" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="ChessInsights" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_white_pawn.TestWhitePawn&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for unittests.test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="ChessInsights" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/unittests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;unittests.test_chess_board.TestChessBoard&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
-        <item itemvalue="Python tests.Python tests for test_white_pawn.TestChessBoard" />
+        <item itemvalue="Python tests.Python tests for tests.test_chess_board.TestChessBoard" />
+        <item itemvalue="Python tests.Python tests for tests.test_white_pawn.TestWhitePawn" />
         <item itemvalue="Python tests.Python tests for tests.test_chess_board.TestChessBoard" />
         <item itemvalue="Python tests.Python tests for tests.test_chess_board.TestChessBoard" />
-        <item itemvalue="Python tests.Python tests for tests.test_chess_board.TestChessBoard" />
+        <item itemvalue="Python tests.Python tests for unittests.test_chess_board.TestChessBoard" />
       </list>
     </recent_temporary>
   </component>
