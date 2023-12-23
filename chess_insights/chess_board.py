@@ -1,6 +1,7 @@
 class ChessBoard:
     def __init__(self):
         self.__is_whites_turn = True
+        self.__piece_list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__all_pieces = 0
         self.__white_pieces = 0
         self.__black_pieces = 0
@@ -49,10 +50,6 @@ class ChessBoard:
         return self.__white_pawns & 2 ** square == 2 ** square
 
     @staticmethod
-    def is_white_pawn_on_starting_rank(pawn_square) -> bool:
-        return 8 <= pawn_square <= 15
-
-    @staticmethod
     def is_black_pawn_on_starting_rank(pawn_square) -> bool:
         return 48 <= pawn_square <= 55
 
@@ -73,3 +70,6 @@ class ChessBoard:
 
     def remove_black_pawn(self, square: int):
         self.__black_pawns = self.__black_pawns & ~(1 << square)
+
+    def remove_piece(self, square: int):
+        return

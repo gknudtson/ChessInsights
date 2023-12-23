@@ -59,3 +59,12 @@ class TestWhitePawn(unittest.TestCase):
         self.chess_board.add_white_pawn(pawn_square + 8)
         self.white_pawn.move(pawn_square, square_to_move)
         self.assertFalse(self.chess_board.is_square_occupied(square_to_move))
+
+    def test_white_pawn_capture_black_piece(self):
+        pawn_square = 10
+        square_to_move = pawn_square + 9
+        self.chess_board.add_white_pawn(pawn_square)
+        self.chess_board.add_black_pawn(square_to_move)
+        self.white_pawn.move(pawn_square, square_to_move)
+        self.assertTrue(self.chess_board.is_white_piece_on_square(square_to_move))
+        self.assertFalse(self.chess_board.is_black_piece_on_square(square_to_move))
