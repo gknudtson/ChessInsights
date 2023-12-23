@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/venvSetup.txt" afterDir="false" />
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="working on pawn capture starting chessboard piece refactor">
       <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
@@ -66,7 +65,7 @@
       <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_chess_board.TestChessBoard">
+  <component name="RunManager" selected="Python tests.Python tests for test_white_pawn.TestWhitePawn">
     <configuration name="Python tests for test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="ChessInsights" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -167,8 +166,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn" />
+        <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_capture_black_piece" />
       </list>
     </recent_temporary>
@@ -182,6 +181,14 @@
       <option name="presentableId" value="Default" />
       <updated>1700603944666</updated>
     </task>
+    <task id="LOCAL-00001" summary="working on pawn capture starting chessboard piece refactor">
+      <created>1703292614208</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703292614208</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -197,5 +204,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="working on pawn capture starting chessboard piece refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="working on pawn capture starting chessboard piece refactor" />
   </component>
 </project>

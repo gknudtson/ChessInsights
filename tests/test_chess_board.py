@@ -71,5 +71,8 @@ class TestChessBoard(unittest.TestCase):
     def test_remove_piece_from_square(self):
         square = 10
         self.chess_board.add_black_pawn(square)
-        self.chess_board.remove_piece(square)
+        self.chess_board.remove_black_piece(square)
+        self.assertFalse(self.chess_board.is_square_occupied(square))
+        self.chess_board.add_white_pawn(square)
+        self.chess_board.remove_white_piece(square)
         self.assertFalse(self.chess_board.is_square_occupied(square))

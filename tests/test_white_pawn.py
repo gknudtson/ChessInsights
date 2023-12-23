@@ -31,6 +31,15 @@ class TestWhitePawn(unittest.TestCase):
         self.white_pawn.move(pawn_square, square_to_move)
         self.assertFalse(self.chess_board.is_square_occupied(square_to_move))
 
+    def test_white_pawn_movement_invalid_piece_in_the_way(self):
+        pawn_square = 10
+        square_to_move = pawn_square + 8
+        self.chess_board.add_white_pawn(pawn_square)
+        self.chess_board.add_white_pawn(square_to_move)
+        white_pawns = self.chess_board.get_white_pawns()
+        self.white_pawn.move(pawn_square, square_to_move)
+        self.assertEquals(white_pawns, self.chess_board.get_white_pawns())
+
     def test_white_pawn_movement_valid_forward(self):
         pawn_square = 10
         square_to_move = pawn_square + 8

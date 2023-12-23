@@ -11,14 +11,13 @@ class WhitePawn(ChessPiece):
             return
         if not self.chess_board.is_white_pawn_on_square(pawn_square):
             return
-        if self.chess_board.is_white_piece_on_square(square_to_move) or self.chess_board.is_black_piece_on_square(
-                square_to_move) and not (square_to_move == pawn_square + 9 or square_to_move == pawn_square + 7):
+        if self.chess_board.is_white_piece_on_square(square_to_move) or (self.chess_board.is_black_piece_on_square(
+                square_to_move) and not (square_to_move == pawn_square + 9 or square_to_move == pawn_square + 7)):
             return
         if square_to_move == pawn_square + 8:
             self.chess_board.add_white_pawn(square_to_move)
         elif square_to_move == pawn_square + 16 and self.is_starting_rank(
-                pawn_square) and not self.chess_board.is_square_occupied(
-            pawn_square + 8):
+                pawn_square) and not self.chess_board.is_square_occupied(pawn_square + 8):
             self.chess_board.add_white_pawn(square_to_move)
         elif square_to_move == pawn_square + 9 or square_to_move == pawn_square + 7 and \
                 self.chess_board.is_black_piece_on_square(square_to_move):
