@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="finished refactor, pawn capture, increased test coverage">
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="seperating whitepawn move into capture and move">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
     </list>
@@ -63,7 +64,7 @@
       <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_en_passant_capture">
+  <component name="RunManager" selected="Python tests.Python tests for test_white_pawn.TestWhitePawn">
     <configuration name="Python tests for test_chess_board.TestChessBoard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="ChessInsights" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -150,8 +151,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_en_passant_capture" />
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn" />
+        <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_en_passant_capture" />
         <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_capture_black_piece" />
       </list>
@@ -180,7 +181,14 @@
       <option name="project" value="LOCAL" />
       <updated>1703310454112</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="seperating whitepawn move into capture and move">
+      <created>1703452553784</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703452553784</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -198,6 +206,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="working on pawn capture starting chessboard piece refactor" />
     <MESSAGE value="finished refactor, pawn capture, increased test coverage" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished refactor, pawn capture, increased test coverage" />
+    <MESSAGE value="seperating whitepawn move into capture and move" />
+    <option name="LAST_COMMIT_MESSAGE" value="seperating whitepawn move into capture and move" />
   </component>
 </project>

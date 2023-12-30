@@ -1,6 +1,7 @@
 class ChessBoard:
     def __init__(self):
         self.__is_whites_turn = True
+        self.en_passant_target_square = None
         self.__piece_locations = {
             'all_pieces': 0,
             'white_pieces': 0,
