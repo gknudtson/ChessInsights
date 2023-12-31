@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="seperating whitepawn move into capture and move">
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="finished white pawn refactor and en passant logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,8 +151,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn" />
-        <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_en_passant_capture" />
         <item itemvalue="Python tests.Python tests for test_chess_board.TestChessBoard" />
+        <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_en_passant_capture" />
         <item itemvalue="Python tests.Python tests for test_white_pawn.TestWhitePawn.test_white_pawn_capture_black_piece" />
       </list>
     </recent_temporary>
@@ -188,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1703452553784</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="finished white pawn refactor and en passant logic">
+      <created>1703961261852</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703961261852</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -207,6 +213,7 @@
     <MESSAGE value="working on pawn capture starting chessboard piece refactor" />
     <MESSAGE value="finished refactor, pawn capture, increased test coverage" />
     <MESSAGE value="seperating whitepawn move into capture and move" />
-    <option name="LAST_COMMIT_MESSAGE" value="seperating whitepawn move into capture and move" />
+    <MESSAGE value="finished white pawn refactor and en passant logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished white pawn refactor and en passant logic" />
   </component>
 </project>

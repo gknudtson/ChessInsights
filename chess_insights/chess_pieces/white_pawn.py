@@ -8,14 +8,15 @@ class WhitePawn(ChessPiece):
         self.__is_valid_move = False
 
     def movement_manager(self, pawn_square: int, square_to_move: int):
+        move_direction = self.ray_direction(pawn_square, square_to_move)
         if not self.chess_board.is_whites_turn():
             return
         if not self.chess_board.is_white_pawn_on_square(pawn_square):
             return
 
-        if square_to_move == pawn_square + 9 or square_to_move == pawn_square + 7:  # TODO Refactor to use NE or NW
+        if move_direction == 'NW' or move_direction == 'NE':
             self.capture(square_to_move)
-        else:
+        elif move_direction == 'N':
             self.move(pawn_square, square_to_move)
 
         if self.__is_valid_move:
