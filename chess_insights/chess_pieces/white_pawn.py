@@ -31,6 +31,8 @@ class WhitePawn(ChessPiece):
             self.__is_valid_move = True
         elif square_to_move == self.chess_board.en_passant_target_square:
             self.en_passant(square_to_move)
+        if self.__is_valid_move:
+            self.chess_board.en_passant_target_square = None
 
     def en_passant(self, square_to_move: int):
         self.chess_board.remove_black_pawn(square_to_move - 8)
@@ -41,6 +43,7 @@ class WhitePawn(ChessPiece):
             return
         if square_to_move == pawn_square + 8:
             self.__is_valid_move = True
+            self.chess_board.en_passant_target_square = None
         elif square_to_move == pawn_square + 16:
             self.double_push(pawn_square)
 
