@@ -71,9 +71,8 @@ class ChessBoard:
     def is_white_pawn_on_square(self, square: int) -> bool:
         return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
 
-    @staticmethod
-    def is_black_pawn_on_starting_rank(pawn_square) -> bool:
-        return 48 <= pawn_square <= 55
+    def is_black_pawn_on_square(self, square: int) -> bool:
+        return self.__piece_locations['black_pawns'] & 2 ** square == 2 ** square
 
     def get_white_pawns(self):
         return self.__piece_locations['white_pawns']

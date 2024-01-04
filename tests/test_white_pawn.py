@@ -1,6 +1,7 @@
 import unittest
 from chess_insights.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_pawn import WhitePawn
+from chess_insights.chess_pieces.black_pawn import BlackPawn
 
 
 class TestWhitePawn(unittest.TestCase):
@@ -8,6 +9,7 @@ class TestWhitePawn(unittest.TestCase):
         self.chess_board = ChessBoard()
         self.white_pawn = WhitePawn(self.chess_board)
         self.white_pawns = self.chess_board.get_white_pawns()
+        self.black_pawn = BlackPawn(self.chess_board)
         self.squares = [2, 10, 17, 18, 19, 26, 64]
 
     def test_cant_move_when_not_turn(self):
@@ -88,10 +90,24 @@ class TestWhitePawn(unittest.TestCase):
         self.assertFalse(self.chess_board.is_black_piece_on_square(square_to_move))
 
     def test_white_pawn_en_passant_capture(self):
-        pawn_square = 34
-        square_to_move = pawn_square + 9
+        pawn_square = 26
+        square_to_move = 43
         self.chess_board.add_white_pawn(pawn_square)
-        self.chess_board.add_black_pawn(pawn_square + 1)
-        self.chess_board.en_passant_target_square = square_to_move  # TODO refactor to use black pawn double push
-        self.white_pawn.movement_manager(pawn_square, square_to_move)
+        self.chess_board.add_black_pawn(51)
+        self.white_pawn.movement_manager(pawn_square, pawn_square + 8)
+        self.black_pawn.movement_manager(51, 35)
+        self.white_pawn.movement_manager(pawn_square + 8, square_to_move)
         self.assertTrue(self.chess_board.is_white_piece_on_square(square_to_move))
+
+    def test_white_pawn_invalid_en_passant_capture(self):
+        pawn_square = 10
+        square_to_move = 43
+        self.chess_board.add_white_pawn(pawn_square)
+        self.chess_board.add_black_pawn(51)
+        self.chess_board.add_black_pawn(55)
+        self.white_pawn.movement_manager(pawn_square, pawn_square + 16)
+        self.black_pawn.movement_manager(51, 35)
+        self.white_pawn.movement_manager(pawn_square + 16, pawn_square + 24)
+        self.black_pawn.movement_manager(55, 47)
+        self.white_pawn.movement_manager(pawn_square + 24, square_to_move)
+        self.assertFalse(self.chess_board.is_white_piece_on_square(square_to_move))
