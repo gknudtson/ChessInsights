@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="added logic to reset en_passant target after moves that don't allow en_passant">
-      <change afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/black_pawn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="added black_pawn.py and additional testing of en_passant_logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -202,7 +200,14 @@
       <option name="project" value="LOCAL" />
       <updated>1704400548323</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added black_pawn.py and additional testing of en_passant_logic">
+      <created>1704402968159</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1704402968159</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -223,6 +228,7 @@
     <MESSAGE value="seperating whitepawn move into capture and move" />
     <MESSAGE value="finished white pawn refactor and en passant logic" />
     <MESSAGE value="added logic to reset en_passant target after moves that don't allow en_passant" />
-    <option name="LAST_COMMIT_MESSAGE" value="added logic to reset en_passant target after moves that don't allow en_passant" />
+    <MESSAGE value="added black_pawn.py and additional testing of en_passant_logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="added black_pawn.py and additional testing of en_passant_logic" />
   </component>
 </project>

@@ -4,6 +4,7 @@ from chess_insights.chess_pieces.white_pawn import WhitePawn
 from chess_insights.chess_pieces.black_pawn import BlackPawn
 
 
+# TODO cleanup test code and ensure logic coverage
 class TestWhitePawn(unittest.TestCase):
     def setUp(self):
         self.chess_board = ChessBoard()

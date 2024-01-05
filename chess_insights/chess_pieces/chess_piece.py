@@ -6,7 +6,7 @@ class ChessPiece:
     def __init__(self, chess_board: ChessBoard):
         self.chess_board = chess_board
 
-    def move(self, pawn_square, square_to_move):
+    def movement_manager(self, pawn_square: int, square_to_move: int):  # Potential name change
         pass
 
     @staticmethod
