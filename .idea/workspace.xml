@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="added black_pawn.py and additional testing of en_passant_logic">
+      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/chess_piece.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/black_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/black_pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/run_tests_with_coverage.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tests/run_tests_with_coverage.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

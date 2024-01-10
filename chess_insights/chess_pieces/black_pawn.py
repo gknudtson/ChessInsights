@@ -14,9 +14,9 @@ class BlackPawn(ChessPiece):
         if not self.chess_board.is_black_pawn_on_square(pawn_square):
             return
 
-        if move_direction == 'SW' or move_direction == 'SE':
+        if (move_direction == 'SW' or move_direction == 'SE') and pawn_square - square_to_move <= 9:
             self.capture(square_to_move)
-        elif move_direction == 'S':
+        elif move_direction == 'S' and pawn_square - square_to_move <= 16:
             self.move(pawn_square, square_to_move)
 
         if self.__is_valid_move:

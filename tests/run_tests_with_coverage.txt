@@ -1,1 +1,2 @@
 pytest -v --cov=./chess_insights --cov-report=html
+python -m pytest -v --cov=./chess_insights --cov-report=html
