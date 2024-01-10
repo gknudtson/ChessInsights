@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="fixed movement logic bug">
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess_insights/chess_pieces/white_pawn.py" afterDir="false" />
+    <list default="true" id="883e96b5-a0fe-4639-ba4a-572cc77560e3" name="Changes" comment="added prevention for movement off board">
+      <change beforePath="$PROJECT_DIR$/tests/test_chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_chess_board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_white_pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_white_pawn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,24 +37,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;coverage&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "advanced.settings"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;CommandLine&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "CommandLine"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gabek\Documents\GitHub\ChessInsights\chess_insights\chess_pieces" />
@@ -215,7 +213,14 @@
       <option name="project" value="LOCAL" />
       <updated>1704921327934</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="added prevention for movement off board">
+      <created>1704923380672</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1704923380672</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -238,6 +243,7 @@
     <MESSAGE value="added logic to reset en_passant target after moves that don't allow en_passant" />
     <MESSAGE value="added black_pawn.py and additional testing of en_passant_logic" />
     <MESSAGE value="fixed movement logic bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed movement logic bug" />
+    <MESSAGE value="added prevention for movement off board" />
+    <option name="LAST_COMMIT_MESSAGE" value="added prevention for movement off board" />
   </component>
 </project>

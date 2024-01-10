@@ -7,10 +7,9 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board = ChessBoard()
         self.white_pawns = self.chess_board.get_white_pawns()
         self.black_pawns = self.chess_board.get_black_pawns()
-        self.squares = [2, 10, 17, 18, 19, 26, 64]
 
     def test_change_turn(self):
-        self.assertFalse(self.chess_board.change_turn())
+        assert not self.chess_board.change_turn()
 
     def test_get_white_pawns_returns_int(self):
         self.assertIsInstance(self.chess_board.get_white_pawns(), int)
@@ -52,27 +51,27 @@ class TestChessBoard(unittest.TestCase):
 
     def test_square_occupied(self):
         square = 10
-        self.assertFalse(self.chess_board.is_square_occupied(square))
+        assert not self.chess_board.is_square_occupied(square)
         self.chess_board.add_white_pawn(square)
-        self.assertTrue(self.chess_board.is_square_occupied(square))
+        assert self.chess_board.is_square_occupied(square)
 
     def test_is_white_piece_on_square(self):
         square = 10
-        self.assertFalse(self.chess_board.is_white_piece_on_square(square))
+        assert not self.chess_board.is_white_piece_on_square(square)
         self.chess_board.add_white_pawn(square)
-        self.assertTrue(self.chess_board.is_white_piece_on_square(square))
+        assert self.chess_board.is_white_piece_on_square(square)
 
     def test_is_black_piece_on_square(self):
         square = 10
-        self.assertFalse(self.chess_board.is_black_piece_on_square(square))
+        assert not self.chess_board.is_black_piece_on_square(square)
         self.chess_board.add_black_pawn(square)
-        self.assertTrue(self.chess_board.is_black_piece_on_square(square))
+        assert self.chess_board.is_black_piece_on_square(square)
 
     def test_remove_piece_from_square(self):
         square = 10
         self.chess_board.add_black_pawn(square)
         self.chess_board.remove_black_piece(square)
-        self.assertFalse(self.chess_board.is_square_occupied(square))
+        assert not self.chess_board.is_square_occupied(square)
         self.chess_board.add_white_pawn(square)
         self.chess_board.remove_white_piece(square)
-        self.assertFalse(self.chess_board.is_square_occupied(square))
+        assert not self.chess_board.is_square_occupied(square)
