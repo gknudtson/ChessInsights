@@ -5,7 +5,6 @@ from chess_insights.chess_pieces.white_pawn import WhitePawn
 from chess_insights.chess_pieces.black_pawn import BlackPawn
 
 
-
 class TestWhitePawn(unittest.TestCase):
     def setUp(self):
         self.chess_board = ChessBoard()
@@ -65,21 +64,21 @@ class TestWhitePawn(unittest.TestCase):
         self.white_pawn.movement_manager(pawn_square, square_to_move)
         assert self.chess_board.is_square_occupied(square_to_move)
 
-    def test_white_pawn_movement_valid_two_forward(self):
+    def test_white_pawn_movement_valid_double_push(self):
         pawn_square = 10
         square_to_move = pawn_square + 16
         self.chess_board.add_white_pawn(pawn_square)
         self.white_pawn.movement_manager(pawn_square, square_to_move)
         assert self.chess_board.is_square_occupied(square_to_move)
 
-    def test_white_pawn_movement_non_starting_rank_two_forward(self):
+    def test_white_pawn_movement_non_starting_rank_double_push(self):
         pawn_square = 19
         square_to_move = pawn_square + 16
         self.chess_board.add_white_pawn(pawn_square)
         self.white_pawn.movement_manager(pawn_square, square_to_move)
         assert not self.chess_board.is_square_occupied(square_to_move)
 
-    def test_white_pawn_movement_two_forward_piece_in_way(self):
+    def test_white_pawn_movement_double_push_piece_in_way(self):
         pawn_square = 10
         square_to_move = pawn_square + 16
         self.chess_board.add_white_pawn(pawn_square)
