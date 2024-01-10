@@ -13,6 +13,8 @@ class WhitePawn(ChessPiece):
             return
         if not self.chess_board.is_white_pawn_on_square(pawn_square):
             return
+        if square_to_move > 63 or square_to_move < 0:
+            return
 
         if (move_direction == 'NW' or move_direction == 'NE') and square_to_move - pawn_square <= 9:
             self.capture(square_to_move)

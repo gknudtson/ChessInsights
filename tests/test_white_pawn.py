@@ -1,4 +1,5 @@
 import unittest
+from parameterized import parameterized
 from chess_insights.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_pawn import WhitePawn
 from chess_insights.chess_pieces.black_pawn import BlackPawn
@@ -27,12 +28,19 @@ class TestWhitePawn(unittest.TestCase):
         self.white_pawn.movement_manager(pawn_square, square_to_move)
         self.assertFalse(self.chess_board.is_square_occupied(square_to_move))
 
-    def test_white_pawn_movement_invalid_square_to_move(self):
-        pawn_square = 101
-        square_to_move = pawn_square - 8
+    @parameterized.expand([9, 10, 11, 17, 19, 25, 27, 32, 34, 36, 42])
+    def test_white_pawn_movement_invalid_square_to_move(self, square_to_move):
+        pawn_square = 18
         self.chess_board.add_white_pawn(pawn_square)
         self.white_pawn.movement_manager(pawn_square, square_to_move)
-        self.assertFalse(self.chess_board.is_square_occupied(square_to_move))
+        assert not self.chess_board.is_square_occupied(square_to_move)
+
+    def test_white_pawn_movement_off_board(self):
+        pawn_square = 63
+        square_to_move = pawn_square + 8
+        self.chess_board.add_white_pawn(pawn_square)
+        self.white_pawn.movement_manager(pawn_square, square_to_move)
+        assert not self.chess_board.is_square_occupied(square_to_move)
 
     def test_white_pawn_movement_invalid_white_piece_in_the_way(self):
         pawn_square = 10
