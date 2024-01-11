@@ -9,7 +9,8 @@ class TestChessBoard(unittest.TestCase):
         self.black_pawns = self.chess_board.get_black_pawns()
 
     def test_change_turn(self):
-        assert not self.chess_board.change_turn()
+        self.chess_board.change_turn()
+        assert not self.chess_board.is_whites_turn()
 
     def test_get_white_pawns_returns_int(self):
         self.assertIsInstance(self.chess_board.get_white_pawns(), int)
