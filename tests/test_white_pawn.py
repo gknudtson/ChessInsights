@@ -46,7 +46,7 @@ class TestWhitePawn(unittest.TestCase):
         self.chess_board.add_white_pawn(square_to_move)
         white_pawns = self.chess_board.get_white_pawns()
         self.white_pawn.movement_manager(pawn_square, square_to_move)
-        self.assertEqual(white_pawns, self.chess_board.get_white_pawns())
+        assert white_pawns == self.chess_board.get_white_pawns()
 
     def test_white_pawn_movement_invalid_black_piece_in_the_way(self):
         pawn_square = 10
@@ -55,7 +55,7 @@ class TestWhitePawn(unittest.TestCase):
         self.chess_board.add_black_pawn(square_to_move)
         white_pawns = self.chess_board.get_white_pawns()
         self.white_pawn.movement_manager(pawn_square, square_to_move)
-        self.assertEqual(white_pawns, self.chess_board.get_white_pawns())
+        assert white_pawns == self.chess_board.get_white_pawns()
 
     def test_white_pawn_movement_valid_forward(self):
         pawn_square = 10
