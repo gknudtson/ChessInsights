@@ -6,24 +6,21 @@ class ChessPiece:
     def __init__(self, chess_board: ChessBoard):
         self.chess_board = chess_board
 
-    def movement_manager(self, pawn_square: int, square_to_move: int):  # Potential name change
+    def movement_manager(self, pawn_square: int, square_to_move: int):  # TODO Potential name change
         pass
 
     @staticmethod
-    def ray_direction(origin_square, target_square) -> str:
-        if (target_square - origin_square) % 8 == 0 and (target_square - origin_square) > 0:
-            return 'N'
-        elif (target_square - origin_square) % 8 == 0 and (target_square - origin_square) < 0:
-            return 'S'
-        elif (target_square - origin_square) % 9 == 0 and (target_square - origin_square) > 0:
-            return 'NE'
-        elif (target_square - origin_square) % 7 == 0 and (target_square - origin_square) > 0:
-            return 'NW'
-        elif (target_square - origin_square) % 9 == 0 and (target_square - origin_square) < 0:
-            return 'SE'
-        elif (target_square - origin_square) % 7 == 0 and (target_square - origin_square) < 0:
-            return 'SW'
-        elif (target_square - origin_square) > 0:
-            return 'E'
-        elif (target_square - origin_square) < 0:
-            return 'W'
+    def ray_direction(origin_square: int, target_square: int) -> str:
+        square_difference = target_square - origin_square
+        if square_difference == 0:
+            return ''
+        if square_difference % 8 == 0:
+            return 'N' if square_difference > 0 else 'S'
+        elif square_difference % 9 == 0:
+            return 'NE' if square_difference > 0 else 'SW'
+        elif square_difference % 7 == 0:
+            return 'NW' if square_difference > 0 else 'SE'
+        elif square_difference > 0:
+            return 'E' if ((1 << 8) - 1 << (origin_square // 8) * 8) & (1 << target_square) != 0 else ''
+        elif square_difference < 0:
+            return 'W' if ((1 << 8) - 1 << (origin_square // 8) * 8) & (1 << target_square) != 0 else ''
