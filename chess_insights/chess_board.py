@@ -68,6 +68,17 @@ class ChessBoard:
                 self.__piece_locations['black_king']
         )
 
+    def is_white_king_on_square(self, square: int) -> bool:
+        return self.__piece_locations['white_king'] & 2 ** square == 2 ** square
+
+    def add_white_king(self, square: int):
+        self.__piece_locations['white_king'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_white_king(self, square: int):
+        self.__piece_locations['white_king'] &= ~(1 << square)
+        self.update_all_pieces()
+
     def is_white_pawn_on_square(self, square: int) -> bool:
         return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
 
