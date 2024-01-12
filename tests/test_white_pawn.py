@@ -103,6 +103,7 @@ class TestWhitePawn(unittest.TestCase):
         self.white_pawn.movement_manager(pawn_square, pawn_square + 8)
         self.black_pawn.movement_manager(51, 35)
         self.white_pawn.movement_manager(pawn_square + 8, square_to_move)
+        assert not self.chess_board.is_black_piece_on_square(35)
         assert self.chess_board.is_white_piece_on_square(square_to_move)
 
     def test_white_pawn_invalid_en_passant_capture(self):
