@@ -70,6 +70,16 @@ class ChessBoard:
                 self.__piece_locations['black_king']
         )
 
+    def find_white_piece_on_square(self, square: int) -> str:
+        for key in self.__piece_keys_by_color['white']:
+            if self.__piece_locations[key] & 2 ** square == 2 ** square:
+                return key
+
+    def remove_white_piece(self, square: int):
+        key = self.find_white_piece_on_square(square)
+        self.__piece_locations[key] &= ~(1 << square)
+        self.update_all_pieces()
+
     def is_white_king_on_square(self, square: int) -> bool:
         return self.__piece_locations['white_king'] & 2 ** square == 2 ** square
 
@@ -92,6 +102,31 @@ class ChessBoard:
         self.__piece_locations['white_rooks'] &= ~(1 << square)
         self.update_all_pieces()
 
+    def is_white_bishop_on_square(self, square: int) -> bool:
+        return self.__piece_locations['white_bishops'] & 2 ** square == 2 ** square
+
+    def add_white_bishop(self, square: int):
+        self.__piece_locations['white_bishops'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_white_bishop(self, square: int):
+        self.__piece_locations['white_bishops'] &= ~(1 << square)
+        self.update_all_pieces()
+
+    def is_white_pawn_on_square(self, square: int) -> bool:
+        return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
+
+    def get_white_pawns(self):
+        return self.__piece_locations['white_pawns']
+
+    def add_white_pawn(self, square: int):
+        self.__piece_locations['white_pawns'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_white_pawn(self, square: int):
+        self.__piece_locations['white_pawns'] &= ~(1 << square)
+        self.update_all_pieces()
+
     def is_black_rook_on_square(self, square: int) -> bool:
         return self.__piece_locations['black_rooks'] & 2 ** square == 2 ** square
 
@@ -103,25 +138,22 @@ class ChessBoard:
         self.__piece_locations['black_rooks'] &= ~(1 << square)
         self.update_all_pieces()
 
-    def is_white_pawn_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
+    def is_black_bishop_on_square(self, square: int) -> bool:
+        return self.__piece_locations['black_bishops'] & 2 ** square == 2 ** square
+
+    def add_black_bishop(self, square: int):
+        self.__piece_locations['black_bishops'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_black_bishop(self, square: int):
+        self.__piece_locations['black_bishops'] &= ~(1 << square)
+        self.update_all_pieces()
 
     def is_black_pawn_on_square(self, square: int) -> bool:
         return self.__piece_locations['black_pawns'] & 2 ** square == 2 ** square
 
-    def get_white_pawns(self):
-        return self.__piece_locations['white_pawns']
-
     def get_black_pawns(self):
         return self.__piece_locations['black_pawns']
-
-    def add_white_pawn(self, square: int):
-        self.__piece_locations['white_pawns'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_pawn(self, square: int):
-        self.__piece_locations['white_pawns'] &= ~(1 << square)
-        self.update_all_pieces()
 
     def add_black_pawn(self, square: int):
         self.__piece_locations['black_pawns'] |= 1 << square
@@ -131,20 +163,10 @@ class ChessBoard:
         self.__piece_locations['black_pawns'] &= ~(1 << square)
         self.update_all_pieces()
 
-    def remove_white_piece(self, square: int):
-        key = self.find_white_piece_on_square(square)
-        self.__piece_locations[key] &= ~(1 << square)
-        self.update_all_pieces()
-
     def remove_black_piece(self, square: int):
         key = self.find_black_piece_on_square(square)
         self.__piece_locations[key] &= ~(1 << square)
         self.update_all_pieces()
-
-    def find_white_piece_on_square(self, square: int) -> str:
-        for key in self.__piece_keys_by_color['white']:
-            if self.__piece_locations[key] & 2 ** square == 2 ** square:
-                return key
 
     def find_black_piece_on_square(self, square: int) -> str:
         for key in self.__piece_keys_by_color['black']:
