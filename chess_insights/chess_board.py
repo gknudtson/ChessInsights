@@ -1,7 +1,7 @@
 class ChessBoard:
     def __init__(self):
         self.__is_whites_turn = True
-        self.en_passant_target_square = None
+        self.en_passant_target_square = None  # TODO: refactor to -1 possibly private
         self.__piece_locations = {
             'all_pieces': 0,
             'white_pieces': 0,
@@ -17,12 +17,14 @@ class ChessBoard:
             'black_bishops': 0,
             'black_rooks': 0,
             'black_queens': 0,
-            'black_king': 0
+            'black_king': 0,
         }
         self.__piece_keys_by_color = {
             'white': ['white_pawns', 'white_knights', 'white_bishops', 'white_rooks', 'white_queens', 'white_king'],
             'black': ['black_pawns', 'black_knights', 'black_bishops', 'black_rooks', 'black_queens', 'black_king']
         }
+        # left 2 bits represent whites ability to castle left or right, right 2 bits represent black
+        self.__castling_rights = 0b1111
 
     def is_whites_turn(self) -> bool:
         return self.__is_whites_turn
@@ -79,6 +81,28 @@ class ChessBoard:
         self.__piece_locations['white_king'] &= ~(1 << square)
         self.update_all_pieces()
 
+    def is_white_rook_on_square(self, square: int) -> bool:
+        return self.__piece_locations['white_rooks'] & 2 ** square == 2 ** square
+
+    def add_white_rook(self, square: int):
+        self.__piece_locations['white_rooks'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_white_rook(self, square: int):
+        self.__piece_locations['white_rooks'] &= ~(1 << square)
+        self.update_all_pieces()
+
+    def is_black_rook_on_square(self, square: int) -> bool:
+        return self.__piece_locations['black_rooks'] & 2 ** square == 2 ** square
+
+    def add_black_rook(self, square: int):
+        self.__piece_locations['black_rooks'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_black_rook(self, square: int):
+        self.__piece_locations['black_rooks'] &= ~(1 << square)
+        self.update_all_pieces()
+
     def is_white_pawn_on_square(self, square: int) -> bool:
         return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
 
@@ -126,3 +150,9 @@ class ChessBoard:
         for key in self.__piece_keys_by_color['black']:
             if self.__piece_locations[key] & 2 ** square == 2 ** square:
                 return key
+
+    def get_castling_rights(self) -> int:
+        return self.__castling_rights
+
+    def update_castling_rights(self, new_value: int):
+        self.__castling_rights = new_value
