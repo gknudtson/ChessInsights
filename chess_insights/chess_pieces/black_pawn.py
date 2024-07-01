@@ -7,7 +7,7 @@ class BlackPawn(ChessPiece):
         super().__init__(chess_board)
         self.__is_valid_move = False
 
-    def movement_manager(self, origin_square: int, target_square: int):
+    def move(self, origin_square: int, target_square: int):
         move_direction = self.ray_direction(origin_square, target_square)
         if self.chess_board.is_whites_turn():
             return
@@ -19,7 +19,7 @@ class BlackPawn(ChessPiece):
         if (move_direction == 'SW' or move_direction == 'SE') and origin_square - target_square <= 9:
             self.capture(target_square)
         elif move_direction == 'S' and origin_square - target_square <= 16:
-            self.move(origin_square, target_square)
+            self.push(origin_square, target_square)
 
         if self.__is_valid_move:
             self.__is_valid_move = False
@@ -40,7 +40,7 @@ class BlackPawn(ChessPiece):
         self.chess_board.remove_white_pawn(target_square + 8)
         self.__is_valid_move = True
 
-    def move(self, origin_square: int, target_square: int):
+    def push(self, origin_square: int, target_square: int):
         if self.chess_board.is_square_occupied(target_square):
             return
         if target_square == origin_square - 8:

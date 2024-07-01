@@ -7,7 +7,7 @@ class WhiteKing(ChessPiece):
         super().__init__(chess_board)
         self.__is_valid_move = False
 
-    def movement_manager(self, origin_square: int, target_square: int):
+    def move(self, origin_square: int, target_square: int):
         move_direction = self.ray_direction(origin_square, target_square)
         move_distance = abs(target_square - origin_square)
         castling_rights = self.chess_board.get_castling_rights()

@@ -1,4 +1,4 @@
-class ChessBoard:
+class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
     def __init__(self):
         self.__is_whites_turn = True
         self.en_passant_target_square = None  # TODO: refactor to -1 possibly private
