@@ -1,5 +1,6 @@
 from chess_insights.chess_pieces.chess_piece import ChessPiece
 from chess_insights.chess_board import ChessBoard
+from chess_insights.enum_ray_direction import Direction
 
 
 class WhiteKing(ChessPiece):
@@ -8,7 +9,7 @@ class WhiteKing(ChessPiece):
         self.__is_valid_move = False
 
     def move(self, origin_square: int, target_square: int):
-        move_direction = self.ray_direction(origin_square, target_square)
+        move_direction = Direction.from_squares(origin_square, target_square).value[0]
         move_distance = abs(target_square - origin_square)
         castling_rights = self.chess_board.get_castling_rights()
         if not self.chess_board.is_whites_turn():

@@ -1,3 +1,8 @@
+from enum import Enum
+
+from chess_insights.enum_ray_direction import Direction
+
+
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
     def __init__(self):
         self.__is_whites_turn = True
@@ -20,8 +25,10 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             'black_king': 0,
         }
         self.__piece_keys_by_color = {
-            'white': ['white_pawns', 'white_knights', 'white_bishops', 'white_rooks', 'white_queens', 'white_king'],
-            'black': ['black_pawns', 'black_knights', 'black_bishops', 'black_rooks', 'black_queens', 'black_king']
+            'white': ['white_pawns', 'white_knights', 'white_bishops', 'white_rooks',
+                      'white_queens', 'white_king'],
+            'black': ['black_pawns', 'black_knights', 'black_bishops', 'black_rooks',
+                      'black_queens', 'black_king']
         }
         # left 2 bits represent whites ability to castle left or right, right 2 bits represent black
         self.__castling_rights = 0b1111
@@ -178,3 +185,21 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
     def update_castling_rights(self, new_value: int):
         self.__castling_rights = new_value
+
+    def is_piece_in_path(self, origin_square: int, target_square: int) -> bool:
+        direction = Direction.from_squares(origin_square, target_square)
+        path = ChessBoard.generate_path(origin_square, target_square,direction )
+        return (path & self.__piece_locations['all_pieces']) != 0
+
+    @staticmethod
+    def generate_path(origin_square: int, target_square: int, direction: Enum):
+        path = 0
+        step = direction.value[1]
+        if step == 0:
+            return path
+        current = origin_square + step
+        while current != target_square:
+            path |= 2 ** current
+            current += step
+        path |= 2 ** current
+        return path

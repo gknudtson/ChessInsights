@@ -1,5 +1,6 @@
 import unittest
 from chess_insights.chess_board import ChessBoard
+from parameterized import parameterized
 
 
 class TestChessBoard(unittest.TestCase):
@@ -76,3 +77,15 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board.add_white_pawn(square)
         self.chess_board.remove_white_piece(square)
         assert not self.chess_board.is_square_occupied(square)
+
+    @parameterized.expand([42, 2, 21, 16, 36, 32, 4, 0])
+    def test_is_piece_in_path_no_pieces(self, target_square):
+        origin_square = 18
+        self.chess_board.add_white_pawn(origin_square)
+        assert not self.chess_board.is_piece_in_path(origin_square, target_square)
+
+    @parameterized.expand([42, 2, 21, 16, 36, 32, 4, 0])
+    def test_is_piece_in_path_piece_in_path(self, target_square):
+        origin_square = 18
+        self.chess_board.add_white_pawn(target_square)
+        assert self.chess_board.is_piece_in_path(origin_square, target_square)

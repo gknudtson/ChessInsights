@@ -11,23 +11,6 @@ class ChessPiece:
         pass
 
     @staticmethod
-    def ray_direction(origin_square: int,
-                      target_square: int) -> str:  # TODO consider ENUM
-        square_difference = target_square - origin_square
-        if square_difference == 0:
-            return ''
-        if square_difference % 8 == 0:
-            return 'N' if square_difference > 0 else 'S'
-        elif square_difference % 9 == 0:
-            return 'NE' if square_difference > 0 else 'SW'
-        elif square_difference % 7 == 0:
-            return 'NW' if square_difference > 0 else 'SE'
-        elif square_difference > 0:
-            return 'E' if ((1 << 8) - 1 << (origin_square // 8) * 8) & (1 << target_square) != 0 else ''
-        elif square_difference < 0:
-            return 'W' if ((1 << 8) - 1 << (origin_square // 8) * 8) & (1 << target_square) != 0 else ''
-
-    @staticmethod
     def chebyshev_distance(origin_square: int, target_square: int) -> int:
         if target_square < 0 or origin_square < 0 or target_square > 63 or origin_square > 63:
             return -1
