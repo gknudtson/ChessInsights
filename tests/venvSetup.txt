@@ -1,1 +1,1 @@
- source env/scripts/activate
+. env/Scripts/activate
