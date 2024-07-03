@@ -27,7 +27,8 @@ class WhiteKing(ChessPiece):
             return
 
         if move_distance == 2:
-            self.castle(move_direction,castling_rights)
+            if not self.chess_board.is_piece_in_path(origin_square, target_square):
+                self.castle(move_direction,castling_rights)
         elif self.chess_board.is_black_piece_on_square(target_square):
             self.chess_board.remove_black_piece(target_square)
             self.__is_valid_move = True

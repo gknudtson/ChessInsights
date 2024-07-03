@@ -9,7 +9,6 @@ class TestWhiteKing(unittest.TestCase): #TODO add invalid castling after rook mo
     def setUp(self):
         self.chess_board = ChessBoard()
         self.white_king = WhiteKing(self.chess_board)
-        self.black_pawn = BlackPawn(self.chess_board)
         self.origin_square = 4
         self.chess_board.add_white_king(self.origin_square)
 
@@ -76,7 +75,7 @@ class TestWhiteKing(unittest.TestCase): #TODO add invalid castling after rook mo
 
     @parameterized.expand([(2, 3), (6, 5)])
     def test_invalid_castling_white_piece_in_path(self, target_square, white_piece_square):
-        self.chess_board.add_white_bishop(white_piece_square)
+        self.chess_board.add_white_pawn(white_piece_square)
         self.white_king.move(self.origin_square, target_square)
         assert self.chess_board.is_white_king_on_square(self.origin_square)
 
