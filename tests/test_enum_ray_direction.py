@@ -1,5 +1,6 @@
 import unittest
 from parameterized import parameterized
+
 from chess_insights.enum_ray_direction import Direction
 
 
