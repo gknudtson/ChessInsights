@@ -24,7 +24,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Unit Tests
-      run: pytest -v --cov=./chess_insights --cov-report=html
+      run: pytest -v --cov=chess_insights --cov-report=html
 
     - name: Archive Coverage Report
       uses: actions/upload-artifact@v3
