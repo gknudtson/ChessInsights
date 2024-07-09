@@ -1,6 +1,7 @@
 from enum import Enum
 
 from chess_insights.enum_ray_direction import Direction
+from chess_insights.enum_file_and_rank import *
 
 
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
@@ -205,8 +206,8 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         return path
 
     def generate_pawn_attacks(self, color: str) -> int:
-        a_file = 0x0101010101010101
-        h_file = 0x8080808080808080
+        a_file = File.A.value
+        h_file = File.H.value
         if color == "white":
             pawns = self.__piece_locations["white_pawns"]
             east_attacks = (pawns & ~h_file) << 9
