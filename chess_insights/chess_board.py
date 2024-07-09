@@ -218,4 +218,27 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             west_attacks = (pawns & ~a_file) >> 9
         else:
             return -1
+
         return east_attacks | west_attacks
+
+    def generate_king_attacks(self, color: str) -> int:
+        a_file = File.A.value
+        h_file = File.H.value
+        rank_1 = Rank.One.value
+        rank_8 = Rank.Eight.value
+        if color == "white":
+            king = self.__piece_locations["white_king"]
+        elif color == "black":
+            king = self.__piece_locations["black_king"]
+        else:
+            return -1
+        east = (king & ~h_file) << 1
+        west = (king & ~a_file) >> 1
+        north = (king & ~rank_8) << 8
+        south = (king & ~rank_1) >> 8
+        ne = (north & ~h_file) << 1
+        nw = (north & ~a_file) >> 1
+        se = (south & ~h_file) << 1
+        sw = (south & ~a_file) >> 1
+
+        return east | west | north | south | ne | nw | se | sw

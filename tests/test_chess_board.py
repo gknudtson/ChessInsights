@@ -94,10 +94,26 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board.add_white_pawn(8)
         self.chess_board.add_white_pawn(12)
         self.chess_board.add_white_pawn(15)
-        assert self.chess_board.generate_pawn_attacks("white") == (2**17 | 2**19 | 2**21 | 2**22)
+        assert self.chess_board.generate_pawn_attacks("white") == (
+                2 ** 17 | 2 ** 19 | 2 ** 21 | 2 ** 22)
 
     def test_generate_pawn_attacks_black(self):
         self.chess_board.add_black_pawn(48)
         self.chess_board.add_black_pawn(52)
         self.chess_board.add_black_pawn(55)
-        assert self.chess_board.generate_pawn_attacks("black") == (2**41 | 2**43 | 2**45 | 2**46)
+        assert self.chess_board.generate_pawn_attacks("black") == (
+                2 ** 41 | 2 ** 43 | 2 ** 45 | 2 ** 46)
+
+    def test_generate_king_attacks_white_centered(self):
+        self.chess_board.add_white_king(10)
+        assert self.chess_board.generate_king_attacks("white") == (
+                2 | 2 ** 2 | 2 ** 3 | 2 ** 9 | 2 ** 11 | 2 ** 17 | 2 ** 18 | 2 ** 19)
+
+    def test_generate_king_attacks_white_corners(self):
+        self.chess_board.add_white_king(0)
+        self.chess_board.add_white_king(7)
+        self.chess_board.add_white_king(56)
+        self.chess_board.add_white_king(63)
+        assert self.chess_board.generate_king_attacks("white") == (
+                2 | 2 ** 6 | 2 ** 8 | 2 ** 9 | 2 ** 14 | 2 ** 15 | 2 ** 48 | 2 ** 49 | 2 ** 54 |
+                2 ** 55 | 2 ** 57 | 2 ** 62)
