@@ -121,11 +121,12 @@ class TestChessBoard(unittest.TestCase):
     def test_generate_knight_attacks_white(self):
         self.chess_board.add_white_knight(20)
         assert self.chess_board.generate_knight_attacks("white") == (
-                    2 ** 3 | 2 ** 5 | 2 ** 10 | 2 ** 14 | 2 ** 26 | 2 ** 30 | 2 ** 35 | 2 ** 37)
+                2 ** 3 | 2 ** 5 | 2 ** 10 | 2 ** 14 | 2 ** 26 | 2 ** 30 | 2 ** 35 | 2 ** 37)
 
     def test_generate_knight_attacks_white_corners(self):
         self.chess_board.add_white_knight(0)
         self.chess_board.add_white_knight(7)
         self.chess_board.add_white_knight(56)
         self.chess_board.add_white_knight(63)
-        assert self.chess_board.generate_knight_attacks("white") == (2 ** 10 | 2 ** 13 |2 ** 17 | 2 ** 22 | 2**41 | 2**46 | 2** 50 | 2 ** 53)
+        assert self.chess_board.generate_knight_attacks("white") == (
+                    2 ** 10 | 2 ** 13 | 2 ** 17 | 2 ** 22 | 2 ** 41 | 2 ** 46 | 2 ** 50 | 2 ** 53)
