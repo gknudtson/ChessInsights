@@ -12,7 +12,7 @@ class Direction(Enum):
     NW = ('NW', 7)
     SE = ('SE', -7)
     SW = ('SW', -9)
-    _ = ('', 0)  # Unsure what to name this
+    _ = ('', 0)  # Possibly name C for Center
 
     @staticmethod
     def from_squares(origin_square: int,
