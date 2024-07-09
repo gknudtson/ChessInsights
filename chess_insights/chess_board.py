@@ -192,7 +192,7 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         return (path & self.__piece_locations['all_pieces']) != 0
 
     @staticmethod
-    def generate_path(origin_square: int, target_square: int, direction: Enum):
+    def generate_path(origin_square: int, target_square: int, direction: Enum) -> int:
         path = 0
         step = direction.value[1]
         if step == 0:
@@ -203,3 +203,18 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             current += step
         path |= 2 ** current
         return path
+
+    def generate_pawn_attacks(self, color: str) -> int:
+        a_file = 0x0101010101010101
+        h_file = 0x8080808080808080
+        if color == "white":
+            pawns = self.__piece_locations["white_pawns"]
+            east_attacks = (pawns & ~h_file) << 9
+            west_attacks = (pawns & ~a_file) << 7
+        elif color == "black":
+            pawns = self.__piece_locations["black_pawns"]
+            east_attacks = (pawns & ~h_file) >> 7
+            west_attacks = (pawns & ~a_file) >> 9
+        else:
+            return -1
+        return east_attacks | west_attacks

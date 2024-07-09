@@ -89,3 +89,15 @@ class TestChessBoard(unittest.TestCase):
         origin_square = 18
         self.chess_board.add_white_pawn(target_square)
         assert self.chess_board.is_piece_in_path(origin_square, target_square)
+
+    def test_generate_pawn_attacks_white(self):
+        self.chess_board.add_white_pawn(8)
+        self.chess_board.add_white_pawn(12)
+        self.chess_board.add_white_pawn(15)
+        assert self.chess_board.generate_pawn_attacks("white") == (2**17 | 2**19 | 2**21 | 2**22)
+
+    def test_generate_pawn_attacks_black(self):
+        self.chess_board.add_black_pawn(48)
+        self.chess_board.add_black_pawn(52)
+        self.chess_board.add_black_pawn(55)
+        assert self.chess_board.generate_pawn_attacks("black") == (2**41 | 2**43 | 2**45 | 2**46)
