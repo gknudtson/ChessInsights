@@ -121,6 +121,17 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         self.__piece_locations['white_bishops'] &= ~(1 << square)
         self.update_all_pieces()
 
+    def is_white_knight_on_square(self, square: int) -> bool:
+        return self.__piece_locations['white_knights'] & 2 ** square == 2 ** square
+
+    def add_white_knight(self, square: int):
+        self.__piece_locations['white_knights'] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_white_knight(self, square: int):
+        self.__piece_locations['white_knights'] &= ~(1 << square)
+        self.update_all_pieces()
+
     def is_white_pawn_on_square(self, square: int) -> bool:
         return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
 
@@ -189,7 +200,7 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
     def is_piece_in_path(self, origin_square: int, target_square: int) -> bool:
         direction = Direction.from_squares(origin_square, target_square)
-        path = ChessBoard.generate_path(origin_square, target_square,direction )
+        path = ChessBoard.generate_path(origin_square, target_square, direction)
         return (path & self.__piece_locations['all_pieces']) != 0
 
     @staticmethod
@@ -221,6 +232,35 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
         return east_attacks | west_attacks
 
+    def generate_knight_attacks(self, color: str) -> int:
+        if color == "white":
+            knights = self.__piece_locations["white_knights"]
+        elif color == "black":
+            knights = self.__piece_locations["black_knights"]
+        else:
+            return -1
+
+        a_file = File.A.value
+        b_file = File.B.value
+        g_file = File.G.value
+        h_file = File.H.value
+        rank_1 = Rank.One.value
+        rank_2 = Rank.Two.value
+        rank_7 = Rank.Seven.value
+        rank_8 = Rank.Eight.value
+
+        nne = (knights & ~(rank_7 | rank_8 | h_file)) << 17
+        nee = (knights & ~(rank_8 | h_file | g_file)) << 10
+        nnw = (knights & ~(rank_7 | rank_8 | a_file)) << 15
+        nww = (knights & ~(rank_8 | a_file | g_file)) << 6
+        sse = (knights & ~(rank_1 | rank_2 | h_file)) >> 15
+        see = (knights & ~(rank_1 | g_file | h_file)) >> 6
+        ssw = (knights & ~(rank_1 | rank_2 | a_file)) >> 10
+        sww = (knights & ~(rank_1 | a_file | b_file)) >> 17
+
+        return nne | nee | nnw | nww | sse | see | ssw | sww
+
+    # TODO needs to consider all squares attacked by opponent pieces
     def generate_king_attacks(self, color: str) -> int:
         a_file = File.A.value
         h_file = File.H.value
