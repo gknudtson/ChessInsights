@@ -5,7 +5,7 @@ from chess_insights.chess_pieces.white_king import WhiteKing
 from chess_insights.chess_pieces.black_pawn import BlackPawn
 
 
-class TestWhiteKing(unittest.TestCase): #TODO add invalid castling after rook movement test after implementing rook
+class TestWhiteKing(unittest.TestCase): #TODO add invalid castling after rook movement test after implementing rook & check for revealed checks
     def setUp(self):
         self.chess_board = ChessBoard()
         self.white_king = WhiteKing(self.chess_board)
