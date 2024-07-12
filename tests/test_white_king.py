@@ -2,7 +2,6 @@ import unittest
 from parameterized import parameterized
 from chess_insights.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_king import WhiteKing
-from chess_insights.chess_pieces.black_pawn import BlackPawn
 
 
 class TestWhiteKing(unittest.TestCase): #TODO add invalid castling after rook movement test after implementing rook & check for revealed checks
