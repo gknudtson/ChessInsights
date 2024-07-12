@@ -1,6 +1,7 @@
 import unittest
 from chess_insights.chess_board import ChessBoard
 from parameterized import parameterized
+from chess_insights.enum_ray_direction import Direction
 
 
 class TestChessBoard(unittest.TestCase):
@@ -129,4 +130,21 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board.add_white_knight(56)
         self.chess_board.add_white_knight(63)
         assert self.chess_board.generate_knight_attacks("white") == (
-                    2 ** 10 | 2 ** 13 | 2 ** 17 | 2 ** 22 | 2 ** 41 | 2 ** 46 | 2 ** 50 | 2 ** 53)
+                2 ** 10 | 2 ** 13 | 2 ** 17 | 2 ** 22 | 2 ** 41 | 2 ** 46 | 2 ** 50 | 2 ** 53)
+
+    #    def test_generate_bishop_attacks_white(self):
+    #        self.chess_board.add_white_bishop(20)
+    #        self.chess_board.add_white_bishop(19)
+    #        assert self.chess_board.generate_bishop_attacks("white") == 36525115856403558
+
+    def test_get_file(self):
+        assert self.chess_board.get_file(7) == 7
+
+    def test_get_rank(self):
+        assert self.chess_board.get_rank(7) == 0
+
+    def test_generate_diagonal_path(self):
+        assert self.chess_board.generate_diagonal_path_to_edge_of_board(0, 9) == 9241421688590303745
+
+    def test_generate_mask(self):
+        assert self.chess_board.generate_mask(27, Direction.NE) == 9241421688590303745

@@ -204,6 +204,43 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         return (path & self.__piece_locations['all_pieces']) != 0
 
     @staticmethod
+    def get_file(square: int) -> int:
+        return square % 8
+
+    @staticmethod
+    def get_rank(square: int) -> int:
+        return square // 8
+
+    @staticmethod
+    def generate_diagonal_path_to_edge_of_board(origin_square: int, offset: int) -> int:
+        abs_offset = abs(offset)
+        start_square = 2 ** origin_square
+        edges = Rank.One | Rank.Eight | File.A | File.H
+        current_square, path = start_square, start_square
+
+        is_first_iteration = True
+        while current_square & edges == 0 or is_first_iteration:
+            if offset > 0:
+                current_square = current_square << abs_offset
+            else:
+                current_square = current_square >> abs_offset
+            path |= current_square
+            is_first_iteration = False
+        return path
+
+    def get_diagonal_mask(self, origin_square: int, direction: Enum) -> int:
+        return (self.generate_diagonal_path_to_edge_of_board(origin_square, direction.value[1]) |
+                self.generate_diagonal_path_to_edge_of_board(origin_square, -direction.value[1]))
+
+    def generate_mask(self, square: int, direction: Enum) -> int:
+        if direction == Direction.N or direction == Direction.S:
+            return 0xFF << (8 * self.get_file(square))
+        elif direction == Direction.E or direction == Direction.W:
+            return 0x0101010101010101 << self.get_rank(square)
+        else:
+            return self.get_diagonal_mask(square, direction)
+
+    @staticmethod
     def generate_path(origin_square: int, target_square: int, direction: Enum) -> int:
         path = 0
         step = direction.value[1]
@@ -259,6 +296,29 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         sww = (knights & ~(rank_1 | a_file | b_file)) >> 17
 
         return nne | nee | nnw | nww | sse | see | ssw | sww
+
+    def generate_bishop_attacks(self, color: str) -> int:
+        if color == "white":
+            bishops = self.__piece_locations["white_bishops"]
+        elif color == "black":
+            bishops = self.__piece_locations["black_bishops"]
+        else:
+            return -1
+        collisions = self.__piece_locations["all_pieces"] ^ bishops
+        directions = [Direction.NE, Direction.SE, Direction.SW, Direction.NW]
+        attacks = 0
+        for direction in directions:
+            offset = abs(direction.value[1])
+            path = bishops
+            is_positive = direction.value[1] > 0
+            while (path & collisions) == 0:
+                if is_positive:
+                    path = path << offset
+                else:
+                    path = path >> offset
+                attacks |= path
+
+        return attacks
 
     # TODO needs to consider all squares attacked by opponent pieces
     def generate_king_attacks(self, color: str) -> int:
