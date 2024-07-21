@@ -1,6 +1,6 @@
 import unittest
-from chess_insights.chess_board import ChessBoard
 from parameterized import parameterized
+from chess_insights.chess_board import ChessBoard
 from chess_insights.enum_ray_direction import Direction
 
 

@@ -1,7 +1,4 @@
 import unittest
-from parameterized import parameterized
-from chess_insights.chess_pieces.chess_piece import ChessPiece
-from chess_insights.chess_pieces.chess_piece import ChessBoard
 
 
 class TestChessPieceParentClass(unittest.TestCase):
