@@ -1,7 +1,7 @@
 from enum import Enum
 
-from chess_insights.enum_ray_direction import Direction
-from chess_insights.enum_file_and_rank import *
+from .enum_ray_direction import Direction
+from .enum_file_and_rank import *
 
 
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
