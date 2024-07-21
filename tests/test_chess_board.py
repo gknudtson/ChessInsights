@@ -154,3 +154,6 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board.add_white_knight(7)
         self.chess_board.add_white_knight(56)
         assert self.chess_board.serialize_board(72057594037928065) == [0, 7, 56]
+
+    def test_mirror_vertical(self):
+        assert self.chess_board.mirror_vertical(18302628885633695744) == 127

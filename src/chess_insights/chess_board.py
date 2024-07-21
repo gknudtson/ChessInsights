@@ -3,6 +3,7 @@ from enum import Enum
 from .enum_ray_direction import Direction
 from .enum_file_and_rank import *
 import math
+import numpy as np
 
 
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
@@ -263,6 +264,29 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             board = board ^ square
         return squares
 
+    @staticmethod
+    def mirror_vertical(bit_board: int) -> int:
+        bitboard_array = np.array([bit_board], dtype=np.uint64)
+        flipped_array = bitboard_array.byteswap()
+        return ChessBoard.mirror_horizontal(flipped_array.item())
+
+    @staticmethod
+    def reverse_bits(byte):
+        byte = (byte & 0xF0) >> 4 | (byte & 0x0F) << 4
+        byte = (byte & 0xCC) >> 2 | (byte & 0x33) << 2
+        byte = (byte & 0xAA) >> 1 | (byte & 0x55) << 1
+        return byte
+
+    @staticmethod
+    def mirror_horizontal(bitboard):
+        # Convert the 64-bit integer to an array of 8 bytes
+        bytes_array = np.array([bitboard], dtype=np.uint64).view(np.uint8)
+        # Reverse the bits in each byte using bitwise operations
+        reversed_bytes = np.array([ChessBoard.reverse_bits(byte) for byte in bytes_array], dtype=np.uint8)
+        # Combine the reversed bytes back into a 64-bit integer
+        mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
+        return mirrored_bitboard.item()
+
     def generate_pawn_attacks(self, color: str) -> int:
         a_file = File.A.value
         h_file = File.H.value
@@ -321,7 +345,7 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         for square in squares:
             for direction in directions:
                 mask = self.generate_mask(square, direction)
-                path = collisions ^ (collisions-2*square)
+                path = collisions ^ (collisions - 2 * square)
                 attacks |= path & mask
 
         return attacks ^ bishops
