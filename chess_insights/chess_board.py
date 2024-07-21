@@ -2,6 +2,7 @@ from enum import Enum
 
 from chess_insights.enum_ray_direction import Direction
 from chess_insights.enum_file_and_rank import *
+import math
 
 
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
@@ -253,6 +254,15 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         path |= 2 ** current
         return path
 
+    @staticmethod
+    def serialize_board(board: int) -> list[int]:
+        squares = []
+        while board != 0:
+            square = board & -board
+            squares.append(int(math.log2(square)))
+            board = board ^ square
+        return squares
+
     def generate_pawn_attacks(self, color: str) -> int:
         a_file = File.A.value
         h_file = File.H.value
@@ -304,21 +314,17 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             bishops = self.__piece_locations["black_bishops"]
         else:
             return -1
+        squares = self.serialize_board(bishops)
         collisions = self.__piece_locations["all_pieces"] ^ bishops
         directions = [Direction.NE, Direction.SE, Direction.SW, Direction.NW]
         attacks = 0
-        for direction in directions:
-            offset = abs(direction.value[1])
-            path = bishops
-            is_positive = direction.value[1] > 0
-            while (path & collisions) == 0:
-                if is_positive:
-                    path = path << offset
-                else:
-                    path = path >> offset
-                attacks |= path
+        for square in squares:
+            for direction in directions:
+                mask = self.generate_mask(square, direction)
+                path = collisions ^ (collisions-2*square)
+                attacks |= path & mask
 
-        return attacks
+        return attacks ^ bishops
 
     # TODO needs to consider all squares attacked by opponent pieces
     def generate_king_attacks(self, color: str) -> int:
