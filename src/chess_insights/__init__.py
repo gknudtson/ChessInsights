@@ -1,6 +1,7 @@
 # chess_insights/__init__.py
 from flask import Flask
 
+
 def create_app():
     app = Flask(__name__)
 
@@ -9,3 +10,6 @@ def create_app():
         return 'Hello World!'
 
     return app
+
+
+__all__ = ["chess_pieces"]
