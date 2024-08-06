@@ -334,42 +334,44 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
         return nne | nee | nnw | nww | sse | see | ssw | sww
 
-    def generate_bishop_attacks(self, color: str) -> int:
-        bishops = self.__piece_locations.get(f"{color}_bishops", -1)
-        squares = self.serialize_board(bishops)
-        collisions = self.__piece_locations["all_pieces"]
-        directions = [Direction.NE, Direction.NW]
-        attacks = 0
-        mirrored_collisions = ChessBoard.mirror_vertical(collisions)
-        for square in squares:
-            bit_square = 2 ** square
-            mirrored_square = ChessBoard.mirror_vertical(bit_square)
-            for direction in directions:
-                mask = self.generate_mask(square, direction)
-                mirrored_mask = ChessBoard.mirror_vertical(mask)
-                positive_path = (collisions & mask) - 2 * bit_square
-                negative_path = ChessBoard.mirror_vertical((mirrored_collisions & mirrored_mask)
-                                                           - 2 * mirrored_square)
-                path = positive_path ^ negative_path
-                attacks |= path & mask
+    def get_sliding_attacks(self, color: str, piece: str) -> int:
+        piece_key = f"{color}_{piece}s"
+        pieces = self.__piece_locations.get(piece_key, -1)
+        if pieces == -1:
+            return -1
+
+        squares = self.serialize_board(pieces)
+        directions = self.get_directions(piece)
+
+        attacks = self.generate_sliding_attacks(squares, directions)
         return attacks
 
-    def generate_rook_attacks(self, color: str) -> int:
-        rooks = self.__piece_locations.get(f"{color}_rooks", -1)
-        squares = self.serialize_board(rooks)
+    @staticmethod
+    def get_directions(piece: str) -> list:
+        if piece == "bishop":
+            return [Direction.NE, Direction.NW]
+        elif piece == "rook":
+            return [Direction.N, Direction.E]
+        elif piece == "queen":
+            return [Direction.NE, Direction.NW, Direction.N, Direction.E]
+        else:
+            return []
+
+    def generate_sliding_attacks(self, squares: list, directions: list) -> int:
         collisions = self.__piece_locations["all_pieces"]
         mirrored_collisions = ChessBoard.mirror_vertical(collisions)
-        directions = [Direction.N, Direction.E]
         attacks = 0
+
         for square in squares:
-            bit_square = 2 ** square
+            bit_square = 1 << square
             mirrored_square = ChessBoard.mirror_vertical(bit_square)
+
             for direction in directions:
                 mask = self.generate_mask(square, direction)
                 mirrored_mask = ChessBoard.mirror_vertical(mask)
                 positive_path = (collisions & mask) - 2 * bit_square
-                negative_path = ChessBoard.mirror_vertical((mirrored_collisions & mirrored_mask)
-                                                           - 2 * mirrored_square)
+                negative_path = ChessBoard.mirror_vertical(
+                    (mirrored_collisions & mirrored_mask) - 2 * mirrored_square)
                 path = positive_path ^ negative_path
                 attacks |= path & mask
         return attacks
