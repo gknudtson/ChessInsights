@@ -266,6 +266,8 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
     @staticmethod
     def mirror_vertical(bit_board: int) -> int:
+        if bit_board < 0:
+            bit_board &= 0xFFFFFFFFFFFFFFFF
         bitboard_array = np.array([bit_board], dtype=np.uint64)
         flipped_array = bitboard_array.byteswap()
         return ChessBoard.mirror_horizontal(flipped_array.item())
@@ -282,7 +284,8 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         # Convert the 64-bit integer to an array of 8 bytes
         bytes_array = np.array([bitboard], dtype=np.uint64).view(np.uint8)
         # Reverse the bits in each byte using bitwise operations
-        reversed_bytes = np.array([ChessBoard.reverse_bits(byte) for byte in bytes_array], dtype=np.uint8)
+        reversed_bytes = np.array([ChessBoard.reverse_bits(byte) for byte in bytes_array],
+                                  dtype=np.uint8)
         # Combine the reversed bytes back into a 64-bit integer
         mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
         return mirrored_bitboard.item()
@@ -332,23 +335,27 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         return nne | nee | nnw | nww | sse | see | ssw | sww
 
     def generate_bishop_attacks(self, color: str) -> int:
-        if color == "white":
-            bishops = self.__piece_locations["white_bishops"]
-        elif color == "black":
-            bishops = self.__piece_locations["black_bishops"]
-        else:
-            return -1
+        bishops = self.__piece_locations.get(f"{color}_bishops", -1)
         squares = self.serialize_board(bishops)
-        collisions = self.__piece_locations["all_pieces"] ^ bishops
-        directions = [Direction.NE, Direction.SE, Direction.SW, Direction.NW]
+        collisions = self.__piece_locations["all_pieces"]
+        directions = [Direction.NE, Direction.NW]
         attacks = 0
+        square_64 = 9223372036854775808
+        mirrored_collisions = ChessBoard.mirror_vertical(collisions)
         for square in squares:
+            bit_square = 2 ** square
+            mirrored_square = ChessBoard.mirror_vertical(bit_square)
             for direction in directions:
                 mask = self.generate_mask(square, direction)
-                path = collisions ^ (collisions - 2 * square)
+                mirrored_mask = ChessBoard.mirror_vertical(mask)
+                positive_path = ((collisions & mask) - 2 * bit_square) ^ collisions
+                negative_path = ChessBoard.mirror_vertical(
+                    ((mirrored_collisions & mirrored_mask) - 2 * mirrored_square) ^ mirrored_collisions)
+                filtered_positive_path = (positive_path & (positive_path ^ (bit_square ^ (bit_square - 2))))
+                filtered_negative_path = (negative_path & (negative_path ^ (square_64 ^ (square_64 - 2 * bit_square))))
+                path = filtered_positive_path ^ filtered_negative_path
                 attacks |= path & mask
-
-        return attacks ^ bishops
+        return attacks
 
     # TODO needs to consider all squares attacked by opponent pieces
     def generate_king_attacks(self, color: str) -> int:
