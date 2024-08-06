@@ -236,9 +236,9 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
     def generate_mask(self, square: int, direction: Enum) -> int:
         if direction == Direction.N or direction == Direction.S:
-            return 0xFF << (8 * self.get_file(square))
+            return 0x0101010101010101 << self.get_file(square)
         elif direction == Direction.E or direction == Direction.W:
-            return 0x0101010101010101 << self.get_rank(square)
+            return 0xFF << (8 * self.get_rank(square))
         else:
             return self.get_diagonal_mask(square, direction)
 
@@ -340,7 +340,6 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         collisions = self.__piece_locations["all_pieces"]
         directions = [Direction.NE, Direction.NW]
         attacks = 0
-        square_64 = 9223372036854775808
         mirrored_collisions = ChessBoard.mirror_vertical(collisions)
         for square in squares:
             bit_square = 2 ** square
@@ -348,12 +347,30 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             for direction in directions:
                 mask = self.generate_mask(square, direction)
                 mirrored_mask = ChessBoard.mirror_vertical(mask)
-                positive_path = ((collisions & mask) - 2 * bit_square) ^ collisions
-                negative_path = ChessBoard.mirror_vertical(
-                    ((mirrored_collisions & mirrored_mask) - 2 * mirrored_square) ^ mirrored_collisions)
-                filtered_positive_path = (positive_path & (positive_path ^ (bit_square ^ (bit_square - 2))))
-                filtered_negative_path = (negative_path & (negative_path ^ (square_64 ^ (square_64 - 2 * bit_square))))
-                path = filtered_positive_path ^ filtered_negative_path
+                positive_path = (collisions & mask) - 2 * bit_square
+                negative_path = ChessBoard.mirror_vertical((mirrored_collisions & mirrored_mask)
+                                                           - 2 * mirrored_square)
+                path = positive_path ^ negative_path
+                attacks |= path & mask
+        return attacks
+
+    def generate_rook_attacks(self, color: str) -> int:
+        rooks = self.__piece_locations.get(f"{color}_rooks", -1)
+        squares = self.serialize_board(rooks)
+        collisions = self.__piece_locations["all_pieces"]
+        mirrored_collisions = ChessBoard.mirror_vertical(collisions)
+        directions = [Direction.N, Direction.E]
+        attacks = 0
+        for square in squares:
+            bit_square = 2 ** square
+            mirrored_square = ChessBoard.mirror_vertical(bit_square)
+            for direction in directions:
+                mask = self.generate_mask(square, direction)
+                mirrored_mask = ChessBoard.mirror_vertical(mask)
+                positive_path = (collisions & mask) - 2 * bit_square
+                negative_path = ChessBoard.mirror_vertical((mirrored_collisions & mirrored_mask)
+                                                           - 2 * mirrored_square)
+                path = positive_path ^ negative_path
                 attacks |= path & mask
         return attacks
 

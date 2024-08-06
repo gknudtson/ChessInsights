@@ -165,3 +165,30 @@ class TestChessBoard(unittest.TestCase):
 
     def test_mirror_vertical(self):
         assert self.chess_board.mirror_vertical(73165767551) == 18356848623779577856
+
+    def test_generate_rook_attacks(self):
+        self.chess_board.add_white_rook(28)
+        self.chess_board.add_white_rook(0)
+        assert self.chess_board.generate_rook_attacks("white") == 1229782941971845630
+
+    def test_generate_rook_attacks_with_collisions(self):
+        self.chess_board.add_black_rook(28)
+        self.chess_board.add_black_rook(0)
+        self.chess_board.add_white_pawn(1)
+        self.chess_board.add_black_pawn(8)
+        self.chess_board.add_black_pawn(4)
+        self.chess_board.add_black_pawn(31)
+        self.chess_board.add_white_pawn(25)
+        self.chess_board.add_white_pawn(26)
+        assert self.chess_board.generate_rook_attacks("black") == 1157442769100214546
+
+    def test_generate_rook_attacks_with_collisions_v2(self):
+        self.chess_board.add_black_rook(28)
+        self.chess_board.add_black_rook(0)
+        self.chess_board.add_white_pawn(1)
+        self.chess_board.add_black_pawn(8)
+        self.chess_board.add_black_pawn(4)
+        self.chess_board.add_black_pawn(30)
+        self.chess_board.add_white_pawn(25)
+        self.chess_board.add_white_pawn(26)
+        assert self.chess_board.generate_rook_attacks("black") == 1157442766952730898
