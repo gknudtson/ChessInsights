@@ -132,10 +132,18 @@ class TestChessBoard(unittest.TestCase):
         assert self.chess_board.generate_knight_attacks("white") == (
                 2 ** 10 | 2 ** 13 | 2 ** 17 | 2 ** 22 | 2 ** 41 | 2 ** 46 | 2 ** 50 | 2 ** 53)
 
-    #    def test_generate_bishop_attacks_white(self):
-    #        self.chess_board.add_white_bishop(20)
-    #        self.chess_board.add_white_bishop(19)
-    #        assert self.chess_board.generate_bishop_attacks("white") == 36525115856403558
+    def test_generate_bishop_attacks(self):
+        self.chess_board.add_white_bishop(20)
+        self.chess_board.add_white_bishop(19)
+        assert self.chess_board.generate_bishop_attacks("white") == 36525115856403558
+
+    def test_generate_bishop_attacks_with_collisions(self):
+        self.chess_board.add_black_bishop(20)
+        self.chess_board.add_black_bishop(19)
+        self.chess_board.add_white_pawn(34)
+        self.chess_board.add_black_pawn(11)
+        self.chess_board.add_black_pawn(39)
+        assert self.chess_board.generate_bishop_attacks("black") == 36241441856437346
 
     def test_get_file(self):
         assert self.chess_board.get_file(7) == 7
@@ -148,3 +156,12 @@ class TestChessBoard(unittest.TestCase):
 
     def test_generate_mask(self):
         assert self.chess_board.generate_mask(27, Direction.NE) == 9241421688590303745
+
+    def test_serialize_board(self):
+        self.chess_board.add_white_knight(0)
+        self.chess_board.add_white_knight(7)
+        self.chess_board.add_white_knight(56)
+        assert self.chess_board.serialize_board(72057594037928065) == [0, 7, 56]
+
+    def test_mirror_vertical(self):
+        assert self.chess_board.mirror_vertical(73165767551) == 18356848623779577856
