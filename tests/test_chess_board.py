@@ -135,7 +135,7 @@ class TestChessBoard(unittest.TestCase):
     def test_generate_bishop_attacks(self):
         self.chess_board.add_white_bishop(20)
         self.chess_board.add_white_bishop(19)
-        assert self.chess_board.generate_bishop_attacks("white") == 36525115856403558
+        assert self.chess_board.get_sliding_attacks("white", "bishop") == 36525115856403558
 
     def test_generate_bishop_attacks_with_collisions(self):
         self.chess_board.add_black_bishop(20)
@@ -143,7 +143,7 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board.add_white_pawn(34)
         self.chess_board.add_black_pawn(11)
         self.chess_board.add_black_pawn(39)
-        assert self.chess_board.generate_bishop_attacks("black") == 36241441856437346
+        assert self.chess_board.get_sliding_attacks("black", "bishop") == 36241441856437346
 
     def test_get_file(self):
         assert self.chess_board.get_file(7) == 7
@@ -165,3 +165,57 @@ class TestChessBoard(unittest.TestCase):
 
     def test_mirror_vertical(self):
         assert self.chess_board.mirror_vertical(73165767551) == 18356848623779577856
+
+    def test_generate_rook_attacks(self):
+        self.chess_board.add_white_rook(28)
+        self.chess_board.add_white_rook(0)
+        assert self.chess_board.get_sliding_attacks("white", "rook") == 1229782941971845630
+
+    def test_generate_rook_attacks_with_collisions(self):
+        self.chess_board.add_black_rook(28)
+        self.chess_board.add_black_rook(0)
+        self.chess_board.add_white_pawn(1)
+        self.chess_board.add_black_pawn(8)
+        self.chess_board.add_black_pawn(4)
+        self.chess_board.add_black_pawn(31)
+        self.chess_board.add_white_pawn(25)
+        self.chess_board.add_white_pawn(26)
+        assert self.chess_board.get_sliding_attacks("black", "rook") == 1157442769100214546
+
+    def test_generate_rook_attacks_with_collisions_v2(self):
+        self.chess_board.add_black_rook(28)
+        self.chess_board.add_black_rook(0)
+        self.chess_board.add_white_pawn(1)
+        self.chess_board.add_black_pawn(8)
+        self.chess_board.add_black_pawn(4)
+        self.chess_board.add_black_pawn(30)
+        self.chess_board.add_white_pawn(25)
+        self.chess_board.add_white_pawn(26)
+        assert self.chess_board.get_sliding_attacks("black", "rook") == 1157442766952730898
+
+    def test_generate_queen_attacks(self):
+        self.chess_board.add_piece("white", "queen", 28)
+        assert self.chess_board.get_sliding_attacks("white", "queen") == 1266167048752878738
+
+    def test_generate_queen_attacks_two_queens(self):
+        self.chess_board.add_piece("white", "queen", 28)
+        self.chess_board.add_piece("white", "queen", 0)
+        assert self.chess_board.get_sliding_attacks("white", "queen") == 10507871247272859646
+
+    def test_generate_queen_attacks_with_collisions(self):
+        self.chess_board.add_piece("white", "queen", 28)
+        self.chess_board.add_piece("white", "queen", 0)
+        self.chess_board.add_piece("white", "queen", 63)
+        self.chess_board.add_white_pawn(1)
+        self.chess_board.add_black_pawn(8)
+        self.chess_board.add_black_pawn(4)
+        self.chess_board.add_black_pawn(30)
+        self.chess_board.add_white_pawn(25)
+        self.chess_board.add_white_pawn(46)
+        self.chess_board.add_white_pawn(55)
+        self.chess_board.add_white_pawn(26)
+        self.chess_board.add_white_pawn(19)
+        self.chess_board.add_white_pawn(36)
+        self.chess_board.add_white_pawn(7)
+        self.chess_board.add_white_pawn(42)
+        assert self.chess_board.get_sliding_attacks("white", "queen") == 9205467831842132882
