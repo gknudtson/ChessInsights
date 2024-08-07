@@ -1,6 +1,6 @@
 from ..chess_pieces.chess_piece import ChessPiece
 from ..chess_board import ChessBoard
-from ..enum_ray_direction import Direction
+from chess_insights.util.enum_ray_direction import Direction
 
 
 class WhiteKing(ChessPiece):
