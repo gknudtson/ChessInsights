@@ -80,6 +80,20 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
                 self.__piece_locations['black_king']
         )
 
+    def is_piece_on_square(self, color: str, piece: str, square: int) -> bool:
+        piece_key = f"{color}_{piece}s"
+        return (self.__piece_locations[piece_key] & (1 << square)) != 0
+
+    def add_piece(self, color: str, piece: str, square: int):
+        piece_key = f"{color}_{piece}s"
+        self.__piece_locations[piece_key] |= 1 << square
+        self.update_all_pieces()
+
+    def remove_piece(self, color: str, piece: str, square: int):
+        piece_key = f"{color}_{piece}s"
+        self.__piece_locations[piece_key] &= ~(1 << square)
+        self.update_all_pieces()
+
     def find_white_piece_on_square(self, square: int) -> str:
         for key in self.__piece_keys_by_color['white']:
             if self.__piece_locations[key] & 2 ** square == 2 ** square:
@@ -226,6 +240,8 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
                 current_square = current_square << abs_offset
             else:
                 current_square = current_square >> abs_offset
+            if current_square > 2 ** 63 or current_square == 0:
+                break
             path |= current_square
             is_first_iteration = False
         return path
