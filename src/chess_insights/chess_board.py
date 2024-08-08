@@ -16,22 +16,26 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             'white_bishops': 0,
             'white_rooks': 0,
             'white_queens': 0,
-            'white_king': 0,
+            'white_kings': 0,
             'black_pawns': 0,
             'black_knights': 0,
             'black_bishops': 0,
             'black_rooks': 0,
             'black_queens': 0,
-            'black_king': 0,
+            'black_kings': 0,
         }
         self.__piece_keys_by_color = {
             'white': ['white_pawns', 'white_knights', 'white_bishops', 'white_rooks',
-                      'white_queens', 'white_king'],
+                      'white_queens', 'white_kings'],
             'black': ['black_pawns', 'black_knights', 'black_bishops', 'black_rooks',
-                      'black_queens', 'black_king']
+                      'black_queens', 'black_kings']
         }
         # left 2 bits represent whites ability to castle left or right, right 2 bits represent black
         self.__castling_rights = 0b1111
+
+    def get_piece_locations(self, color: str, piece: str) -> int:
+        piece_key = f"{color}_{piece}s"
+        return self.__piece_locations.get(piece_key, 0)
 
     def is_whites_turn(self) -> bool:
         return self.__is_whites_turn
@@ -41,45 +45,11 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
 
     def is_square_occupied(self, square: int) -> bool:
         self.update_all_pieces()
-        return self.__piece_locations['all_pieces'] & 2 ** square == 2 ** square
-
-    def is_white_piece_on_square(self, square: int) -> bool:
-        self.update_white_pieces()
-        return self.__piece_locations['white_pieces'] & 2 ** square == 2 ** square
-
-    def update_all_pieces(self):
-        self.update_white_pieces()
-        self.update_black_pieces()
-        self.__piece_locations['all_pieces'] = self.__piece_locations['white_pieces'] | \
-                                               self.__piece_locations['black_pieces']
-
-    def update_white_pieces(self):
-        self.__piece_locations['white_pieces'] = (
-                self.__piece_locations['white_pawns'] |
-                self.__piece_locations['white_knights'] |
-                self.__piece_locations['white_bishops'] |
-                self.__piece_locations['white_rooks'] |
-                self.__piece_locations['white_queens'] |
-                self.__piece_locations['white_king']
-        )
-
-    def is_black_piece_on_square(self, square: int) -> bool:
-        self.update_black_pieces()
-        return self.__piece_locations['black_pieces'] & 2 ** square == 2 ** square
-
-    def update_black_pieces(self):
-        self.__piece_locations['black_pieces'] = (
-                self.__piece_locations['black_pawns'] |
-                self.__piece_locations['black_knights'] |
-                self.__piece_locations['black_bishops'] |
-                self.__piece_locations['black_rooks'] |
-                self.__piece_locations['black_queens'] |
-                self.__piece_locations['black_king']
-        )
+        return (self.__piece_locations['all_pieces'] & (1 << square)) != 0
 
     def is_piece_on_square(self, color: str, piece: str, square: int) -> bool:
-        piece_key = f"{color}_{piece}s"
-        return (self.__piece_locations[piece_key] & (1 << square)) != 0
+        piece_locations = self.get_piece_locations(color, piece)
+        return (piece_locations & (1 << square)) != 0
 
     def add_piece(self, color: str, piece: str, square: int):
         piece_key = f"{color}_{piece}s"
@@ -91,119 +61,28 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         self.__piece_locations[piece_key] &= ~(1 << square)
         self.update_all_pieces()
 
-    def find_white_piece_on_square(self, square: int) -> str:
-        for key in self.__piece_keys_by_color['white']:
-            if self.__piece_locations[key] & 2 ** square == 2 ** square:
+    def update_all_pieces(self):
+        self.update_pieces('white')
+        self.update_pieces('black')
+        self.__piece_locations['all_pieces'] = self.__piece_locations['white_pieces'] | \
+                                               self.__piece_locations['black_pieces']
+
+    def update_pieces(self, color: str):
+        self.__piece_locations[f'{color}_pieces'] = 0
+        for piece in self.__piece_keys_by_color[color]:
+            self.__piece_locations[f'{color}_pieces'] |= self.__piece_locations[piece]
+
+    def find_piece_on_square(self, color: str, square: int) -> str:
+        for key in self.__piece_keys_by_color[color]:
+            if (self.__piece_locations[key] & (1 << square)) != 0:
                 return key
+        return ''
 
-    def remove_white_piece(self, square: int):
-        key = self.find_white_piece_on_square(square)
-        self.__piece_locations[key] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_white_king_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_king'] & 2 ** square == 2 ** square
-
-    def add_white_king(self, square: int):
-        self.__piece_locations['white_king'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_king(self, square: int):
-        self.__piece_locations['white_king'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_white_rook_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_rooks'] & 2 ** square == 2 ** square
-
-    def add_white_rook(self, square: int):
-        self.__piece_locations['white_rooks'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_rook(self, square: int):
-        self.__piece_locations['white_rooks'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_white_bishop_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_bishops'] & 2 ** square == 2 ** square
-
-    def add_white_bishop(self, square: int):
-        self.__piece_locations['white_bishops'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_bishop(self, square: int):
-        self.__piece_locations['white_bishops'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_white_knight_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_knights'] & 2 ** square == 2 ** square
-
-    def add_white_knight(self, square: int):
-        self.__piece_locations['white_knights'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_knight(self, square: int):
-        self.__piece_locations['white_knights'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_white_pawn_on_square(self, square: int) -> bool:
-        return self.__piece_locations['white_pawns'] & 2 ** square == 2 ** square
-
-    def get_white_pawns(self):
-        return self.__piece_locations['white_pawns']
-
-    def add_white_pawn(self, square: int):
-        self.__piece_locations['white_pawns'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_white_pawn(self, square: int):
-        self.__piece_locations['white_pawns'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_black_rook_on_square(self, square: int) -> bool:
-        return self.__piece_locations['black_rooks'] & 2 ** square == 2 ** square
-
-    def add_black_rook(self, square: int):
-        self.__piece_locations['black_rooks'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_black_rook(self, square: int):
-        self.__piece_locations['black_rooks'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_black_bishop_on_square(self, square: int) -> bool:
-        return self.__piece_locations['black_bishops'] & 2 ** square == 2 ** square
-
-    def add_black_bishop(self, square: int):
-        self.__piece_locations['black_bishops'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_black_bishop(self, square: int):
-        self.__piece_locations['black_bishops'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def is_black_pawn_on_square(self, square: int) -> bool:
-        return self.__piece_locations['black_pawns'] & 2 ** square == 2 ** square
-
-    def get_black_pawns(self):
-        return self.__piece_locations['black_pawns']
-
-    def add_black_pawn(self, square: int):
-        self.__piece_locations['black_pawns'] |= 1 << square
-        self.update_all_pieces()
-
-    def remove_black_pawn(self, square: int):
-        self.__piece_locations['black_pawns'] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def remove_black_piece(self, square: int):
-        key = self.find_black_piece_on_square(square)
-        self.__piece_locations[key] &= ~(1 << square)
-        self.update_all_pieces()
-
-    def find_black_piece_on_square(self, square: int) -> str:
-        for key in self.__piece_keys_by_color['black']:
-            if self.__piece_locations[key] & 2 ** square == 2 ** square:
-                return key
+    def remove_piece_by_color(self, color: str, square: int):
+        piece_key = self.find_piece_on_square(color, square)
+        if piece_key:
+            self.__piece_locations[piece_key] &= ~(1 << square)
+            self.update_all_pieces()
 
     def get_castling_rights(self) -> int:
         return self.__castling_rights
@@ -224,7 +103,7 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
             return path
         current = origin_square + step
         while current != target_square:
-            path |= 2 ** current
+            path |= 1 << current
             current += step
-        path |= 2 ** current
+        path |= 1 << current
         return path

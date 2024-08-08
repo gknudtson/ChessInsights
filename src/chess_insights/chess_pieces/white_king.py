@@ -14,7 +14,7 @@ class WhiteKing(ChessPiece):
         castling_rights = self.chess_board.get_castling_rights()
         if not self.chess_board.is_whites_turn():
             return
-        if not self.chess_board.is_white_king_on_square(origin_square):
+        if not self.chess_board.is_piece_on_square("white", "king", origin_square):
             return
         if target_square > 63 or target_square < 0:
             return
@@ -28,26 +28,27 @@ class WhiteKing(ChessPiece):
 
         if move_distance == 2:
             if not self.chess_board.is_piece_in_path(origin_square, target_square):
-                self.castle(move_direction,castling_rights)
-        elif self.chess_board.is_black_piece_on_square(target_square):
-            self.chess_board.remove_black_piece(target_square)
+                self.castle(move_direction, castling_rights)
+        elif self.chess_board.is_piece_on_square("black", "piece", target_square):
+            self.chess_board.remove_piece_by_color("black",  target_square)
             self.__is_valid_move = True
-        elif not self.chess_board.is_white_piece_on_square(target_square):
+        elif not self.chess_board.is_piece_on_square("white", "piece", target_square):
             self.__is_valid_move = True
 
         if self.__is_valid_move:
             self.__is_valid_move = False
-            self.chess_board.add_white_king(target_square)
-            self.chess_board.remove_white_king(origin_square)
-            self.chess_board.update_castling_rights(castling_rights & 0b0011) if origin_square == 4 else None
+            self.chess_board.add_piece("white", "king", target_square)
+            self.chess_board.remove_piece("white", "king", origin_square)
+            if origin_square == 4:
+                self.chess_board.update_castling_rights(castling_rights & 0b0011)
             self.chess_board.change_turn()
 
     def castle(self, move_direction: str, castling_rights: int):
         if move_direction == 'E' and castling_rights & 0b0100 == 0b0100:
-            self.chess_board.add_white_rook(5)
-            self.chess_board.remove_white_rook(7)
+            self.chess_board.add_piece("white", "rook", 5)
+            self.chess_board.remove_piece("white", "rook", 7)
             self.__is_valid_move = True
         elif move_direction == 'W' and castling_rights & 0b1000 == 0b1000:
-            self.chess_board.add_white_rook(3)
-            self.chess_board.remove_white_rook(0)
+            self.chess_board.add_piece("white", "rook", 3)
+            self.chess_board.remove_piece("white", "rook", 0)
             self.__is_valid_move = True
