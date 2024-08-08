@@ -58,7 +58,7 @@ def generate_knight_attacks(knights: int) -> int:
     nne = (knights & ~(rank_7 | rank_8 | h_file)) << 17
     nee = (knights & ~(rank_8 | h_file | g_file)) << 10
     nnw = (knights & ~(rank_7 | rank_8 | a_file)) << 15
-    nww = (knights & ~(rank_8 | a_file | g_file)) << 6
+    nww = (knights & ~(rank_8 | a_file | b_file | g_file)) << 6
     sse = (knights & ~(rank_1 | rank_2 | h_file)) >> 15
     see = (knights & ~(rank_1 | g_file | h_file)) >> 6
     ssw = (knights & ~(rank_1 | rank_2 | a_file)) >> 10
