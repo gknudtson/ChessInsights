@@ -1,6 +1,8 @@
 from enum import Enum
 
 from chess_insights.util.enum_ray_direction import Direction
+from chess_insights.util.move_generators import generate_pawn_attacks, generate_knight_attacks, \
+    generate_king_attacks, get_sliding_attacks
 
 
 class ChessBoard:  # TODO check logic for when to update piece locations to increase efficiency
@@ -32,6 +34,23 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         }
         # left 2 bits represent whites ability to castle left or right, right 2 bits represent black
         self.__castling_rights = 0b1111
+
+    def setup(self):
+        self.__piece_locations["all_pieces"] = 18446462598732906495
+        self.__piece_locations["white_pieces"] = 65535
+        self.__piece_locations["black_pieces"] = 18446462598732840960
+        self.__piece_locations["white_pawns"] = 65280
+        self.__piece_locations["white_knights"] = 66
+        self.__piece_locations["white_bishops"] = 36
+        self.__piece_locations["white_rooks"] = 129
+        self.__piece_locations["white_queens"] = 8
+        self.__piece_locations["white_kings"] = 16
+        self.__piece_locations["black_pawns"] = 71776119061217280
+        self.__piece_locations["black_knights"] = 4755801206503243776
+        self.__piece_locations["black_bishops"] = 2594073385365405696
+        self.__piece_locations["black_rooks"] = 9295429630892703744
+        self.__piece_locations["black_queens"] = 576460752303423488
+        self.__piece_locations["black_kings"] = 1152921504606846976
 
     def get_piece_locations(self, color: str, piece: str) -> int:
         piece_key = f"{color}_{piece}s"
@@ -94,6 +113,21 @@ class ChessBoard:  # TODO check logic for when to update piece locations to incr
         direction = Direction.from_squares(origin_square, target_square)
         path = ChessBoard.generate_path(origin_square, target_square, direction)
         return (path & self.__piece_locations['all_pieces']) != 0
+
+    def get_moves(self, piece_key: str, color: str, square: int):
+        piece = piece_key.split('_')[1]
+        match piece:
+            case "pawns":
+                return generate_pawn_attacks(square, color)
+            case "knights":
+                return generate_knight_attacks(square)
+            case "kings":
+                return generate_king_attacks(square)
+            case "bishops" | "rooks" | "queens":
+                return get_sliding_attacks(self.__piece_locations["all_pieces"],
+                                           square, piece)
+            case _:
+                raise ValueError(f"Incorrect piece type passed to move_generator")
 
     @staticmethod
     def generate_path(origin_square: int, target_square: int, direction: Enum) -> int:
