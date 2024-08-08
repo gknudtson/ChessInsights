@@ -12,7 +12,7 @@ class Direction(Enum):
     NW = ('NW', 7)
     SE = ('SE', -7)
     SW = ('SW', -9)
-    _ = ('', 0)  # Possibly name C for Center
+    _ = ('', 0)  # TODO Possibly name C for Center
 
     @staticmethod
     def from_squares(origin_square: int,
@@ -32,3 +32,14 @@ class Direction(Enum):
         elif square_difference < 0:
             return Direction.W if ((1 << 8) - 1 << (origin_square // 8) * 8) & (
                     1 << target_square) != 0 else Direction._
+
+    @staticmethod
+    def get_directions(piece: str) -> list:
+        if piece == "bishop":
+            return [Direction.NE, Direction.NW]
+        elif piece == "rook":
+            return [Direction.N, Direction.E]
+        elif piece == "queen":
+            return [Direction.NE, Direction.NW, Direction.N, Direction.E]
+        else:
+            return []

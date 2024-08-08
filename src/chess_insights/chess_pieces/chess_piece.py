@@ -1,5 +1,5 @@
 from ..chess_board import ChessBoard
-from ..enum_square import Square
+from chess_insights.util.enum_square import Square
 
 
 class ChessPiece:

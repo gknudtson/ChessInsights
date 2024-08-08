@@ -1,6 +1,6 @@
 import unittest
 from parameterized import parameterized
-from chess_insights.enum_ray_direction import Direction
+from chess_insights.util.enum_ray_direction import Direction
 
 
 class TestChessPieceParentClass(unittest.TestCase):
