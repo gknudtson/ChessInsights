@@ -1,26 +1,49 @@
 import numpy as np
 
+from .enum_chess_piece_type import ChessPieceType
 from .enum_file_and_rank import Rank, File
 from .enum_ray_direction import Direction
 
 
-def mirror_vertical(bit_board: int) -> int:
-    if bit_board < 0:
-        bit_board &= 0xFFFFFFFFFFFFFFFF
-    bitboard_array = np.array([bit_board], dtype=np.uint64)
-    flipped_array = bitboard_array.byteswap()
-    return mirror_horizontal(flipped_array.item())
+class BitBoard:
+    def __init__(self, board: int = 0, board_type: ChessPieceType = None):
+        if not (-(1 << 64) <= board < (1 << 64)):
+            raise ValueError(f"Bitboard must be a 64-bit integer. {board} is not")
 
+        self.board = board & 0xFFFFFFFFFFFFFFFF
+        self.board_type = board_type
 
-def mirror_horizontal(bitboard):
-    # Convert the 64-bit integer to an array of 8 bytes
-    bytes_array = np.array([bitboard], dtype=np.uint64).view(np.uint8)
-    # Reverse the bits in each byte using bitwise operations
-    reversed_bytes = np.array([reverse_bits(byte) for byte in bytes_array],
-                              dtype=np.uint8)
-    # Combine the reversed bytes back into a 64-bit integer
-    mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
-    return mirrored_bitboard.item()
+    def set_board(self, board: int):
+        if not (0 <= board < (1 << 64)):
+            raise ValueError("Bitboard must be a 64-bit integer.")
+        self.board = board
+
+    def set_bit(self, square: int):
+        """Set a bit at the given square (0-63)."""
+        if not (0 <= square < 64):
+            raise ValueError("Square must be between 0 and 63.")
+        self.board |= (1 << square)
+
+    def clear_bit(self, square: int):
+        """Clear a bit at the given square (0-63)."""
+        if not (0 <= square < 64):
+            raise ValueError("Square must be between 0 and 63.")
+        self.board &= ~(1 << square)
+
+    def mirror_vertical(self) -> 'BitBoard':
+        bitboard_array = np.array([self.board], dtype=np.uint64)
+        flipped_array = BitBoard(bitboard_array.byteswap().item(), self.board_type)
+        return BitBoard(flipped_array.mirror_horizontal().board, self.board_type)
+
+    def mirror_horizontal(self) -> 'BitBoard':
+        # Convert the 64-bit integer to an array of 8 bytes
+        bytes_array = np.array([self.board], dtype=np.uint64).view(np.uint8)
+        # Reverse the bits in each byte using bitwise operations
+        reversed_bytes = np.array([reverse_bits(byte) for byte in bytes_array],
+                                  dtype=np.uint8)
+        # Combine the reversed bytes back into a 64-bit integer
+        mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
+        return BitBoard(mirrored_bitboard.item(), self.board_type)
 
 
 def reverse_bits(byte):
