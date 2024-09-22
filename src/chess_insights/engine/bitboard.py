@@ -1,12 +1,12 @@
 import numpy as np
 
-from .enum_chess_piece_type import ChessPieceType
-from .enum_file_and_rank import Rank, File
-from .enum_ray_direction import Direction
+from chess_insights.util.enum_chess_piece_type import ColorChessPiece
+from chess_insights.util.enum_file_and_rank import Rank, File
+from chess_insights.util.enum_ray_direction import Direction
 
 
 class BitBoard:
-    def __init__(self, board: int = 0, board_type: ChessPieceType = None):
+    def __init__(self, board: int = 0, board_type: ColorChessPiece = None):
         if not (-(1 << 64) <= board < (1 << 64)):
             raise ValueError(f"Bitboard must be a 64-bit integer. {board} is not")
 
@@ -30,11 +30,12 @@ class BitBoard:
             raise ValueError("Square must be between 0 and 63.")
         self.board &= ~(1 << square)
 
-    def mirror_vertical(self) -> 'BitBoard':
-        bitboard_array = np.array([self.board], dtype=np.uint64)
-        flipped_array = BitBoard(bitboard_array.byteswap().item(), self.board_type)
-        return BitBoard(flipped_array.mirror_horizontal().board, self.board_type)
+    def mirror(self) -> 'BitBoard':
+        return self.mirror_vertical().mirror_horizontal()
 
+    def mirror_vertical(self) ->'BitBoard':
+        bitboard_array = np.array([self.board], dtype=np.uint64)
+        return BitBoard(bitboard_array.byteswap().item(), self.board_type)
     def mirror_horizontal(self) -> 'BitBoard':
         # Convert the 64-bit integer to an array of 8 bytes
         bytes_array = np.array([self.board], dtype=np.uint64).view(np.uint8)

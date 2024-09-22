@@ -1,18 +1,18 @@
 import unittest
-from chess_insights.util.bitboard import BitBoard, reverse_bits
-from chess_insights.util.enum_chess_piece_type import ChessPieceType
+from chess_insights.engine.bitboard import BitBoard, reverse_bits
+from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 
 
 class TestBitBoard(unittest.TestCase):
 
     def setUp(self):
         # Initialize a BitBoard for testing (e.g., a white rook with no pieces on board)
-        self.bitboard = BitBoard(0, ChessPieceType.WHITE_ROOK)
+        self.bitboard = BitBoard(0, ColorChessPiece.WHITE_ROOK)
 
     def test_initialization(self):
         # Test that board initializes correctly
         self.assertEqual(self.bitboard.board, 0)
-        self.assertEqual(self.bitboard.board_type, ChessPieceType.WHITE_ROOK)
+        self.assertEqual(self.bitboard.board_type, ColorChessPiece.WHITE_ROOK)
 
     def test_set_board(self):
         # Test setting the entire board
@@ -62,11 +62,11 @@ class TestBitBoard(unittest.TestCase):
         mirrored_board = self.bitboard.mirror_horizontal()
         self.assertEqual(mirrored_board.board, 0x102040810204080)
 
-    def test_mirror_vertical(self):
+    def test_mirror(self):
         # Test vertical mirroring (flipping ranks)
         # Example: 0xFF00000000000000 (row 8) should become 0x00000000000000FF (row 1)
         self.bitboard.set_board(0x9050301)
-        mirrored_board = self.bitboard.mirror_vertical()
+        mirrored_board = self.bitboard.mirror()
         self.assertEqual(mirrored_board.board, 0x80c0a09000000000)
 
     def test_reverse_bits(self):
