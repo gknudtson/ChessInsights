@@ -1,6 +1,6 @@
 import unittest
 from parameterized import parameterized
-from chess_insights.chess_board import ChessBoard
+from chess_insights.game.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_king import WhiteKing
 
 

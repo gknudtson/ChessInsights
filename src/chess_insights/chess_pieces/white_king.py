@@ -1,5 +1,5 @@
 from ..chess_pieces.chess_piece import ChessPiece
-from ..chess_board import ChessBoard
+from chess_insights.game.chess_board import ChessBoard
 from chess_insights.util.enum_ray_direction import Direction
 
 
@@ -30,7 +30,7 @@ class WhiteKing(ChessPiece):
             if not self.chess_board.is_piece_in_path(origin_square, target_square):
                 self.castle(move_direction, castling_rights)
         elif self.chess_board.is_piece_on_square("black", "piece", target_square):
-            self.chess_board.remove_piece_by_color("black",  target_square)
+            self.chess_board.remove_piece_by_square("black", target_square)
             self.__is_valid_move = True
         elif not self.chess_board.is_piece_on_square("white", "piece", target_square):
             self.__is_valid_move = True

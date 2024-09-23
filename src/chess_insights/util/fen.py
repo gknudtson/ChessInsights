@@ -64,7 +64,8 @@ def board_from_fen(
         castling_rights=castling_rights_int
     )
 
-#TODO might need to fix my understanding of how castling rights works as 0b1111 etc
+
+# TODO might need to fix my understanding of how castling rights works as 0b1111 etc
 def fen_to_castling_rights(fen: str) -> int:
     castling_rights = 0
     if 'K' in fen:
@@ -76,3 +77,19 @@ def fen_to_castling_rights(fen: str) -> int:
     if 'q' in fen:
         castling_rights |= 0b0100
     return castling_rights
+
+
+def castling_rights_to_fen(castling_rights: int) -> str:
+    fen_castling = []
+
+    if castling_rights & 0b0100:
+        fen_castling.append('K')
+    if castling_rights & 0b1000:
+        fen_castling.append('Q')
+    if castling_rights & 0b0001:
+        fen_castling.append('k')
+    if castling_rights & 0b0010:
+        fen_castling.append('q')
+
+    # If no castling rights are available, return "-"
+    return ''.join(fen_castling) if fen_castling else '-'

@@ -13,7 +13,7 @@ def moves(
 ):
     square = int(request.args.get('square'))
     color = request.args.get('color')
-    piece_key = chess_board.find_piece_on_square(color, square)
+    piece_key = chess_board.get_piece_on_square(color, square)
 
     return str(chess_board.get_moves(piece_key, color, 2**square))
 

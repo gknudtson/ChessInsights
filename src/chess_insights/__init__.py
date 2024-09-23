@@ -2,7 +2,7 @@
 from flask import Flask
 
 from chess_insights.api.containers.chess_game_container import ChessGameContainer
-from chess_insights.chess_board import ChessBoard
+from chess_insights.game.chess_board import ChessBoard
 from chess_insights.api.routes.chess_game_routes import chess_game_routes
 
 
