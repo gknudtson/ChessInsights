@@ -1,5 +1,5 @@
 import unittest
-from chess_insights.chess_board import ChessBoard
+from chess_insights.game.chess_board import ChessBoard
 from chess_insights.chess_pieces.white_pawn import WhitePawn
 
 

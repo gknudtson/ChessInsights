@@ -1,5 +1,5 @@
 from chess_insights.chess_pieces.chess_piece import ChessPiece
-from chess_insights.chess_board import ChessBoard
+from chess_insights.game.chess_board import ChessBoard
 
 
 class WhitePawn(ChessPiece):
