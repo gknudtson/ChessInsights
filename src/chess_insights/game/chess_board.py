@@ -2,12 +2,12 @@ from dataclasses import replace
 from enum import Enum
 from types import MappingProxyType
 
-from chess_insights.chess_pieces.chess_piece import ChessPiece
+
 from chess_insights.engine.bitboard import BitBoard
 from chess_insights.game.board_state import BoardState
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
     get_chess_piece_by_fen, ChessPieceType
-from chess_insights.util.enum_ray_direction import Direction
+
 from chess_insights.engine.move_generators import generate_moves
 from chess_insights.util.fen import board_from_fen
 from chess_insights.util.serializers import serialize_board
@@ -34,12 +34,12 @@ class ChessBoard:
             new_piece_locations = dict(self.board_state.piece_locations)
             new_piece_locations[piece_type].clear_bit(origin_square)
             new_piece_locations[piece_type].set_bit(target_square)
-            if piece_type.piece_type == ChessPieceType.KING:
+            if piece_type.piece_type == ChessPieceType.KING: # Need to move proper rook too if move distance =2
                 if piece_type.color == Color.WHITE:
                     castling_rights &= 0b0011
                 elif piece_type.color == Color.BLACK:
                     castling_rights &= 0b1100
-            if piece_type.piece_type == ChessPieceType.ROOK:
+            if piece_type.piece_type == ChessPieceType.ROOK: # Need to update based on square the rook was on
                 if piece_type.color == Color.WHITE:
                     castling_rights &= 0b0011
                 elif piece_type.color == Color.BLACK:
@@ -56,6 +56,7 @@ class ChessBoard:
             if enemy_piece_type:
                 new_piece_locations[enemy_piece_type].clear_bit(target_square)
                 fifty_move = 0
+                # need to write a check game status function that checks win/loss/draw conditions on new board
             new_board_state = replace(
                 self.board_state,
                 piece_locations=MappingProxyType(new_piece_locations),
@@ -65,7 +66,8 @@ class ChessBoard:
                 fifty_move_rule=fifty_move,
                 castling_rights=castling_rights,
             )
-        return self.board_state
+        return new_board_state
+
     def get_moves(self, square: int) -> list[int]:
         piece_type = self.get_piece_on_square(square)
         piece_board = BitBoard(1 << square, piece_type)
