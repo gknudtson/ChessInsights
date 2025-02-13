@@ -17,8 +17,8 @@ def test_engine_move(engine):
     candidate_moves = generate_all_moves(engine.board_state)
 
     # Flatten the list of valid moves
-    valid_moves = [(origin, target) for origin, _, targets in candidate_moves for target in
-                   engine._validate_moves(origin, _, targets)]
+    valid_moves = [(origin, target) for targets, _, origin in candidate_moves for target in
+                   engine._validate_moves(targets, _, origin)]
 
     # Ensure that there are valid moves available
     assert len(valid_moves) > 0, "No valid moves were generated!"
