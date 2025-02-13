@@ -9,7 +9,6 @@ class ChessPieceType(Enum):
     ROOK = 'rook'
     QUEEN = 'queen'
     KING = 'king'
-    # TODO possibly add methods to get colorpieces by type
 
 
 class Color(Enum):
