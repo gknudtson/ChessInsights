@@ -2,7 +2,8 @@ from types import MappingProxyType
 
 from chess_insights.engine.bitboard import BitBoard
 from chess_insights.game.board_state import BoardState
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece, get_chess_piece_by_fen
+from chess_insights.util.enum_chess_piece_type import ColorChessPiece, get_chess_piece_by_fen, \
+    ChessPieceType
 from chess_insights.util.enum_square import Square
 
 
@@ -63,6 +64,56 @@ def board_from_fen(
         move_number=int(move_number),
         castling_rights=castling_rights_int
     )
+
+
+def fen_from_board(board_state: BoardState) -> str:
+    """
+    Generate a FEN string from a BoardState object.
+    """
+    position = []
+
+    for rank in range(8):
+        empty_squares = 0
+        for file in range(8):
+            square_index = 56 - rank * 8 + file  # Top-left (a8) is 56, bottom-right (h1) is 0
+
+            # Identify the piece at the current square
+            piece = next(
+                (color_piece.fen for color_piece, bitboard in board_state.piece_locations.items()
+                 if color_piece.piece_type != ChessPieceType.ANY and bitboard.board & (1 << square_index)),
+                None
+            )
+
+            if piece:
+                # Add empty squares before a piece
+                if empty_squares > 0:
+                    position.append(str(empty_squares))
+                    empty_squares = 0
+                position.append(piece)
+            else:
+                empty_squares += 1
+
+        # Add remaining empty squares at the end of the rank
+        if empty_squares > 0:
+            position.append(str(empty_squares))
+        if rank < 7:
+            position.append('/')
+
+    # Turn (w/b)
+    turn = 'w' if board_state.is_whites_turn else 'b'
+
+    # Castling rights
+    castling_rights = castling_rights_to_fen(board_state.castling_rights)
+
+    # En passant square
+    en_passant_square = '-'
+    if board_state.en_passant_square.board:
+        en_passant_square_index = board_state.en_passant_square.board.bit_length() - 1
+        en_passant_square = Square(en_passant_square_index).name
+
+    # Assemble the FEN string
+    return f"{''.join(position)} {turn} {castling_rights} {en_passant_square} {board_state.fifty_move_rule} {board_state.move_number}"
+
 
 
 # TODO might need to fix my understanding of how castling rights works as 0b1111 etc

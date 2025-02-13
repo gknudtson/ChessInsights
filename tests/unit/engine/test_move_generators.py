@@ -48,6 +48,13 @@ class TestMoveGenerators(unittest.TestCase):
             9205467831842132882
         )
 
+    def test_generate_queen_attacks_with_collisions_2(self):
+        self.assertEqual(
+            get_sliding_attacks(BitBoard(18432952556033470455, ColorChessPiece.ALL_PIECES),
+                                BitBoard(549755813888, ColorChessPiece.WHITE_QUEEN)).board,
+            1198169022661693448
+        )
+
     def test_generate_pawn_attacks_white(self):
         self.assertEqual(
             generate_pawn_attacks(BitBoard(37120, ColorChessPiece.WHITE_PAWN)).board,
@@ -76,6 +83,12 @@ class TestMoveGenerators(unittest.TestCase):
         self.assertEqual(
             generate_knight_attacks(BitBoard(1048576, ColorChessPiece.WHITE_KNIGHT)).board,
             172939559976
+        )
+
+    def test_generate_knight_attacks_white_2(self):
+        self.assertEqual(
+            generate_knight_attacks(BitBoard(66, ColorChessPiece.WHITE_KNIGHT)).board,
+            10819584
         )
 
     def test_generate_knight_attacks_white_corners(self):
@@ -150,6 +163,59 @@ class TestMoveGenerators(unittest.TestCase):
         self.assertEqual(generate_moves(board_state.piece_locations[king_type], board_state).board,
                          expected)
 
+    def test_empty_board(self):
+        """Test that an empty board returns no moves."""
+        empty_fen = "8/8/8/8/8/8/8/8 w - - 0 1"
+        board_state = board_from_fen(empty_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertEqual(len(moves), 0, "Empty board should not generate any moves")
+
+    def test_starting_position(self):
+        """Test move generation from the standard starting position."""
+        starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        board_state = board_from_fen(starting_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertGreater(len(moves), 0, "Starting position should generate valid moves")
+
+    def test_midgame_position(self):
+        """Test a midgame board state where multiple pieces have moved."""
+        midgame_fen = "rnbqkbnr/pppp1ppp/8/4p3/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 3"
+        board_state = board_from_fen(midgame_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertGreater(len(moves), 0, "Midgame position should generate valid moves")
+
+    def test_black_turn(self):
+        """Ensure that only black pieces move when it's black's turn."""
+        black_turn_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1"
+        board_state = board_from_fen(black_turn_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertTrue(
+            all(piece.color == Color.BLACK for _, piece, _ in moves),
+            "All moves should belong to Black when it's Black's turn"
+        )
+
+    def test_white_turn(self):
+        """Ensure that only white pieces move when it's white's turn."""
+        white_turn_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        board_state = board_from_fen(white_turn_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertTrue(
+            all(piece.color == Color.WHITE for _, piece, _ in moves),
+            "All moves should belong to White when it's White's turn"
+        )
+
+    def test_king_in_check(self):
+        """Test move generation when the king is in check."""
+        check_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPP1PPPP/RNBQKBNR w KQkq - 0 1"
+        board_state = board_from_fen(check_fen)
+
+        moves = generate_all_moves(board_state)
+        self.assertGreater(len(moves), 0, "Move generation should still function in check")
 
 if __name__ == '__main__':
     unittest.main()

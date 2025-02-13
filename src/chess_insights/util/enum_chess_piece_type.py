@@ -1,6 +1,17 @@
 from enum import Enum
 
 
+class ChessPieceType(Enum):
+    ANY = 'any'
+    PAWN = 'pawn'
+    KNIGHT = 'knight'
+    BISHOP = 'bishop'
+    ROOK = 'rook'
+    QUEEN = 'queen'
+    KING = 'king'
+    # TODO possibly add methods to get colorpieces by type
+
+
 class Color(Enum):
     ANY = 'any'
     WHITE = 'white'
@@ -26,16 +37,13 @@ class Color(Enum):
             case _:
                 raise TypeError(f"No general board for {self}")
 
-
-class ChessPieceType(Enum):
-    ANY = 'any'
-    PAWN = 'pawn'
-    KNIGHT = 'knight'
-    BISHOP = 'bishop'
-    ROOK = 'rook'
-    QUEEN = 'queen'
-    KING = 'king'
-    #TODO possibly add methods to get colorpieces by type
+    def get_color_piece_by_type(self, piece_type: ChessPieceType) -> "ColorChessPiece":
+        """Retrieves the specific ColorChessPiece for the given color and type."""
+        try:
+            return next(piece for piece in ColorChessPiece if
+                        piece.piece_type == piece_type and piece.color == self)
+        except StopIteration:
+            raise ValueError(f"No {piece_type.name} found for color {self.name}")
 
 
 class ColorChessPiece(Enum):

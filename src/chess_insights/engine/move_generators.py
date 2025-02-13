@@ -4,9 +4,36 @@ from chess_insights.util.enum_file_and_rank import Rank, File
 from chess_insights.util.enum_ray_direction import Direction
 from chess_insights.util.serializers import serialize_board
 from .bitboard import BitBoard, generate_mask
-from ..chess_pieces.king import get_castling_moves
-from ..chess_pieces.pawn import is_pawn_starting_rank, pawn_movement
+from chess_insights.game.castling import get_castling_moves
+from chess_insights.game.pawn import is_pawn_starting_rank, pawn_movement
 from ..game.board_state import BoardState
+
+
+
+# XHRPOST
+# http: // 127.0
+# .0
+# .1: 5000 / move
+# [HTTP / 1.1 400 BAD REQUEST 8ms]
+#
+# error
+# "update_castling_rights() missing 1 required positional argument: 'square'"
+# fen
+# "1nb4r/2ppkppp/r2R4/pp1Pp3/4P3/1B3QP1/PPP2PP1/RNB1K1N1 w q - 1 19"
+def generate_all_moves(board_state: BoardState) -> list[tuple[list[int], ColorChessPiece, int]]:
+    """Generate all moves for a given BoardState based on turn."""
+
+    # Determine which color is playing
+    color = Color.WHITE if board_state.is_whites_turn else Color.BLACK
+
+    # Generate all moves
+    return [
+        (serialize_board(generate_moves(BitBoard(1 << square, board.board_type), board_state)),
+         board.board_type, square)
+        for piece in get_pieces_by_color(color)
+        for board in [board_state.piece_locations[piece]]
+        for square in serialize_board(board)
+    ]
 
 
 def generate_moves(piece_board: BitBoard, board_state: BoardState) -> BitBoard:
@@ -70,14 +97,15 @@ def generate_pawn_moves(piece_board: BitBoard, board_state: BoardState) -> BitBo
     pawn_pushes = pawn_movement(color, square)
     single_push_board = BitBoard()
     double_push_board = BitBoard()
-    if 0 <= pawn_pushes[0] <= 63: #TODO ask andrea
+    if 0 <= pawn_pushes[0] <= 63:
         single_push_board.set_bit(pawn_pushes[0])
     if 0 <= pawn_pushes[1] <= 63:
         double_push_board.set_bit(pawn_pushes[1])
 
     pawn_moves = single_push_board.board ^ (collisions.board & single_push_board.board)
 
-    if pawn_moves != 0 and is_pawn_starting_rank(square, piece_board.board_type.color):
+    if pawn_moves != 0 and is_pawn_starting_rank(square,
+                                                 piece_board.board_type.color):
         pawn_moves |= double_push_board.board ^ (collisions.board & double_push_board.board)
 
     moves = attack_board | pawn_moves
@@ -160,7 +188,7 @@ def generate_knight_attacks(knight_board: BitBoard) -> BitBoard:
     nne = (knights & ~(rank_7 | rank_8 | h_file)) << 17
     nee = (knights & ~(rank_8 | h_file | g_file)) << 10
     nnw = (knights & ~(rank_7 | rank_8 | a_file)) << 15
-    nww = (knights & ~(rank_8 | a_file | b_file | g_file)) << 6
+    nww = (knights & ~(rank_8 | a_file | b_file)) << 6
     sse = (knights & ~(rank_1 | rank_2 | h_file)) >> 15
     see = (knights & ~(rank_1 | g_file | h_file)) >> 6
     ssw = (knights & ~(rank_1 | rank_2 | a_file)) >> 17

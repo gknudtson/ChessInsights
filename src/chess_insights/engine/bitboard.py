@@ -33,9 +33,10 @@ class BitBoard:
     def mirror(self) -> 'BitBoard':
         return self.mirror_vertical().mirror_horizontal()
 
-    def mirror_vertical(self) ->'BitBoard':
+    def mirror_vertical(self) -> 'BitBoard':
         bitboard_array = np.array([self.board], dtype=np.uint64)
         return BitBoard(bitboard_array.byteswap().item(), self.board_type)
+
     def mirror_horizontal(self) -> 'BitBoard':
         # Convert the 64-bit integer to an array of 8 bytes
         bytes_array = np.array([self.board], dtype=np.uint64).view(np.uint8)
@@ -76,10 +77,13 @@ def generate_diagonal_path_to_edge_of_board(origin_square: int, offset: int) -> 
 
     is_first_iteration = True
     while current_square & edges == 0 or is_first_iteration:
+        prev_square = current_square
         if offset > 0:
             current_square = current_square << abs_offset
         else:
             current_square = current_square >> abs_offset
+        if current_square & edges > 0 and prev_square & edges > 0:
+            break
         if current_square > 2 ** 63 or current_square == 0:
             break
         path |= current_square
