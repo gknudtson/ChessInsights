@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ChessInsights{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    {% block head_imports %}{% endblock %}  <!-- Custom imports (CSS/JS libraries) -->
+    {% block styles %}{% endblock %}  <!-- Custom styles for specific pages -->
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <ul class="sidebar">
+            <li onclick="hideSidebar()"><a href="#">✖</a></li>
+            <li><a href="{{ url_for('play') }}">Play</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="https://github.com/gknudtson/ChessInsights" target="_blank">GitHub</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('home') }}">ChessInsights</a></li>
+            <li class="hideOnMobile"><a href="{{ url_for('play') }}">Play</a></li>
+            <li class="hideOnMobile"><a href="#">About</a></li>
+            <li class="hideOnMobile"><a href="https://github.com/gknudtson/ChessInsights" target="_blank">GitHub</a></li>
+            <li class="menu-button" onclick="showSidebar()"><a href="#">☰</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Base scripts -->
+    <script>
+        function showSidebar() {
+            document.querySelector('.sidebar').style.display = 'flex';
+        }
+        function hideSidebar() {
+            document.querySelector('.sidebar').style.display = 'none';
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}  <!-- Page-specific scripts -->
+
+</body>
+</html>
