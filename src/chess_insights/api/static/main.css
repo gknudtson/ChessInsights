@@ -1,3 +1,5 @@
+@import "buttons.css";
+
 * {
     margin: 0;
     padding: 0;
@@ -6,12 +8,12 @@
 body {
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #393E46;
 }
 
 nav {
     width: 100%;
-    background-color: rgba(0, 0, 0, 1);
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    background-color: #222831;
 }
 
 nav ul {
@@ -31,13 +33,13 @@ nav a {
     text-decoration: none;
     display: flex;
     align-items: center;
-    color: white;
+    color: #EEEEEE;
     font-size: 20px;
 }
 
 nav a:hover {
-    background-color: rgba(59, 59, 59, 0.2);
-    color: #00bbff;
+    background-color: #00ADB5;
+    color: #EEEEEE;
 }
 nav li:first-child{
     margin-right: auto;
@@ -49,7 +51,7 @@ nav li:first-child{
     height: 100vh;
     width: 250px;
     z-index: 999;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(34, 40, 49, 0.8);
     backdrop-filter: blur(10px);
     box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
     display: none;
