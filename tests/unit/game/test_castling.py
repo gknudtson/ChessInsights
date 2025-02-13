@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from chess_insights.chess_pieces.king import get_castling_moves
+from chess_insights.game.castling import get_castling_moves
 from chess_insights.engine.bitboard import BitBoard
 from chess_insights.util.enum_chess_piece_type import Color
 
