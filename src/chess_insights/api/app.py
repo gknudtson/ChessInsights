@@ -113,6 +113,20 @@ def engine_move():
         return jsonify({'error': f'Unexpected error: {str(e)}',
                         'fen': fen_from_board(chess_game.board_state)}), 500
 
+@app.route('/set_fen', methods=['POST'])
+def set_fen():
+    global chess_game
+    try:
+        fen = request.get_json().get('fen')
+
+        # Validate FEN before setting the board
+        if not fen or len(fen.split()) != 6:
+            return jsonify({'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
+
+        chess_game = ChessBoard(fen)
+        return jsonify({'status': 'ok', 'fen': fen})
+    except Exception as e:
+        return jsonify({'error': f'Unexpected error: {str(e)}', 'fen': fen_from_board(chess_game.board_state)}), 500
 
 
 if __name__ == '__main__':

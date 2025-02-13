@@ -18,7 +18,6 @@
             flex-direction: column;
             align-items: center;
             height: 100vh;
-            background-color: white;
         }
 
         #board {
@@ -39,12 +38,12 @@
 
     <!-- Buttons -->
     <div style="display: flex; gap: 10px;">
-        <button id="newGameBtn">New Game</button>
+        <button class="btn-danger" id="newGameBtn">New Game</button>
         <form action="/undo" method="GET">
-            <button>Undo</button>
+            <button class="btn-primary">Undo</button>
         </form>
         <label for="userInput"></label><input type="text" id="userInput" placeholder="Enter FEN here">
-        <button onclick="setFen()">Set Fen</button>
+        <button class="btn-primary" type="button" onclick="setFen()">Set Fen</button>
     </div>
 {% endblock %}
 
@@ -53,23 +52,28 @@
     <script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
 
     <script>
+        let board;
+
         $(document).ready(function () {
             const statusEl = document.getElementById('statusEl');
             let currentFen = "{{ fen }}";
 
-            var board = Chessboard('board', {
+            // Initialize chessboard globally
+            board = Chessboard('board', {
                 draggable: true,
                 dropOffBoard: 'snapback',
-                position: currentFen,
+                position: currentFen || "start",
                 pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
                 onDrop: function (source, target) {
                     handleDrop(source, target);
                 }
             });
+
+            // New Game Button Click
             $("#newGameBtn").click(function () {
                 board.start();
+                statusEl.textContent = "New game started!";
             });
-
 
             async function handleDrop(source, target) {
                 const prev_fen = board.fen();
@@ -137,6 +141,40 @@
                 }
             }
         });
+        async function setFen() {
+            try {
+                let fenInput = document.getElementById("userInput").value.trim();
+
+                if (!fenInput) {
+                    alert("Please enter a valid FEN string.");
+                    return;
+                }
+
+                let prevFen = board.fen();  // Store the current board position
+
+                // Send request to the server
+                const response = await fetch('/set_fen', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fen: fenInput })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === "ok") {
+                    board.position(fenInput);  // Set the board to the new FEN
+                    document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
+                } else {
+                    alert(`Error: ${data.error || "Invalid FEN entered!"}`);
+                    console.error("Server error:", data.error);
+                }
+            } catch (err) {
+                console.error("Error setting FEN:", err);
+                alert("Failed to update board. Please check your FEN.");
+            }
+        }
+
+
     </script>
 
     <script>
@@ -157,5 +195,8 @@
             alert("Server error.");
         }
     });
+    </script>
+    <script>
+
     </script>
 {% endblock %}
