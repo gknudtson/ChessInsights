@@ -1,19 +1,10 @@
-@import "buttons.css";
-
-* {
-    margin: 0;
-    padding: 0;
+:root {
+    --navbar-background: #222831;
+    --hover-background: #00ADB5;
 }
-
-body {
-    min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #393E46;
-}
-
 nav {
     width: 100%;
-    background-color: #222831;
+    background-color: var(--navbar-background)
 }
 
 nav ul {
@@ -38,13 +29,15 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #00ADB5;
+    background-color: var(--hover-background);
     color: #EEEEEE;
 }
-nav li:first-child{
+
+nav li:first-child {
     margin-right: auto;
 }
-.sidebar{
+
+.sidebar {
     position: fixed;
     top: 0;
     right: 0;
@@ -59,28 +52,35 @@ nav li:first-child{
     align-items: flex-start;
     justify-content: flex-start;
 }
-.sidebar li{
+
+.sidebar li {
     width: 100%;
 }
-.sidebar li:first-child{
-    margin-left: auto ;
+
+.sidebar li:first-child {
+    margin-left: auto;
 }
-.sidebar a{
+
+.sidebar a {
     width: 100%;
 }
-.menu-button{
+
+.menu-button {
     display: none;
 }
-@media(max-width: 800px){
-    .hideOnMobile{
+
+@media (max-width: 800px) {
+    .hideOnMobile {
         display: none;
     }
-    .menu-button{
+
+    .menu-button {
         display: block;
     }
 }
-@media(max-width: 450px){
-    .sidebar{
+
+@media (max-width: 450px) {
+    .sidebar {
         width: 100%;
     }
 }

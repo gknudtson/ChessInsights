@@ -1,202 +1,61 @@
 {% extends "base.html" %}
 
-{% block title %}Chess Game{% endblock %}
+{% block title %}ChessInsights Game{% endblock %}
 
 {% block head_imports %}
-    <!-- jQuery (Required for Chessboard.js) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Chessboard.js CSS -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='chessboardjs-1.0.0/css/chessboard-1.0.0.min.css') }}">
+<!-- jQuery (Required for Chessboard.js) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Chessboard.js for board representation and movement-->
+<script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
+<script>
+    var currentFen = "{{ fen|default('start') }}";
+</script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+<!-- Chessboard.js CSS -->
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='chessboardjs-1.0.0/css/chessboard-1.0.0.min.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='/css/game.css') }}">
 {% endblock %}
 
 {% block styles %}
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #board {
-            width: 800px;
-        }
-
-        #statusEl {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
-    <div id="board"></div>
-    <p id="statusEl">Make a move!</p>
 
-    <!-- Buttons -->
-    <div style="display: flex; gap: 10px;">
-        <button class="btn-danger" id="newGameBtn">New Game</button>
-        <form action="/undo" method="GET">
-            <button class="btn-primary">Undo</button>
-        </form>
-        <label for="userInput"></label><input type="text" id="userInput" placeholder="Enter FEN here">
-        <button class="btn-primary" type="button" onclick="setFen()">Set Fen</button>
+<div class="game-container">
+    <!-- Chessboard -->
+    <div id="board" style="padding-top: 10px"></div>
+    <p id="statusEl" style="text-align: center;">Make a move!</p>
+</div>
+
+<div class="bottom-buttons">
+
+</div>
+{% endblock %}
+{% block rightbar %}
+<!-- Controls Container-->
+<div class="button-container">
+    <div class="button-group">
+        <div class="fen-input-container">
+            <input type="text" id="userInput" placeholder="Enter FEN here">
+            <button class="btn-primary" type="button" onclick="setFen()">Set Fen</button>
+        </div>
+        <div class="action-buttons">
+            <form action="/undo" method="GET">
+                <button class="btn-primary">Undo</button>
+            </form>
+            <button class="btn-danger" id="newGameBtn">New Game</button>
+        </div>
     </div>
+</div>
+
+
+
 {% endblock %}
 
 {% block scripts %}
-    <!-- Chessboard.js JS -->
-    <script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
-
-    <script>
-        let board;
-
-        $(document).ready(function () {
-            const statusEl = document.getElementById('statusEl');
-            let currentFen = "{{ fen }}";
-
-            // Initialize chessboard globally
-            board = Chessboard('board', {
-                draggable: true,
-                dropOffBoard: 'snapback',
-                position: currentFen || "start",
-                pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
-                onDrop: function (source, target) {
-                    handleDrop(source, target);
-                }
-            });
-
-            // New Game Button Click
-            $("#newGameBtn").click(function () {
-                board.start();
-                statusEl.textContent = "New game started!";
-            });
-
-            async function handleDrop(source, target) {
-                const prev_fen = board.fen();
-                if (target === 'offboard' || source === target) return;
-
-                try {
-                    const response = await fetch('/move', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({fromSquare: source, toSquare: target})
-                    });
-
-                    const data = await response.json();
-
-                    if (data.status === 'ok') {
-                        board.position(data.fen);
-                        statusEl.textContent = "Move successful!";
-                        setTimeout(makeEngineMove, 1);
-                    } else if (data.status === 'game_over') {
-                        board.position(data.fen);
-                        statusEl.textContent = `Game Over: ${data.game_status}`;
-                        board = Chessboard('board', {
-                            position: data.fen,
-                            draggable: false,
-                            pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
-                        });
-                    } else {
-                        board.position(prev_fen);
-                        statusEl.textContent = "Move rejected by server.";
-                    }
-                } catch (err) {
-                    console.error("Error processing move:", err);
-                    board.position(prev_fen);
-                    statusEl.textContent = "Server error.";
-                }
-            }
-
-            async function makeEngineMove() {
-                try {
-                    const response = await fetch('/engine_move', {
-                        method: 'GET',
-                        headers: {'Content-Type': 'application/json'}
-                    });
-
-                    const data = await response.json();
-
-                    if (data.status === 'ok') {
-                        board.position(data.fen);
-                        statusEl.textContent = "Engine moved.";
-                    } else if (data.status === 'game_over') {
-                        board.position(data.fen);
-                        statusEl.textContent = `Game Over: ${data.game_status}`;
-                        board = Chessboard('board', {
-                            position: data.fen,
-                            draggable: false,
-                            pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
-                        });
-                    } else {
-                        console.error("Error in engine move:", data);
-                        statusEl.textContent = "Engine move failed.";
-                    }
-                } catch (err) {
-                    console.error("Error processing engine move:", err);
-                    statusEl.textContent = "Server error.";
-                }
-            }
-        });
-        async function setFen() {
-            try {
-                let fenInput = document.getElementById("userInput").value.trim();
-
-                if (!fenInput) {
-                    alert("Please enter a valid FEN string.");
-                    return;
-                }
-
-                let prevFen = board.fen();  // Store the current board position
-
-                // Send request to the server
-                const response = await fetch('/set_fen', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fen: fenInput })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.status === "ok") {
-                    board.position(fenInput);  // Set the board to the new FEN
-                    document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
-                } else {
-                    alert(`Error: ${data.error || "Invalid FEN entered!"}`);
-                    console.error("Server error:", data.error);
-                }
-            } catch (err) {
-                console.error("Error setting FEN:", err);
-                alert("Failed to update board. Please check your FEN.");
-            }
-        }
+<!-- Chessboard.js JS -->
 
 
-    </script>
-
-    <script>
-        document.getElementById("newGameBtn").addEventListener("click", async function() {
-        try {
-            const response = await fetch('/new_game', {
-                method: 'GET'
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);  // Log server response
-            } else {
-                alert("Failed to start new game.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Server error.");
-        }
-    });
-    </script>
-    <script>
-
-    </script>
 {% endblock %}

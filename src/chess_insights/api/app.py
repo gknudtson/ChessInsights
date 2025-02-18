@@ -46,15 +46,18 @@ def home():
 @app.route('/play', methods=['GET'])
 def play():
     """Render the play page with the current board state."""
-    fen = fen_from_board(chess_game.board_state)  # Get current FEN
-    return render_template('play.html', fen=fen)  # Pass FEN to HTML template
+    fen = fen_from_board(chess_game.board_state)
+    return render_template('play.html', fen=fen)
 
 
 @app.route('/new_game', methods=['GET'])
 def new_game():
     global chess_game
     chess_game = ChessBoard()  # Reset the game
-    return jsonify({"message": "New game started!", "fen": "start"})
+    new_fen = fen_from_board(chess_game.board_state)  # Get new FEN
+
+    return jsonify({"message": "New game started!", "fen": new_fen})
+
 
 
 @app.route('/move', methods=['POST'])

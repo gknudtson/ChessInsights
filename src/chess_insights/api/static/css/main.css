@@ -1,0 +1,44 @@
+@import "buttons.css";
+@import "navbar.css";
+:root {
+    --dark-background: #161512;
+    --light-background: #262421;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-family);
+    background-color: var(--dark-background)
+}
+
+.basic-grid {
+    display: grid;
+    grid-template-areas:
+        "leftbar content rightbar";
+    grid-template-columns: min-content min-content min-content;
+    gap: 0px;
+    padding: 0px;
+}
+
+.leftbar {
+    grid-area: leftbar;
+
+    padding: 20px;
+}
+
+.content {
+    grid-area: content;
+
+}
+
+.rightbar {
+    grid-area: rightbar;
+    padding-top: 10px;
+
+}
+
