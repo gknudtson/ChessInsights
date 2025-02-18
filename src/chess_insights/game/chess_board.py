@@ -14,16 +14,18 @@ from chess_insights.engine.move_generators import generate_moves, generate_attac
     generate_all_moves
 from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.fen import board_from_fen
+from chess_insights.util.pgn import convert_move_pgn
 from chess_insights.util.serializers import serialize_board
 
 
 class ChessBoard:
-    def __init__(self, fen: str = None, board_state: BoardState = None):
+    def __init__(self, fen: str = None, board_state: BoardState = None, pgn: str = ""):
         if board_state:
             self._board_state = board_state
         else:
             self._board_state = board_from_fen(
                 fen) if fen else board_from_fen()
+        self.pgn = pgn
 
     @property
     def board_state(self) -> BoardState:
@@ -82,6 +84,11 @@ class ChessBoard:
             fifty_move_rule=fifty_move,
             castling_rights=castling_rights,
         )
+        is_check = self.__is_king_in_check(
+            new_board_state, Color.WHITE if new_board_state.is_whites_turn else Color.BLACK)
+        self.pgn += convert_move_pgn(
+            origin_square, target_square, temp_board_state, is_check, piece_type,
+            bool(enemy_piece_type), self.check_game_status(new_board_state))
 
         return new_board_state
 
