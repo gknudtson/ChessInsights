@@ -36,14 +36,14 @@ class ChessBoard:
                    target_square: int
                    ) -> None:
         """Move a piece from origin_square to target_square, and update BoardState and PGN."""
-        new_board_state = self.get_move_board_state(origin_square, target_square)
+        new_board_state = self._generate_move_board_state(origin_square, target_square)
         self.pgn = self.get_new_pgn(origin_square, target_square, new_board_state)
         self._board_state = new_board_state
 
-    def get_move_board_state(self,
-                             origin_square: int,
-                             target_square: int
-                             ) -> BoardState:
+    def _generate_move_board_state(self,
+                                   origin_square: int,
+                                   target_square: int
+                                   ) -> BoardState:
         """Move a piece from origin_square to target_square, and return the resulting BoardState."""
         piece_type = self.get_piece_on_square(origin_square)
         self.__validate_move(origin_square, target_square, piece_type)
