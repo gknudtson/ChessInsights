@@ -1,17 +1,10 @@
-* {
-    margin: 0;
-    padding: 0;
+:root {
+    --navbar-background: #222831;
+    --hover-background: #00ADB5;
 }
-
-body {
-    min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 nav {
     width: 100%;
-    background-color: rgba(0, 0, 0, 1);
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    background-color: var(--navbar-background)
 }
 
 nav ul {
@@ -31,25 +24,27 @@ nav a {
     text-decoration: none;
     display: flex;
     align-items: center;
-    color: white;
+    color: #EEEEEE;
     font-size: 20px;
 }
 
 nav a:hover {
-    background-color: rgba(59, 59, 59, 0.2);
-    color: #00bbff;
+    background-color: var(--hover-background);
+    color: #EEEEEE;
 }
-nav li:first-child{
+
+nav li:first-child {
     margin-right: auto;
 }
-.sidebar{
+
+.sidebar {
     position: fixed;
     top: 0;
     right: 0;
     height: 100vh;
     width: 250px;
     z-index: 999;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(34, 40, 49, 0.8);
     backdrop-filter: blur(10px);
     box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
     display: none;
@@ -57,28 +52,35 @@ nav li:first-child{
     align-items: flex-start;
     justify-content: flex-start;
 }
-.sidebar li{
+
+.sidebar li {
     width: 100%;
 }
-.sidebar li:first-child{
-    margin-left: auto ;
+
+.sidebar li:first-child {
+    margin-left: auto;
 }
-.sidebar a{
+
+.sidebar a {
     width: 100%;
 }
-.menu-button{
+
+.menu-button {
     display: none;
 }
-@media(max-width: 800px){
-    .hideOnMobile{
+
+@media (max-width: 800px) {
+    .hideOnMobile {
         display: none;
     }
-    .menu-button{
+
+    .menu-button {
         display: block;
     }
 }
-@media(max-width: 450px){
-    .sidebar{
+
+@media (max-width: 450px) {
+    .sidebar {
         width: 100%;
     }
 }
