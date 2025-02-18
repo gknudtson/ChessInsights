@@ -34,9 +34,17 @@ class ChessBoard:
     def move_piece(self,
                    origin_square: int,
                    target_square: int
-                   ) -> BoardState:
-        """Move a piece from origin_square to target_square, ensuring validity and immutability."""
+                   ) -> None:
+        """Move a piece from origin_square to target_square, and update BoardState and PGN."""
+        new_board_state = self.get_move_board_state(origin_square, target_square)
+        self.pgn = self.get_new_pgn(origin_square, target_square, new_board_state)
+        self._board_state = new_board_state
 
+    def get_move_board_state(self,
+                             origin_square: int,
+                             target_square: int
+                             ) -> BoardState:
+        """Move a piece from origin_square to target_square, and return the resulting BoardState."""
         piece_type = self.get_piece_on_square(origin_square)
         self.__validate_move(origin_square, target_square, piece_type)
 
@@ -84,13 +92,17 @@ class ChessBoard:
             fifty_move_rule=fifty_move,
             castling_rights=castling_rights,
         )
+        return new_board_state
+
+    def get_new_pgn(self, origin_square: int, target_square: int,
+                    new_board_state: BoardState) -> str:
+        piece_type = self.get_piece_on_square(origin_square)
+        is_capture = bool(self.get_piece_on_square(target_square))
         is_check = self.__is_king_in_check(
             new_board_state, Color.WHITE if new_board_state.is_whites_turn else Color.BLACK)
-        self.pgn += convert_move_pgn(
-            origin_square, target_square, temp_board_state, is_check, piece_type,
-            bool(enemy_piece_type), self.check_game_status(new_board_state))
-
-        return new_board_state
+        return self.pgn + convert_move_pgn(
+            origin_square, target_square, self.board_state.copy(), is_check, piece_type,
+            is_capture, self.check_game_status(new_board_state))
 
     def get_moves(self,
                   square: int
