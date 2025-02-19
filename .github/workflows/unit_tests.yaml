@@ -28,7 +28,7 @@ jobs:
       run: pytest -v --cov=./chess_insights --cov-report=html
 
     - name: Archive Coverage Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: htmlcov/  # Standard output folder for pytest-cov
