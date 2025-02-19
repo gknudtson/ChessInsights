@@ -88,7 +88,8 @@ class ChessBoard:
             piece_locations=MappingProxyType(new_piece_locations),
             is_whites_turn=not temp_board_state.is_whites_turn,
             en_passant_square=BitBoard(en_passant_square),
-            move_number=temp_board_state.move_number + 1,
+            move_number=temp_board_state.move_number + 1 if
+            temp_board_state.is_whites_turn else temp_board_state.move_number,
             fifty_move_rule=fifty_move,
             castling_rights=castling_rights,
         )
