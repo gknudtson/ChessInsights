@@ -28,6 +28,7 @@ button.btn-danger:hover {
 }
 
 .button-group {
+    grid-row: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,18 +43,14 @@ button.btn-danger:hover {
 }
 
 .button-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
+    display: grid;
+    grid-template-rows: 1fr auto;
     gap: 10px;
 
     background-color: var(--light-background);
     border-radius: 5px;
-    flex-wrap: wrap;
 
-    /* Match height of the board */
-    height: var(--board-size);
-
+    height: var(--board-size); /* Keeps height matching the board */
     align-self: center;
     width: auto;
     min-width: 150px;
@@ -62,12 +59,12 @@ button.btn-danger:hover {
 }
 
 .pgn-container {
+    grid-row: 1;
     align-self: flex-start;
     flex-grow: 1;
     max-width: 100%;
     max-height: 100%;
     overflow-y: auto;
-    overflow-x: hidden;
     border-radius: 5px;
 }
 
