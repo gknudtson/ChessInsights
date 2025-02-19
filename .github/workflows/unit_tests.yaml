@@ -32,3 +32,4 @@ jobs:
       with:
         name: coverage-report
         path: htmlcov/  # Standard output folder for pytest-cov
+
