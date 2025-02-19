@@ -61,7 +61,7 @@ def board_from_fen(
         is_whites_turn=is_whites_turn,
         en_passant_square=en_passant_square_board,
         fifty_move_rule=int(fifty_move_rule),
-        move_number=int(move_number),
+        move_number=int(move_number) if int(move_number) > 1 else 0,
         castling_rights=castling_rights_int
     )
 
@@ -112,11 +112,10 @@ def fen_from_board(board_state: BoardState) -> str:
         en_passant_square = Square(en_passant_square_index).name
 
     # Assemble the FEN string
-    return f"{''.join(position)} {turn} {castling_rights} {en_passant_square} {board_state.fifty_move_rule} {board_state.move_number}"
+    return f"{''.join(position)} {turn} {castling_rights} {en_passant_square} {board_state.fifty_move_rule} {board_state.move_number if board_state.move_number > 0 else 1}"
 
 
 
-# TODO might need to fix my understanding of how castling rights works as 0b1111 etc
 def fen_to_castling_rights(fen: str) -> int:
     castling_rights = 0
     if 'K' in fen:
