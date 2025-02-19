@@ -112,7 +112,7 @@ def fen_from_board(board_state: BoardState) -> str:
         en_passant_square = Square(en_passant_square_index).name
 
     # Assemble the FEN string
-    return f"{''.join(position)} {turn} {castling_rights} {en_passant_square} {board_state.fifty_move_rule} {board_state.move_number + 1}"
+    return f"{''.join(position)} {turn} {castling_rights} {en_passant_square} {board_state.fifty_move_rule} {board_state.move_number + 1 if turn =='w' else board_state.move_number}"
 
 
 
