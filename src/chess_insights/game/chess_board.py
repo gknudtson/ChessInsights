@@ -13,7 +13,7 @@ from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
 from chess_insights.engine.move_generators import generate_moves, generate_attacks_by_color, \
     generate_all_moves
 from chess_insights.util.enum_game_status import GameStatus
-from chess_insights.util.fen import board_from_fen
+from chess_insights.util.fen import board_from_fen, fen_from_board
 from chess_insights.util.pgn import convert_move_pgn
 from chess_insights.util.serializers import serialize_board
 
@@ -39,6 +39,7 @@ class ChessBoard:
         new_board_state = self._generate_move_board_state(origin_square, target_square)
         self.pgn = self.get_new_pgn(origin_square, target_square, new_board_state)
         self._board_state = new_board_state
+        print()
 
     def _generate_move_board_state(self,
                                    origin_square: int,
@@ -134,17 +135,17 @@ class ChessBoard:
                 return piece
         return None
 
-    def check_game_status(self,
-                          board_state: BoardState
+    @staticmethod
+    def check_game_status(board_state: BoardState
                           ) -> GameStatus:
         """Check if the game has ended and return the appropriate status."""
+        board = ChessBoard(board_state=board_state)
         moves = generate_all_moves(board_state)
-        valid_moves = [self._validate_moves(*move_tuple) for move_tuple in moves]
+        valid_moves = [board._validate_moves(*move_tuple) for move_tuple in moves]
         color = Color.WHITE if board_state.is_whites_turn else Color.BLACK
         # Flatten the list so we can just check len
         all_moves = sum(valid_moves, [])
-
-        if not all_moves and self.__is_king_in_check(board_state, color):
+        if not all_moves and board.__is_king_in_check(board_state, color):
             return GameStatus.CHECKMATE
         if not all_moves:
             return GameStatus.STALEMATE
