@@ -6,13 +6,13 @@ from .enum_square import Square, chebyshev_distance
 
 def convert_move_pgn(origin_square: int,
                      target_square: int,
-                     board_state: BoardState,
+                     new_board_state: BoardState,
                      is_check: bool,
                      piece: ColorChessPiece,
                      is_capture: bool,
                      status: GameStatus,
                      ) -> str:
-    pgn = f"{board_state.move_number}. " if board_state.is_whites_turn else " "
+    pgn = f"{new_board_state.move_number}. " if not new_board_state.is_whites_turn else " "
     if piece.piece_type == ChessPieceType.KING and chebyshev_distance(origin_square,
                                                                       target_square) == 2:
         pgn += "0-0" if Square(target_square).name.startswith('g') else "0-0-0"
