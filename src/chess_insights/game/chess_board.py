@@ -101,9 +101,12 @@ class ChessBoard:
         is_capture = bool(self.get_piece_on_square(target_square))
         is_check = self.__is_king_in_check(
             new_board_state, Color.WHITE if new_board_state.is_whites_turn else Color.BLACK)
-        return self.pgn + convert_move_pgn(
-            origin_square, target_square, self.board_state.copy(), is_check, piece_type,
-            is_capture, self.check_game_status(new_board_state))
+
+        pgn_substring = convert_move_pgn(origin_square, target_square, new_board_state,
+                                         is_check, piece_type, is_capture,
+                                         self.check_game_status(new_board_state))
+        is_fen_black_start = new_board_state.is_whites_turn and self.pgn == ""
+        return f"{new_board_state.move_number}. — {pgn_substring}" if is_fen_black_start else self.pgn + pgn_substring
 
     def get_moves(self,
                   square: int
