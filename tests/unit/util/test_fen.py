@@ -1,4 +1,3 @@
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 from chess_insights.util.fen import board_from_fen, fen_from_board
 import unittest
 
