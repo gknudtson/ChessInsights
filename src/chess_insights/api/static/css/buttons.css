@@ -1,6 +1,8 @@
 :root {
     --button-background: #393E46;
     --danger-background: #c82333;
+    --even-row-background: #333230;
+    --odd-row-background: #403f3e;
 }
 
 button {
@@ -30,6 +32,7 @@ button.btn-danger:hover {
     flex-direction: column;
     align-items: center;
     gap: 5px;
+    margin: 5px 5px 0 5px;
 }
 
 .action-buttons {
@@ -39,12 +42,11 @@ button.btn-danger:hover {
 }
 
 .button-container {
-    grid-area: buttons;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
     gap: 10px;
-    padding: 10px;
+
     background-color: var(--light-background);
     border-radius: 5px;
     flex-wrap: wrap;
@@ -56,4 +58,64 @@ button.btn-danger:hover {
     width: auto;
     min-width: 150px;
     justify-content: center;
+    margin-left: 10px;
 }
+
+.pgn-container {
+    align-self: flex-start;
+    flex-grow: 1;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 5px;
+}
+
+.pgn-row {
+    display: grid;
+    grid-template-columns: .25fr 1fr 1fr;
+    width: inherit;
+    height: auto;
+    padding: 0;
+    font-size: clamp(8px, 5vw, 18px);
+    color: white;
+    background-color: black;
+    gap: 5px;
+    box-sizing: border-box;
+    min-height: 20px;
+}
+
+.pgn-column {
+    flex: 1;
+    text-align: left;
+    padding: 5px;
+    width: inherit;
+}
+
+.pgn-row button {
+    cursor: pointer;
+    text-align: center;
+    width: inherit;
+    height: inherit;
+    border: none;
+    outline: none;
+    font-size: inherit;
+    background-color: inherit;
+    padding: 0;
+    border-radius: 0;
+
+}
+
+
+.pgn-row button:hover {
+    background-color: var(--hover-background);
+}
+
+.pgn-row:nth-child(even) {
+    background-color: var(--even-row-background)
+}
+
+.pgn-row:nth-child(odd) {
+    background-color: var(--odd-row-background);
+}
+
