@@ -41,16 +41,13 @@ $(document).ready(function () {
 
             if (data.status === 'ok') {
                 board.position(data.fen);
+                setPGNMoves(data.pgn)
                 statusEl.textContent = "Move successful!";
                 setTimeout(makeEngineMove, 1);
             } else if (data.status === 'game_over') {
                 board.position(data.fen);
+                setPGNMoves(data.pgn)
                 statusEl.textContent = `Game Over: ${data.game_status}`;
-                board = Chessboard('board', {
-                    position: data.fen,
-                    draggable: false,
-                    pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
-                });
             } else {
                 board.position(prev_fen);
                 statusEl.textContent = "Move rejected by server.";
@@ -73,14 +70,13 @@ $(document).ready(function () {
 
             if (data.status === 'ok') {
                 board.position(data.fen);
+                setPGNMoves(data.pgn)
                 statusEl.textContent = "Engine moved.";
             } else if (data.status === 'game_over') {
                 board.position(data.fen);
+                setPGNMoves(data.pgn)
                 statusEl.textContent = `Game Over: ${data.game_status}`;
-                board = Chessboard('board', {
-                    position: data.fen,
-                    draggable: false,
-                });
+
             } else {
                 console.error("Error in engine move:", data);
                 statusEl.textContent = "Engine move failed.";
@@ -90,6 +86,49 @@ $(document).ready(function () {
             statusEl.textContent = "Server error.";
         }
     }
+
+    function setPGNMoves(pgnString) {
+        const pgnContainer = document.querySelector(".pgn-container");
+        pgnContainer.innerHTML = "";
+        const moves = pgnString.trim().split(/\s+/);
+
+        for (let i = 0; i < moves.length; i += 3) {
+            const newRow = document.createElement("div");
+            newRow.classList.add("pgn-row");
+
+            // Create move number column
+            const moveNumberCol = document.createElement("div");
+            moveNumberCol.classList.add("pgn-column");
+            moveNumberCol.textContent = `${moves[i]}`;
+
+            // Create button for White's move
+            const whiteMoveButton = document.createElement("button");
+            whiteMoveButton.classList.add("pgn-button");
+            whiteMoveButton.textContent = moves[i + 1]; // White move
+
+
+            // Create button for Black's move (if exists)
+            const blackMoveButton = document.createElement("button");
+            blackMoveButton.classList.add("pgn-button");
+
+            if (moves[i + 2]) {
+                blackMoveButton.textContent = moves[i + 2]; // Black move
+            } else {
+                blackMoveButton.textContent = "—"; // Placeholder if no Black move
+            }
+            // Append elements into the row
+            newRow.appendChild(moveNumberCol);
+            newRow.appendChild(whiteMoveButton);
+            newRow.appendChild(blackMoveButton);
+
+            // Append row into PGN container
+            pgnContainer.appendChild(newRow);
+        }
+
+        // Auto-scroll to bottom (if necessary)
+        pgnContainer.scrollTop = pgnContainer.scrollHeight;
+    }
+
 });
 
 async function setFen() {
@@ -126,7 +165,7 @@ async function setFen() {
 document.addEventListener("click", async function (event) {
     if (event.target && event.target.id === "newGameBtn") {
         try {
-            const response = await fetch('/new_game', { method: 'GET' });
+            const response = await fetch('/new_game', {method: 'GET'});
 
             if (response.ok) {
                 const result = await response.json();
