@@ -39,7 +39,6 @@ class ChessBoard:
         new_board_state = self._generate_move_board_state(origin_square, target_square)
         self.pgn = self.get_new_pgn(origin_square, target_square, new_board_state)
         self._board_state = new_board_state
-        print()
 
     def _generate_move_board_state(self,
                                    origin_square: int,
