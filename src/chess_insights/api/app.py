@@ -18,24 +18,24 @@ def execute_move(from_square,
     global chess_game
 
     try:
-        new_board_state = chess_game.move_piece(from_square, to_square)
-        fen = fen_from_board(new_board_state)
-        chess_game = ChessBoard(board_state=new_board_state)
+        chess_game.move_piece(from_square, to_square)
+        fen = fen_from_board(chess_game.board_state)
 
         # Check game status after the move
-        game_status = chess_game.check_game_status(new_board_state)
+        game_status = chess_game.check_game_status(chess_game.board_state)
 
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
                 'game_status': game_status.value,
-                'fen': fen
+                'fen': fen,
+                'pgn': chess_game.pgn
             }
 
-        return {'status': 'ok', 'fen': fen}
+        return {'status': 'ok', 'fen': fen, 'pgn': chess_game.pgn}
 
     except Exception as e:
-        return {'error': str(e), 'fen': fen_from_board(chess_game.board_state)}, 400
+        return {'error': str(e), 'fen': fen_from_board(chess_game.board_state), 'pgn': chess_game.pgn}, 400
 
 
 @app.route('/', methods=['GET'])
