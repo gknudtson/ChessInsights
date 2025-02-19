@@ -42,7 +42,7 @@ def execute_move(from_square,
 def home():
     return render_template('home.html')
 
-
+# TODO: make refresh generate pgn buttons
 @app.route('/play', methods=['GET'])
 def play():
     """Render the play page with the current board state."""

@@ -181,6 +181,7 @@ document.addEventListener("click", async function (event) {
     }
 });
 
-
+// TODO: make pgn buttons set client board to undraggable view of the board at that move
+// TODO: Add functionality for undo button
 
 
