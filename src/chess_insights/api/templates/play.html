@@ -7,9 +7,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Chessboard.js for board representation and movement-->
 <script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
-<script>
-    var currentFen = "{{ fen|default('start') }}";
-</script>
 <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 <!-- Chessboard.js CSS -->
 <link rel="stylesheet"
@@ -25,8 +22,8 @@
 
 <div class="game-container">
     <!-- Chessboard -->
-    <div id="board" style="padding-top: 10px"></div>
-    <p id="statusEl" style="text-align: center;">Make a move!</p>
+    <div id="board"></div>
+    <p id="statusEl">Make a move!</p>
 </div>
 
 <div class="bottom-buttons">
@@ -56,7 +53,8 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Chessboard.js JS -->
-
-
+<script>
+    var currentFen = "{{ fen|default('start') }}";
+    var currentPGN = "{{ pgn|default('') }}";
+</script>
 {% endblock %}
