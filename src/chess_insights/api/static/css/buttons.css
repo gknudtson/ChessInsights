@@ -1,0 +1,59 @@
+:root {
+    --button-background: #393E46;
+    --danger-background: #c82333;
+}
+
+button {
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px);
+    font-size: clamp(14px, 2vw, 16px);
+    font-family: var(--font-family);
+    border: none;
+    border-radius: 7px;
+    background-color: var(--button-background);
+    color: #EEEEEE;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    width: auto; /* Default auto width */
+    min-width: 80px; /* Prevents tiny buttons */
+}
+
+button.btn-primary:hover {
+    background-color: var(--hover-background);
+}
+
+button.btn-danger:hover {
+    background-color: var(--danger-background);
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.button-container {
+    grid-area: buttons;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--light-background);
+    border-radius: 5px;
+    flex-wrap: wrap;
+
+    /* Match height of the board */
+    height: var(--board-size);
+
+    align-self: center;
+    width: auto;
+    min-width: 150px;
+    justify-content: center;
+}
