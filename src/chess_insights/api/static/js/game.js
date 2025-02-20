@@ -1,146 +1,198 @@
-let board;
-let config;
-$(document).ready(function () {
-    const statusEl = document.getElementById('statusEl');
+document.addEventListener("DOMContentLoaded", () => {
+    initializeBoard();
+    setupEventListeners();
+});
 
-    config = {
+/**
+ * Initializes the chessboard with configurations and sets the PGN.
+ */
+function initializeBoard() {
+    window.board = Chessboard('board', getBoardConfig());
+    setPGNMoves(currentPGN);
+}
+
+/**
+ * Returns the configuration object for Chessboard.js.
+ */
+function getBoardConfig() {
+    return {
         draggable: true,
         dropOffBoard: 'snapback',
         position: currentFen || "start",
         pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
-        onDrop: function (source, target) {
-            handleDrop(source, target);
-        }
+        onDrop: handleDrop
     };
+}
 
-    board = Chessboard('board', config);
+/**
+ * Sets up event listeners for various UI interactions.
+ */
+function setupEventListeners() {
+    const statusEl = document.getElementById('statusEl');
 
-    window.addEventListener("resize", () => {
-        board.resize();
-    });
+    // Resize event for board responsiveness
+    window.addEventListener("resize", () => board.resize());
 
-// New Game Button Click
-    $("#newGameBtn").click(function () {
-        board = Chessboard('board', config)
-        board.fen(currentFen)
-        statusEl.textContent = "New game started!";
-    });
+    // New game button click event
+    document.getElementById("newGameBtn").addEventListener("click", startNewGame);
+}
 
-    async function handleDrop(source, target) {
-        const prev_fen = board.fen();
-        if (target === 'offboard' || source === target) return;
+/**
+ * Starts a new game by resetting the board and PGN.
+ */
+function startNewGame() {
+    fetch('/new_game', {method: 'GET'})
+        .then(response => response.json())
+        .then(data => {
+            clearPGN();
+            board = Chessboard('board', getBoardConfig());
+            board.position(data.fen);
 
-        try {
-            const response = await fetch('/move', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({fromSquare: source, toSquare: target})
-            });
+            document.getElementById('statusEl').textContent = "New game started!";
 
-            const data = await response.json();
+        })
+        .catch(error => {
+            console.error("Error starting new game:", error);
+            alert("Server error.");
+        });
+}
 
-            if (data.status === 'ok') {
-                board.position(data.fen);
-                setPGNMoves(data.pgn)
-                statusEl.textContent = "Move successful!";
-                setTimeout(makeEngineMove, 1);
-            } else if (data.status === 'game_over') {
-                board.position(data.fen);
-                setPGNMoves(data.pgn)
-                statusEl.textContent = `Game Over: ${data.game_status}`;
-            } else {
-                board.position(prev_fen);
-                statusEl.textContent = "Move rejected by server.";
-            }
-        } catch (err) {
-            console.error("Error processing move:", err);
-            board.position(prev_fen);
-            statusEl.textContent = "Server error.";
-        }
-    }
+/**
+ * Handles piece drops and communicates with the server.
+ */
+async function handleDrop(source, target) {
+    if (target === 'offboard' || source === target) return;
 
-    async function makeEngineMove() {
-        try {
-            const response = await fetch('/engine_move', {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            });
+    const prev_fen = board.fen();
 
-            const data = await response.json();
-
-            if (data.status === 'ok') {
-                board.position(data.fen);
-                setPGNMoves(data.pgn)
-                statusEl.textContent = "Engine moved.";
-            } else if (data.status === 'game_over') {
-                board.position(data.fen);
-                setPGNMoves(data.pgn)
-                statusEl.textContent = `Game Over: ${data.game_status}`;
-
-            } else {
-                console.error("Error in engine move:", data);
-                statusEl.textContent = "Engine move failed.";
-            }
-        } catch (err) {
-            console.error("Error processing engine move:", err);
-            statusEl.textContent = "Server error.";
-        }
-    }
-
-    function setPGNMoves(pgnString) {
-        const pgnContainer = document.querySelector(".pgn-container");
-        pgnContainer.innerHTML = "";
-        const moves = pgnString.trim().split(/\s+/);
-
-        for (let i = 0; i < moves.length; i += 3) {
-            const newRow = document.createElement("div");
-            newRow.classList.add("pgn-row");
-
-            // Create move number column
-            const moveNumberCol = document.createElement("div");
-            moveNumberCol.classList.add("pgn-column");
-            moveNumberCol.textContent = `${moves[i]}`;
-
-            // Create button for White's move
-            const whiteMoveButton = document.createElement("button");
-            whiteMoveButton.classList.add("pgn-button");
-            whiteMoveButton.textContent = moves[i + 1]; // White move
-
-
-            // Create button for Black's move (if exists)
-            const blackMoveButton = document.createElement("button");
-            blackMoveButton.classList.add("pgn-button");
-
-            if (moves[i + 2]) {
-                blackMoveButton.textContent = moves[i + 2]; // Black move
-            } else {
-                blackMoveButton.textContent = "—"; // Placeholder if no Black move
-            }
-            // Append elements into the row
-            newRow.appendChild(moveNumberCol);
-            newRow.appendChild(whiteMoveButton);
-            newRow.appendChild(blackMoveButton);
-
-            // Append row into PGN container
-            pgnContainer.appendChild(newRow);
-        }
-
-        // Auto-scroll to bottom (if necessary)
-        pgnContainer.scrollTop = pgnContainer.scrollHeight;
-    }
-
-});
-
-async function setFen() {
     try {
-        let fenInput = document.getElementById("userInput").value.trim();
+        const response = await fetch('/move', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({fromSquare: source, toSquare: target})
+        });
 
-        if (!fenInput) {
-            alert("Please enter a valid FEN string.");
-            return;
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            board.position(data.fen);
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = "Move successful!";
+            setTimeout(makeEngineMove, 1);
+        } else if (data.status === 'game_over') {
+            board.position(data.fen);
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
+        } else {
+            board.position(prev_fen);
+            document.getElementById('statusEl').textContent = "Move rejected by server.";
         }
+    } catch (error) {
+        console.error("Error processing move:", error);
+        board.position(prev_fen);
+        document.getElementById('statusEl').textContent = "Server error.";
+    }
+}
 
-        // Send request to the server
+/**
+ * Requests an engine move from the server.
+ */
+async function makeEngineMove() {
+    try {
+        const response = await fetch('/engine_move', {method: 'GET'});
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            board.position(data.fen);
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = "Engine moved.";
+        } else if (data.status === 'game_over') {
+            board.position(data.fen);
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
+        } else {
+            console.error("Error in engine move:", data);
+            document.getElementById('statusEl').textContent = "Engine move failed.";
+        }
+    } catch (error) {
+        console.error("Error processing engine move:", error);
+        document.getElementById('statusEl').textContent = "Server error.";
+    }
+}
+
+/**
+ * Clears the PGN move list.
+ */
+function clearPGN() {
+    const pgnContainer = document.querySelector(".pgn-container");
+    if (!pgnContainer) {
+        console.error("clearPGN: PGN container not found.");
+        return;
+    }
+    pgnContainer.innerHTML = "";
+}
+
+/**
+ * Updates the PGN move list in the UI.
+ */
+function setPGNMoves(pgnString) {
+    clearPGN();
+
+    const pgnContainer = document.querySelector(".pgn-container");
+    if (!pgnContainer) {
+        console.error("setPGNMoves: PGN container not found.");
+        return;
+    }
+
+    const moves = pgnString.trim().split(/\s+/);
+    if (!moves[0]) return;
+
+    for (let i = 0; i < moves.length; i += 3) {
+        const newRow = document.createElement("div");
+        newRow.classList.add("pgn-row");
+
+        // Create move number column
+        const moveNumberCol = document.createElement("div");
+        moveNumberCol.classList.add("pgn-column");
+        moveNumberCol.textContent = moves[i];
+
+        // Create buttons for moves
+        const whiteMoveButton = createPGNButton(moves[i + 1]);
+        const blackMoveButton = createPGNButton(moves[i + 2] || "—");
+
+        // Append elements into the row
+        newRow.appendChild(moveNumberCol);
+        newRow.appendChild(whiteMoveButton);
+        newRow.appendChild(blackMoveButton);
+
+        pgnContainer.appendChild(newRow);
+    }
+
+    // Auto-scroll to bottom
+    pgnContainer.scrollTop = pgnContainer.scrollHeight;
+}
+
+/**
+ * Creates a PGN move button.
+ */
+function createPGNButton(text) {
+    const button = document.createElement("button");
+    button.classList.add("pgn-button");
+    button.textContent = text;
+    return button;
+}
+
+/**
+ * Sets the board to a user-inputted FEN.
+ */
+async function setFen() {
+    const fenInput = document.getElementById("userInput").value.trim();
+    if (!fenInput) {
+        alert("Please enter a valid FEN string.");
+        return;
+    }
+
+    try {
         const response = await fetch('/set_fen', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -150,36 +202,19 @@ async function setFen() {
         const data = await response.json();
 
         if (response.ok && data.status === "ok") {
-            board.position(fenInput);  // Set the board to the new FEN
+            board.position(fenInput);
+            clearPGN()
             document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
         } else {
             alert(`Error: ${data.error || "Invalid FEN entered!"}`);
             console.error("Server error:", data.error);
         }
-    } catch (err) {
-        console.error("Error setting FEN:", err);
+    } catch (error) {
+        console.error("Error setting FEN:", error);
         alert("Failed to update board. Please check your FEN.");
     }
 }
 
-document.addEventListener("click", async function (event) {
-    if (event.target && event.target.id === "newGameBtn") {
-        try {
-            const response = await fetch('/new_game', {method: 'GET'});
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
-                currentFen = result.fen;
-            } else {
-                alert("Failed to start new game.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Server error.");
-        }
-    }
-});
 
 // TODO: make pgn buttons set client board to undraggable view of the board at that move
 // TODO: Add functionality for undo button
