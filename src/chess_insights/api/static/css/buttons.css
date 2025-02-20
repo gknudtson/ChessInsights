@@ -41,7 +41,7 @@ button.btn-danger:hover {
     flex-direction: row;
     gap: 10px;
 }
-/*TODO: make so its locked to board height*/
+
 .button-container {
     display: grid;
     grid-template-rows: 1fr auto;
