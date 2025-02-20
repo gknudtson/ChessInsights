@@ -23,6 +23,17 @@ function getBoardConfig() {
         onDrop: handleDrop
     };
 }
+/**
+ * Creates a static chessboard where pieces cannot be moved.
+ */
+function createStaticBoard() {
+    const boardConfig = {
+        ...getBoardConfig(),
+        draggable: false,
+    };
+
+    return Chessboard('board', boardConfig);
+}
 
 /**
  * Sets up event listeners for various UI interactions.
@@ -58,7 +69,29 @@ function startNewGame() {
 }
 
 /**
- * Handles piece drops and communicates with the server.
+ * Updates the game state based on server response.
+ * Handles board updates, PGN moves, game over, and status messages.
+ */
+function updateGameState(data, prev_fen = null) {
+    if (data.status === 'ok') {
+        board.position(data.fen);
+        setPGNMoves(data.pgn);
+        document.getElementById('statusEl').textContent = "Move successful!";
+    } else if (data.status === 'game_over') {
+        board = createStaticBoard();
+        board.position(data.fen, false);
+        setPGNMoves(data.pgn);
+        document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
+    } else {
+        if (prev_fen) board.position(prev_fen); // Restore previous position if move failed
+        document.getElementById('statusEl').textContent = data.status === 'error'
+            ? "Move rejected by server."
+            : "Engine move failed.";
+    }
+}
+
+/**
+ * Handles piece drops, sends move to the server, and updates the board.
  */
 async function handleDrop(source, target) {
     if (target === 'offboard' || source === target) return;
@@ -73,19 +106,10 @@ async function handleDrop(source, target) {
         });
 
         const data = await response.json();
+        updateGameState(data, prev_fen);
 
         if (data.status === 'ok') {
-            board.position(data.fen);
-            setPGNMoves(data.pgn);
-            document.getElementById('statusEl').textContent = "Move successful!";
-            setTimeout(makeEngineMove, 1);
-        } else if (data.status === 'game_over') {
-            board.position(data.fen);
-            setPGNMoves(data.pgn);
-            document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
-        } else {
-            board.position(prev_fen);
-            document.getElementById('statusEl').textContent = "Move rejected by server.";
+            setTimeout(makeEngineMove, 1); // Let the engine respond
         }
     } catch (error) {
         console.error("Error processing move:", error);
@@ -99,26 +123,15 @@ async function handleDrop(source, target) {
  */
 async function makeEngineMove() {
     try {
-        const response = await fetch('/engine_move', {method: 'GET'});
+        const response = await fetch('/engine_move', { method: 'GET' });
         const data = await response.json();
-
-        if (data.status === 'ok') {
-            board.position(data.fen);
-            setPGNMoves(data.pgn);
-            document.getElementById('statusEl').textContent = "Engine moved.";
-        } else if (data.status === 'game_over') {
-            board.position(data.fen);
-            setPGNMoves(data.pgn);
-            document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
-        } else {
-            console.error("Error in engine move:", data);
-            document.getElementById('statusEl').textContent = "Engine move failed.";
-        }
+        updateGameState(data);
     } catch (error) {
         console.error("Error processing engine move:", error);
         document.getElementById('statusEl').textContent = "Server error.";
     }
 }
+
 
 /**
  * Clears the PGN move list.
@@ -202,6 +215,7 @@ async function setFen() {
         const data = await response.json();
 
         if (response.ok && data.status === "ok") {
+            board = Chessboard('board', getBoardConfig());
             board.position(fenInput);
             clearPGN()
             document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
