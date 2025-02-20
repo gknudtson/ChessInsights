@@ -49,12 +49,12 @@ jobs:
       #    run test suite and output coverage file
       #----------------------------------------------
       - name: Test with pytest
-        run: poetry run pytest --cov=chess_insights --cov-report=html
+        run: poetry run pytest --cov=chess_insights --cov-report=xml
       #----------------------------------------------
       #             upload coverage stats
       #----------------------------------------------
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
-          file: ./htmlcov
-          fail_ci_if_error: true
+          file: ./coverage.xml
+          fail_ci_if_error: tru
