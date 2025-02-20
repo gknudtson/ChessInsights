@@ -21,12 +21,12 @@ body {
     flex-grow: 1;
     width: 100%;
     max-width: 800px;
+    padding-top: 10px;
 }
 
 #statusEl {
     margin-top: 15px;
     font-size: clamp(8px, 5vw, 18px);
-    max-font-size: 18px;
     font-weight: bold;
     color: white;
 }
@@ -63,23 +63,18 @@ body {
 
     }
 
-    .leftbar {
+    .leftbar, .fen-input-container, .pgn-container {
         display: none;
     }
 
     .button-container {
-        max-height: 10vh;
+        height: min-content;
         width: var(--board-size);
         justify-content: center;
         align-items: center;
-
         background-color: var(--dark-background);
 
 
-    }
-
-    .fen-input-container {
-        display: none;
     }
 
     button {
@@ -88,7 +83,7 @@ body {
     }
 
     #statusEl {
-
+        height: min-content;
     }
 
 }
