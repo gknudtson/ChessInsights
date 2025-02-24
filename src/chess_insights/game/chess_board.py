@@ -13,17 +13,19 @@ from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
 from chess_insights.engine.move_generators import generate_moves, generate_attacks_by_color, \
     generate_all_moves
 from chess_insights.util.enum_game_status import GameStatus
-from chess_insights.util.fen import board_from_fen
+from chess_insights.util.fen import board_from_fen, fen_from_board
+from chess_insights.util.pgn import convert_move_pgn
 from chess_insights.util.serializers import serialize_board
 
 
 class ChessBoard:
-    def __init__(self, fen: str = None, board_state: BoardState = None):
+    def __init__(self, fen: str = None, board_state: BoardState = None, pgn: str = ""):
         if board_state:
             self._board_state = board_state
         else:
             self._board_state = board_from_fen(
                 fen) if fen else board_from_fen()
+        self.pgn = pgn
 
     @property
     def board_state(self) -> BoardState:
@@ -32,9 +34,17 @@ class ChessBoard:
     def move_piece(self,
                    origin_square: int,
                    target_square: int
-                   ) -> BoardState:
-        """Move a piece from origin_square to target_square, ensuring validity and immutability."""
+                   ) -> None:
+        """Move a piece from origin_square to target_square, and update BoardState and PGN."""
+        new_board_state = self._generate_move_board_state(origin_square, target_square)
+        self.pgn = self.get_new_pgn(origin_square, target_square, new_board_state)
+        self._board_state = new_board_state
 
+    def _generate_move_board_state(self,
+                                   origin_square: int,
+                                   target_square: int
+                                   ) -> BoardState:
+        """Move a piece from origin_square to target_square, and return the resulting BoardState."""
         piece_type = self.get_piece_on_square(origin_square)
         self.__validate_move(origin_square, target_square, piece_type)
 
@@ -78,12 +88,25 @@ class ChessBoard:
             piece_locations=MappingProxyType(new_piece_locations),
             is_whites_turn=not temp_board_state.is_whites_turn,
             en_passant_square=BitBoard(en_passant_square),
-            move_number=temp_board_state.move_number + 1,
+            move_number=temp_board_state.move_number + 1 if
+            temp_board_state.is_whites_turn else temp_board_state.move_number,
             fifty_move_rule=fifty_move,
             castling_rights=castling_rights,
         )
-
         return new_board_state
+
+    def get_new_pgn(self, origin_square: int, target_square: int,
+                    new_board_state: BoardState) -> str:
+        piece_type = self.get_piece_on_square(origin_square)
+        is_capture = bool(self.get_piece_on_square(target_square))
+        is_check = self.__is_king_in_check(
+            new_board_state, Color.WHITE if new_board_state.is_whites_turn else Color.BLACK)
+
+        pgn_substring = convert_move_pgn(origin_square, target_square, new_board_state,
+                                         is_check, piece_type, is_capture,
+                                         self.check_game_status(new_board_state))
+        is_fen_black_start = new_board_state.is_whites_turn and self.pgn == ""
+        return f"{new_board_state.move_number}. — {pgn_substring}" if is_fen_black_start else self.pgn + pgn_substring
 
     def get_moves(self,
                   square: int
@@ -111,17 +134,17 @@ class ChessBoard:
                 return piece
         return None
 
-    def check_game_status(self,
-                          board_state: BoardState
+    @staticmethod
+    def check_game_status(board_state: BoardState
                           ) -> GameStatus:
         """Check if the game has ended and return the appropriate status."""
+        board = ChessBoard(board_state=board_state)
         moves = generate_all_moves(board_state)
-        valid_moves = [self._validate_moves(*move_tuple) for move_tuple in moves]
+        valid_moves = [board._validate_moves(*move_tuple) for move_tuple in moves]
         color = Color.WHITE if board_state.is_whites_turn else Color.BLACK
         # Flatten the list so we can just check len
         all_moves = sum(valid_moves, [])
-
-        if not all_moves and self.__is_king_in_check(board_state, color):
+        if not all_moves and board.__is_king_in_check(board_state, color):
             return GameStatus.CHECKMATE
         if not all_moves:
             return GameStatus.STALEMATE

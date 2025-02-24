@@ -18,24 +18,25 @@ def execute_move(from_square,
     global chess_game
 
     try:
-        new_board_state = chess_game.move_piece(from_square, to_square)
-        fen = fen_from_board(new_board_state)
-        chess_game = ChessBoard(board_state=new_board_state)
+        chess_game.move_piece(from_square, to_square)
+        fen = fen_from_board(chess_game.board_state)
 
         # Check game status after the move
-        game_status = chess_game.check_game_status(new_board_state)
+        game_status = chess_game.check_game_status(chess_game.board_state)
 
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
                 'game_status': game_status.value,
-                'fen': fen
+                'fen': fen,
+                'pgn': chess_game.pgn
             }
 
-        return {'status': 'ok', 'fen': fen}
+        return {'status': 'ok', 'fen': fen, 'pgn': chess_game.pgn}
 
     except Exception as e:
-        return {'error': str(e), 'fen': fen_from_board(chess_game.board_state)}, 400
+        return {'error': str(e), 'fen': fen_from_board(chess_game.board_state),
+                'pgn': chess_game.pgn}, 400
 
 
 @app.route('/', methods=['GET'])
@@ -47,7 +48,8 @@ def home():
 def play():
     """Render the play page with the current board state."""
     fen = fen_from_board(chess_game.board_state)
-    return render_template('play.html', fen=fen)
+    pgn = chess_game.pgn
+    return render_template('play.html', fen=fen, pgn=pgn)
 
 
 @app.route('/new_game', methods=['GET'])
@@ -57,7 +59,6 @@ def new_game():
     new_fen = fen_from_board(chess_game.board_state)  # Get new FEN
 
     return jsonify({"message": "New game started!", "fen": new_fen})
-
 
 
 @app.route('/move', methods=['POST'])
@@ -116,6 +117,7 @@ def engine_move():
         return jsonify({'error': f'Unexpected error: {str(e)}',
                         'fen': fen_from_board(chess_game.board_state)}), 500
 
+
 @app.route('/set_fen', methods=['POST'])
 def set_fen():
     global chess_game
@@ -124,12 +126,14 @@ def set_fen():
 
         # Validate FEN before setting the board
         if not fen or len(fen.split()) != 6:
-            return jsonify({'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
+            return jsonify(
+                {'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
 
         chess_game = ChessBoard(fen)
         return jsonify({'status': 'ok', 'fen': fen})
     except Exception as e:
-        return jsonify({'error': f'Unexpected error: {str(e)}', 'fen': fen_from_board(chess_game.board_state)}), 500
+        return jsonify({'error': f'Unexpected error: {str(e)}',
+                        'fen': fen_from_board(chess_game.board_state)}), 500
 
 
 if __name__ == '__main__':

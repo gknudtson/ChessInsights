@@ -1,6 +1,5 @@
 from copy import deepcopy
-
-from chess_insights.util.enum_chess_piece_type import get_chess_piece_by_fen, ColorChessPiece
+from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 from chess_insights.engine.bitboard import BitBoard
 from dataclasses import dataclass, replace
 from types import MappingProxyType

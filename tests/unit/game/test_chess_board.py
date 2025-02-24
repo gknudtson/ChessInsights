@@ -50,13 +50,13 @@ class TestChessBoard(unittest.TestCase):
         """Verify if a specific piece is detected at a square."""
         square = Square.e4.value
         self.chess_board = ChessBoard(
-            board_state=self.chess_board.move_piece(Square.e2.value, square))
+            board_state=self.chess_board._generate_move_board_state(Square.e2.value, square))
         self.assertTrue(self.is_piece_on_square(ColorChessPiece.WHITE_PAWN, square))
 
     def test_find_piece_on_square(self):
         """Ensure `get_piece_on_square()` correctly identifies the piece type."""
         square = Square.c3.value
-        new_board = ChessBoard(board_state=self.chess_board.move_piece(Square.c2.value, square))
+        new_board = ChessBoard(board_state=self.chess_board._generate_move_board_state(Square.c2.value, square))
         self.assertEqual(new_board.get_piece_on_square(square), ColorChessPiece.WHITE_PAWN)
 
     def test_get_castling_rights(self):
@@ -67,7 +67,7 @@ class TestChessBoard(unittest.TestCase):
         """Ensure castling rights update when moving a rook."""
         board = ChessBoard("1k6/8/8/8/8/8/8/R3K2R w KQ - 0 1")
         new_board = ChessBoard(
-            board_state=board.move_piece(Square.h1.value, Square.h2.value))  # Move white rook
+            board_state=board._generate_move_board_state(Square.h1.value, Square.h2.value))  # Move white rook
         self.assertEqual(new_board.board_state.castling_rights, 0b0010)
 
     @parameterized.expand([
@@ -90,7 +90,7 @@ class TestChessBoard(unittest.TestCase):
         """Ensure pawns can capture diagonally but not move sideways."""
         board = ChessBoard("rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")
         self.chess_board = ChessBoard(
-            board_state=board.move_piece(Square.e4.value, Square.d5.value))
+            board_state=board._generate_move_board_state(Square.e4.value, Square.d5.value))
         self.assertTrue(self.is_piece_on_square(ColorChessPiece.WHITE_PAWN, Square.d5.value))
         self.assertFalse(self.is_piece_on_square(ColorChessPiece.BLACK_PAWN, Square.d5.value))
 
@@ -98,7 +98,7 @@ class TestChessBoard(unittest.TestCase):
         """Test en passant capture logic."""
         board = ChessBoard("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3")
         self.chess_board = ChessBoard(
-            board_state=board.move_piece(Square.e5.value, Square.f6.value))
+            board_state=board._generate_move_board_state(Square.e5.value, Square.f6.value))
         self.assertTrue(self.is_piece_on_square(ColorChessPiece.WHITE_PAWN, Square.f6.value))
         self.assertFalse(self.is_piece_on_square(ColorChessPiece.BLACK_PAWN, Square.f5.value))
 
@@ -106,7 +106,7 @@ class TestChessBoard(unittest.TestCase):
         """Ensure kingside castling works correctly."""
         self.chess_board = ChessBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1")
         new_board = ChessBoard(
-            board_state=self.chess_board.move_piece(Square.e1.value, Square.g1.value))
+            board_state=self.chess_board._generate_move_board_state(Square.e1.value, Square.g1.value))
         self.assertEqual(new_board.get_piece_on_square(Square.g1.value), ColorChessPiece.WHITE_KING)
         self.assertEqual(new_board.get_piece_on_square(Square.f1.value), ColorChessPiece.WHITE_ROOK)
 
@@ -114,7 +114,7 @@ class TestChessBoard(unittest.TestCase):
         """Ensure queenside castling works correctly."""
         self.chess_board = ChessBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1")
         new_board = ChessBoard(
-            board_state=self.chess_board.move_piece(Square.e1.value, Square.c1.value))
+            board_state=self.chess_board._generate_move_board_state(Square.e1.value, Square.c1.value))
         self.assertEqual(new_board.get_piece_on_square(Square.c1.value), ColorChessPiece.WHITE_KING)
         self.assertEqual(new_board.get_piece_on_square(Square.d1.value), ColorChessPiece.WHITE_ROOK)
 
@@ -167,13 +167,13 @@ class TestChessBoard(unittest.TestCase):
     def test_invalid_move(self):
         """Ensure an invalid move raises an error."""
         with self.assertRaises(ValueError):
-            self.chess_board.move_piece(Square.e2.value,
-                                        Square.e5.value)  # Pawn can't jump 3 squares
+            self.chess_board._generate_move_board_state(Square.e2.value,
+                                                        Square.e5.value)  # Pawn can't jump 3 squares
 
     def test_piece_movement(self):
         """Ensure moving a piece updates the board state correctly."""
         new_board = ChessBoard(
-            board_state=self.chess_board.move_piece(Square.e2.value, Square.e4.value)
+            board_state=self.chess_board._generate_move_board_state(Square.e2.value, Square.e4.value)
         )
         self.assertEqual(new_board.get_piece_on_square(Square.e4.value), ColorChessPiece.WHITE_PAWN)
         self.assertIsNone(new_board.get_piece_on_square(Square.e2.value))
@@ -181,9 +181,9 @@ class TestChessBoard(unittest.TestCase):
     def test_capture_piece(self):
         """Ensure capturing a piece removes it from the board."""
         board = ChessBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-        board = ChessBoard(board_state=board.move_piece(Square.e2.value, Square.e4.value))
-        board = ChessBoard(board_state=board.move_piece(Square.d7.value, Square.d5.value))
-        board = ChessBoard(board_state=board.move_piece(Square.e4.value, Square.d5.value))
+        board = ChessBoard(board_state=board._generate_move_board_state(Square.e2.value, Square.e4.value))
+        board = ChessBoard(board_state=board._generate_move_board_state(Square.d7.value, Square.d5.value))
+        board = ChessBoard(board_state=board._generate_move_board_state(Square.e4.value, Square.d5.value))
 
         self.assertEqual(board.get_piece_on_square(Square.d5.value), ColorChessPiece.WHITE_PAWN)
         self.assertIsNone(board.get_piece_on_square(Square.e4.value))
@@ -191,7 +191,7 @@ class TestChessBoard(unittest.TestCase):
     def test_pawn_promotion(self):
         """Ensure pawns promote correctly."""
         board = ChessBoard("8/4P3/8/8/8/8/8/k6K w - - 0 1")
-        new_board = ChessBoard(board_state=board.move_piece(Square.e7.value, Square.e8.value))
+        new_board = ChessBoard(board_state=board._generate_move_board_state(Square.e7.value, Square.e8.value))
         self.assertEqual(new_board.get_piece_on_square(Square.e8.value),
                          ColorChessPiece.WHITE_QUEEN)
 
@@ -200,7 +200,7 @@ class TestChessBoard(unittest.TestCase):
         self.chess_board = ChessBoard("rnbqkbnr/pppp1ppp/8/4pP2/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3")
         with self.assertRaises(ValueError):
             self.chess_board = ChessBoard(
-                board_state=self.chess_board.move_piece(Square.f5.value, Square.e6.value))
+                board_state=self.chess_board._generate_move_board_state(Square.f5.value, Square.e6.value))
 
         self.assertFalse(self.is_piece_on_square(ColorChessPiece.WHITE_PAWN, Square.e6.value))
         self.assertTrue(self.is_piece_on_square(ColorChessPiece.BLACK_PAWN, Square.e5.value))
