@@ -1,3 +1,5 @@
+let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem("fenIndex")) : 0;
+let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
 document.addEventListener("DOMContentLoaded", () => {
     initializeBoard();
     setupEventListeners();
@@ -23,6 +25,7 @@ function getBoardConfig() {
         onDrop: handleDrop
     };
 }
+
 /**
  * Creates a static chessboard where pieces cannot be moved.
  */
@@ -58,7 +61,7 @@ function startNewGame() {
             clearPGN();
             board = Chessboard('board', getBoardConfig());
             board.position(data.fen);
-
+            clearFenList();
             document.getElementById('statusEl').textContent = "New game started!";
 
         })
@@ -74,14 +77,23 @@ function startNewGame() {
  */
 function updateGameState(data, prev_fen = null) {
     if (data.status === 'ok') {
+        // Clear fenList if currentFen is starting postion
+        const startPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        if (currentFen === startPosition) {
+            clearFenList();
+        }
+        addFEN(data.fen);
         board.position(data.fen);
         setPGNMoves(data.pgn);
         document.getElementById('statusEl').textContent = "Move successful!";
+        currentFen = data.fen;
     } else if (data.status === 'game_over') {
         board = createStaticBoard();
         board.position(data.fen, false);
         setPGNMoves(data.pgn);
         document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
+        addFEN(data.fen);
+        currentFen = data.fen;
     } else {
         if (prev_fen) board.position(prev_fen); // Restore previous position if move failed
         document.getElementById('statusEl').textContent = data.status === 'error'
@@ -123,7 +135,7 @@ async function handleDrop(source, target) {
  */
 async function makeEngineMove() {
     try {
-        const response = await fetch('/engine_move', { method: 'GET' });
+        const response = await fetch('/engine_move', {method: 'GET'});
         const data = await response.json();
         updateGameState(data);
     } catch (error) {
@@ -142,6 +154,8 @@ function clearPGN() {
         console.error("clearPGN: PGN container not found.");
         return;
     }
+    fenIndex = 0;
+    localStorage.setItem("fenIndex", fenIndex);
     pgnContainer.innerHTML = "";
 }
 
@@ -170,13 +184,13 @@ function setPGNMoves(pgnString) {
         moveNumberCol.textContent = moves[i];
 
         // Create buttons for moves
-        const whiteMoveButton = createPGNButton(moves[i + 1]);
-        const blackMoveButton = createPGNButton(moves[i + 2] || "—");
+        const playerMoveButton = createPGNButton(moves[i + 1]);
+        const engineMoveButton = createPGNButton(moves[i + 2] || "—");
 
         // Append elements into the row
         newRow.appendChild(moveNumberCol);
-        newRow.appendChild(whiteMoveButton);
-        newRow.appendChild(blackMoveButton);
+        newRow.appendChild(playerMoveButton);
+        newRow.appendChild(engineMoveButton);
 
         pgnContainer.appendChild(newRow);
     }
@@ -192,7 +206,44 @@ function createPGNButton(text) {
     const button = document.createElement("button");
     button.classList.add("pgn-button");
     button.textContent = text;
+    button.fenIndex = fenIndex;
+    fenIndex++;
+    localStorage.setItem("fenIndex", fenIndex);
+    button.onclick = function () {
+        fen = getFENs()[this.fenIndex];
+        // If current move allow pieces to be moved else can't move in the past board states.
+        if (fen === currentFen) {
+            board = Chessboard('board', getBoardConfig());
+        } else {
+            board = createStaticBoard();
+        }
+        board.position(fen, false);
+    };
+
     return button;
+}
+
+/**
+ * Add given fen to end of fenList.
+ */
+function addFEN(fen) {
+    fenList.push(fen);
+    localStorage.setItem("fenList", JSON.stringify(fenList));
+}
+
+/**
+ * Return local storage fenList as a JS array.
+ */
+function getFENs() {
+    return JSON.parse(localStorage.getItem("fenList")) || [];
+}
+
+/**
+ * Empty fenList.
+ */
+function clearFenList() {
+    fenList = []
+    localStorage.setItem("fenList", fenList);
 }
 
 /**
@@ -228,9 +279,3 @@ async function setFen() {
         alert("Failed to update board. Please check your FEN.");
     }
 }
-
-
-// TODO: make pgn buttons set client board to undraggable view of the board at that move
-// TODO: Add functionality for undo button
-
-
