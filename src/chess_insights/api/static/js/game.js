@@ -268,7 +268,8 @@ async function setFen() {
         if (response.ok && data.status === "ok") {
             board = Chessboard('board', getBoardConfig());
             board.position(fenInput);
-            clearPGN()
+            clearPGN();
+            clearFenList();
             document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
         } else {
             alert(`Error: ${data.error || "Invalid FEN entered!"}`);
