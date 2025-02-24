@@ -279,3 +279,24 @@ async function setFen() {
         alert("Failed to update board. Please check your FEN.");
     }
 }
+
+async function undo() {
+    try {
+        const response = await fetch ('/undo', {
+            method: 'GET'
+        });
+        const data = await response.json();
+        if (response.ok && data.status === "ok") {
+            board = Chessboard('board', getBoardConfig());
+            currentFen = data.fen;
+            board.position(currentFen);
+            clearPGN();
+            setPGNMoves(data.pgn);
+            document.getElementById("statusEl").textContent = "Undo Successful.";
+        } else {
+            alert("Something went wrong when UNDOING.")
+        }
+    } catch (error) {
+        console.error("Error UNDOING:", error);
+    }
+}

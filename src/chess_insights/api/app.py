@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from collections import deque
 
 from chess_insights.engine.engine import Engine
 from chess_insights.game.chess_board import ChessBoard  # Import your class
@@ -9,6 +10,8 @@ from chess_insights.util.fen import fen_from_board
 app = Flask(__name__)
 chess_game = ChessBoard()
 engine = Engine()
+board_states = deque(maxlen=10)
+board_states.append((chess_game.board_state, chess_game.pgn))
 
 
 def execute_move(from_square,
@@ -23,7 +26,6 @@ def execute_move(from_square,
 
         # Check game status after the move
         game_status = chess_game.check_game_status(chess_game.board_state)
-
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
@@ -54,9 +56,11 @@ def play():
 
 @app.route('/new_game', methods=['GET'])
 def new_game():
-    global chess_game
+    global chess_game, board_states
     chess_game = ChessBoard()  # Reset the game
     new_fen = fen_from_board(chess_game.board_state)  # Get new FEN
+    board_states = deque(maxlen=10)
+    board_states.append((chess_game.board_state, chess_game.pgn))
 
     return jsonify({"message": "New game started!", "fen": new_fen})
 
@@ -64,12 +68,13 @@ def new_game():
 @app.route('/move', methods=['POST'])
 def move():
     """Validate and execute a move."""
+    global board_states
     data = request.get_json()
 
     try:
         from_square = Square[data.get('fromSquare')].value
         to_square = Square[data.get('toSquare')].value
-
+        state_pgn_tuple = (chess_game.board_state.copy(), chess_game.pgn)
         response = execute_move(from_square, to_square)
         return jsonify(response)
 
@@ -82,7 +87,8 @@ def move():
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}',
                         'fen': fen_from_board(chess_game.board_state)}), 500
-
+    finally:
+        board_states.append(state_pgn_tuple)
 
 @app.route('/end_game', methods=['POST'])
 def end_game():
@@ -134,6 +140,18 @@ def set_fen():
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}',
                         'fen': fen_from_board(chess_game.board_state)}), 500
+
+
+@app.route('/undo', methods=['GET'])
+def undo():
+    global chess_game, board_states
+    if not board_states:
+        return jsonify(
+            {'error': 'No moves to undo', 'fen': fen_from_board(chess_game.board_state)}), 400
+    state = board_states.pop()
+    chess_game = ChessBoard(board_state=state[0])
+    chess_game.pgn = state[1]
+    return jsonify({'status': 'ok', 'fen': fen_from_board(chess_game.board_state), 'pgn': chess_game.pgn})
 
 
 if __name__ == '__main__':
