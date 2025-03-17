@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from collections import deque
 
 from chess_insights.engine.engine import Engine
@@ -49,16 +49,23 @@ def home():
 @app.route('/play', methods=['GET'])
 def play():
     """Render the play page with the current board state."""
+    new_game()
+    fen = fen_from_board(chess_game.board_state)
+    return render_template('play.html', fen=fen)
+
+
+@app.route('/game', methods=['GET'])
+def game():
     fen = fen_from_board(chess_game.board_state)
     pgn = chess_game.pgn
-    return render_template('play.html', fen=fen, pgn=pgn)
+    return render_template('game.html', fen=fen, pgn=pgn)
 
 
 @app.route('/new_game', methods=['GET'])
 def new_game():
     global chess_game, board_states
-    chess_game = ChessBoard()  # Reset the game
-    new_fen = fen_from_board(chess_game.board_state)  # Get new FEN
+    chess_game = ChessBoard()
+    new_fen = fen_from_board(chess_game.board_state)
     board_states = deque(maxlen=10)
     board_states.append((chess_game.board_state, chess_game.pgn))
 
@@ -89,6 +96,7 @@ def move():
                         'fen': fen_from_board(chess_game.board_state)}), 500
     finally:
         board_states.append(state_pgn_tuple)
+
 
 @app.route('/end_game', methods=['POST'])
 def end_game():
@@ -136,7 +144,7 @@ def set_fen():
                 {'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
 
         chess_game = ChessBoard(fen)
-        return jsonify({'status': 'ok', 'fen': fen})
+        return redirect(url_for('game'))
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}',
                         'fen': fen_from_board(chess_game.board_state)}), 500
@@ -145,13 +153,14 @@ def set_fen():
 @app.route('/undo', methods=['GET'])
 def undo():
     global chess_game, board_states
-    if not board_states:
+    if len(board_states) <= 1:
         return jsonify(
             {'error': 'No moves to undo', 'fen': fen_from_board(chess_game.board_state)}), 400
     state = board_states.pop()
     chess_game = ChessBoard(board_state=state[0])
     chess_game.pgn = state[1]
-    return jsonify({'status': 'ok', 'fen': fen_from_board(chess_game.board_state), 'pgn': chess_game.pgn})
+    return jsonify(
+        {'status': 'ok', 'fen': fen_from_board(chess_game.board_state), 'pgn': chess_game.pgn})
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}ChessInsights{% endblock %}
+{% block title %}ChessInsights Game{% endblock %}
 
 {% block head_imports %}
 <!-- jQuery (Required for Chessboard.js) -->
@@ -8,7 +8,6 @@
 <!-- Chessboard.js for board representation and movement-->
 <script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/game.js') }}"></script>
-<script src="{{ url_for('static', filename='js/play.js') }}"></script>
 {% endblock %}
 
 {% block styles %}
@@ -20,13 +19,12 @@
 {% endblock %}
 
 {% block content %}
-<body class="play">
 <div class="game-container">
     <!-- Chessboard -->
     <div id="board"></div>
-    <p id="statusEl">Pick your color</p>
+    <p id="statusEl">Make a move!</p>
 </div>
-</body>
+
 <div class="bottom-buttons">
 
 </div>
@@ -38,15 +36,17 @@
     <div class="button-group">
 
         <div class="action-buttons">
-            <button class="btn-primary" id="white" onclick="renderGame('white')">White</button>
-            <button class="btn-primary" id="random" onclick="renderGame('random')">Random</button>
-            <button class="btn-primary" id="black" onclick="renderGame('black')">Black</button>
-        </div>
-
-        <div class="fen-input-container">
-            <input type="text" id="userInput" placeholder="Enter Custom FEN">
-            <button class="btn-primary" type="button" onclick="setFen()">Set Fen</button>
+            <button class="btn-primary" onclick="undo()">Undo</button>
+            <button class="btn-danger" onclick="startNewGame()">New Game</button>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var currentFen = "{{ fen|default('start') }}";
+    var currentPGN = "{{ pgn|default('') }}";
+    var playerColor = "{{ color }}"
+</script>
 {% endblock %}

@@ -1,6 +1,8 @@
 let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem("fenIndex")) : 0;
 let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
 document.addEventListener("DOMContentLoaded", () => {
+    playerColor = localStorage.getItem("playerColor") || "white";
+    localStorage.setItem("currentFen", localStorage.getItem("currentFen") || "start");
     initializeBoard();
     setupEventListeners();
 });
@@ -9,8 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
  * Initializes the chessboard with configurations and sets the PGN.
  */
 function initializeBoard() {
-    window.board = Chessboard('board', getBoardConfig());
+    let isPlay = document.body.classList.contains("play");
+    window.board = isPlay ? createStaticBoard() : Chessboard("board", getBoardConfig());
     setPGNMoves(currentPGN);
+    if (playerColor === "black" && localStorage.getItem("currentFen") === "start") {
+        setTimeout(makeEngineMove, 1);
+    }
 }
 
 /**
@@ -20,7 +26,8 @@ function getBoardConfig() {
     return {
         draggable: true,
         dropOffBoard: 'snapback',
-        position: currentFen || "start",
+        position: localStorage.getItem("currentFen") || "start",
+        orientation: playerColor,
         pieceTheme: '/static/chessboardjs-1.0.0/img/chesspieces/wikipedia/{piece}.png',
         onDrop: handleDrop
     };
@@ -42,63 +49,37 @@ function createStaticBoard() {
  * Sets up event listeners for various UI interactions.
  */
 function setupEventListeners() {
-    const statusEl = document.getElementById('statusEl');
-
     // Resize event for board responsiveness
     window.addEventListener("resize", () => board.resize());
-
-    // New game button click event
-    document.getElementById("newGameBtn").addEventListener("click", startNewGame);
 }
 
 /**
- * Starts a new game by resetting the board and PGN.
+ * Starts a new game by navigating to /play.
  */
 function startNewGame() {
-    fetch('/new_game', {method: 'GET'})
-        .then(response => response.json())
-        .then(data => {
-            clearPGN();
-            board = Chessboard('board', getBoardConfig());
-            board.position(data.fen);
-            clearFenList();
-            document.getElementById('statusEl').textContent = "New game started!";
-
-        })
-        .catch(error => {
-            console.error("Error starting new game:", error);
-            alert("Server error.");
-        });
+    window.location.href = "/play";
 }
 
 /**
  * Updates the game state based on server response.
- * Handles board updates, PGN moves, game over, and status messages.
  */
 function updateGameState(data, prev_fen = null) {
     if (data.status === 'ok') {
-        // Clear fenList if currentFen is starting postion
-        const startPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-        if (currentFen === startPosition) {
-            clearFenList();
-        }
         addFEN(data.fen);
         board.position(data.fen);
         setPGNMoves(data.pgn);
         document.getElementById('statusEl').textContent = "Move successful!";
-        currentFen = data.fen;
+        localStorage.setItem("currentFen", data.fen);
     } else if (data.status === 'game_over') {
         board = createStaticBoard();
         board.position(data.fen, false);
         setPGNMoves(data.pgn);
         document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
         addFEN(data.fen);
-        currentFen = data.fen;
+        localStorage.setItem("currentFen", data.fen);
     } else {
-        if (prev_fen) board.position(prev_fen); // Restore previous position if move failed
-        document.getElementById('statusEl').textContent = data.status === 'error'
-            ? "Move rejected by server."
-            : "Engine move failed.";
+        if (prev_fen) board.position(prev_fen);
+        document.getElementById('statusEl').textContent = "Move rejected or engine move failed.";
     }
 }
 
@@ -121,7 +102,7 @@ async function handleDrop(source, target) {
         updateGameState(data, prev_fen);
 
         if (data.status === 'ok') {
-            setTimeout(makeEngineMove, 1); // Let the engine respond
+            setTimeout(makeEngineMove, 1);
         }
     } catch (error) {
         console.error("Error processing move:", error);
@@ -295,7 +276,7 @@ async function undo() {
             setPGNMoves(data.pgn);
             document.getElementById("statusEl").textContent = "Undo Successful.";
         } else {
-            alert("Something went wrong when UNDOING.")
+            alert(data.error || "Something went wrong when UNDOING.");
         }
     } catch (error) {
         console.error("Error UNDOING:", error);
