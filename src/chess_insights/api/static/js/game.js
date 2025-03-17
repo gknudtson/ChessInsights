@@ -281,7 +281,7 @@ async function undo() {
             setPGNMoves(data.pgn);
             document.getElementById("statusEl").textContent = "Undo Successful.";
         } else {
-            alert("Something went wrong when UNDOING.")
+            alert(data.error || "Something went wrong when UNDOING.");
         }
     } catch (error) {
         console.error("Error UNDOING:", error);
