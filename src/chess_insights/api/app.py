@@ -153,7 +153,7 @@ def set_fen():
 @app.route('/undo', methods=['GET'])
 def undo():
     global chess_game, board_states
-    if not board_states:
+    if len(board_states) <= 1:
         return jsonify(
             {'error': 'No moves to undo', 'fen': fen_from_board(chess_game.board_state)}), 400
     state = board_states.pop()
