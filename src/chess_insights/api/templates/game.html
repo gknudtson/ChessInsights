@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}ChessInsights Game{% endblock %}
+
+{% block head_imports %}
+<!-- jQuery (Required for Chessboard.js) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Chessboard.js for board representation and movement-->
+<script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+<!-- Chessboard.js CSS -->
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='chessboardjs-1.0.0/css/chessboard-1.0.0.min.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='/css/game.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <!-- Chessboard -->
+    <div id="board"></div>
+    <p id="statusEl">Make a move!</p>
+</div>
+
+<div class="bottom-buttons">
+
+</div>
+{% endblock %}
+{% block rightbar %}
+<!-- Controls Container-->
+<div class="button-container">
+    <div class="pgn-container"></div>
+    <div class="button-group">
+
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="undo()">Undo</button>
+            <button class="btn-danger" id="newGameBtn">New Game</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var currentFen = "{{ fen|default('start') }}";
+    var currentPGN = "{{ pgn|default('') }}";
+    var playerColor = "{{ color }}"
+</script>
+{% endblock %}
