@@ -49,13 +49,8 @@ function createStaticBoard() {
  * Sets up event listeners for various UI interactions.
  */
 function setupEventListeners() {
-    const statusEl = document.getElementById('statusEl');
-
     // Resize event for board responsiveness
     window.addEventListener("resize", () => board.resize());
-
-    // TODO: Remove
-    document.getElementById("newGameBtn").addEventListener("click", startNewGame);
 }
 
 /**
