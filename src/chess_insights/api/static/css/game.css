@@ -1,5 +1,5 @@
 :root {
-    --board-size: min(80vw, 80vh, 800px);
+    --board-size: min(80vw, 80vh);
 }
 
 * {
