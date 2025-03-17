@@ -59,23 +59,10 @@ function setupEventListeners() {
 }
 
 /**
- * Starts a new game by resetting the board and PGN.
+ * Starts a new game by navigating to /play.
  */
 function startNewGame() {
-    fetch('/new_game', {method: 'GET'})
-        .then(response => response.json())
-        .then(data => {
-            clearPGN();
-            board = Chessboard('board', getBoardConfig());
-            board.position(data.fen);
-            clearFenList();
-            document.getElementById('statusEl').textContent = "New game started!";
-
-        })
-        .catch(error => {
-            console.error("Error starting new game:", error);
-            alert("Server error.");
-        });
+    window.location.href = "/play";
 }
 
 /**
