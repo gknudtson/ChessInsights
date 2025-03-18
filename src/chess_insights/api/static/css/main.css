@@ -20,7 +20,7 @@ body {
     display: grid;
     grid-template-areas:
         "leftbar content rightbar";
-    grid-template-columns: min-content min-content min-content;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0px;
     padding: 0px;
 }
