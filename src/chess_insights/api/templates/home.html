@@ -18,9 +18,21 @@
 {% block content %}
     <section class="hero">
         <div class="hero-content">
-            <h1>Welcome to Chess Insights</h1>
+            <h1>Welcome to ChessInsights</h1>
             <p>A Python-powered chess engine in its early stages, starting with random moves, but learning towards mastery.</p>
             <a href="{{ url_for('play') }}" class="btn">Play Now</a>
         </div>
+    </section>
+    <section class="features">
+        <h2>Current Features</h2>
+        <p>Chess Insights is in early development. Here’s what it can do right now:</p>
+        <ul>
+            <li>Python-powered chess rule engine</li>
+            <li>Random engine move selection from legal moves</li>
+            <li>Playable game interface</li>
+            <li>Play from custom positions using FEN</li>
+            <li>PGN move notation and tracking</li>
+        </ul>
+        <a href="{{ url_for('about') }}" class="btn">Learn More</a>
     </section>
 {% endblock %}
