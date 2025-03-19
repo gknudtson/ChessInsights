@@ -13,7 +13,8 @@
 body {
     min-height: 100vh;
     font-family: var(--font-family);
-    background-color: var(--dark-background)
+    background-color: var(--dark-background);
+    color: white;
 }
 
 .basic-grid {
@@ -41,4 +42,3 @@ body {
     padding-top: 10px;
 
 }
-
