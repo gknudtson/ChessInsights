@@ -5,7 +5,16 @@
 {% endblock %}
 
 {% block styles %}
-
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='/css/content-styles.css') }}">
+<style>
+    body {
+        background-image: url("{{ url_for('static', filename='images/background.webp') }}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }</style>
 {% endblock %}
 
 
@@ -14,7 +23,43 @@
 {% endblock%}
 
 {% block content %}
-
+<section class="block">
+    <div>
+        <h1>About ChessInsights</h1>
+        <p>Chess Insights is a Python-powered chess engine that explores the game through analytics
+            and automation. While it currently selects moves at random, I'm working towards building
+            a fully intelligent chess-playing system.</p>
+    </div>
+</section>
+<section class="block">
+    <div class="features">
+        <h2>Current Features</h2>
+        <ul>
+            <li>Python-powered chess rule engine</li>
+            <li>Random move selection from legal moves</li>
+            <li>Playable game interface</li>
+            <li>Play from a custom position using FEN</li>
+            <li>PGN move notation and tracking</li>
+        </ul>
+    </div>
+</section>
+<section class="block">
+    <div class="future">
+        <h2>Future Plans</h2>
+        <ul>
+            <li>Implementing basic evaluation for better move selection</li>
+            <li>Adding Minimax algorithm with Alpha-Beta pruning</li>
+            <li>Importing & analyzing user games</li>
+            <li>Game Database for storing games played against engine</li>
+        </ul>
+    </div>
+</section>
+<section class="block">
+<h2>How It Works: A High-Level Technical Overview</h2>
+    </section>
+<section class="block">
+<h2>Who Built This?</h2>
+</section>
 {% endblock %}
 
 {% block rightbar %}
