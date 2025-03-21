@@ -13,14 +13,15 @@
 body {
     min-height: 100vh;
     font-family: var(--font-family);
-    background-color: var(--dark-background)
+    background-color: var(--dark-background);
+    color: white;
 }
 
 .basic-grid {
     display: grid;
     grid-template-areas:
         "leftbar content rightbar";
-    grid-template-columns: min-content min-content min-content;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0px;
     padding: 0px;
 }
@@ -41,4 +42,3 @@ body {
     padding-top: 10px;
 
 }
-

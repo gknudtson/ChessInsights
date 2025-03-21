@@ -1,0 +1,99 @@
+.block {
+    position: relative;
+    width: 50vw;
+    text-align: center;
+    padding: 60px 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.block:first-child {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+}
+
+.block:nth-child(even) {
+    color: black;
+    background: white;
+}
+
+.block:nth-child(odd) {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.block h1 {
+    font-size: 2.9rem;
+    margin-bottom: 15px;
+}
+
+.block h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.block h3 {
+    font-size: 1.5rem;
+    margin-bottom: 7.5px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.block p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #ff6600;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #cc5200;
+}
+
+.block ul {
+    list-style-type: none;
+    padding: 0;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.block ul li {
+    display: block;
+    align-items: start;
+    gap: 10px;
+    text-align: left;
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+
+.block ul li::before {
+    content: "•";
+    color: #ff6600;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: inline-block;
+    width: 30px;
+}
+
+.feature ul li::before {
+    content: "✔";
+}
+
+.future ul li::before {
+    content: "🔜";
+    padding-right: 10px;
+}

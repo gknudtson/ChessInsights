@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ChessInsights{% endblock %}</title>
+    <link rel="icon" type="image/webp"
+          href="{{ url_for('static', filename='images/favicon.webp') }}">
+
 
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/main.css') }}">
 
@@ -22,7 +25,7 @@
     <ul>
         <li><a href="{{ url_for('home') }}">ChessInsights</a></li>
         <li class="hideOnMobile"><a href="{{ url_for('play') }}">Play</a></li>
-        <li class="hideOnMobile"><a href="#">About</a></li>
+        <li class="hideOnMobile"><a href="{{ url_for('about') }}">About</a></li>
         <li class="hideOnMobile"><a href="https://github.com/gknudtson/ChessInsights"
                                     target="_blank">GitHub</a></li>
         <li class="menu-button" onclick="showSidebar()"><a href="#">☰</a></li>

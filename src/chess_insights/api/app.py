@@ -46,6 +46,11 @@ def home():
     return render_template('home.html')
 
 
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html')
+
+
 @app.route('/play', methods=['GET'])
 def play():
     """Render the play page with the current board state."""

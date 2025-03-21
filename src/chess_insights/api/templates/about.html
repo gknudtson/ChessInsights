@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block head_imports %}
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='/css/content-styles.css') }}">
+<style>
+    body {
+        background-image: url("{{ url_for('static', filename='images/background.webp') }}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }</style>
+{% endblock %}
+
+
+{% block leftbar %}
+
+{% endblock%}
+
+{% block content %}
+<section class="block">
+    <div>
+        <h1>About ChessInsights</h1>
+        <p>ChessInsights is a Python-powered chess engine that utilizes bitboards to efficiently
+            calculate valid moves.
+            Currently, when playing against it, it selects a random move from a list of all valid
+            moves in the position.
+            However, I'm working towards building a more powerful evaluation system for better move
+            selection.
+        </p>
+    </div>
+</section>
+<section class="block">
+    <div class="features">
+        <h2>Current Features</h2>
+        <ul>
+            <li>Python-powered chess rule engine</li>
+            <li>Random move selection from legal moves</li>
+            <li>Playable game interface</li>
+            <li>Play from a custom position using FEN</li>
+            <li>PGN move notation and tracking</li>
+        </ul>
+    </div>
+</section>
+<section class="block">
+    <div class="future">
+        <h2>Future Plans</h2>
+        <ul>
+            <li>Implementing basic evaluation for better move selection</li>
+            <li>Adding Minimax algorithm with Alpha-Beta pruning</li>
+            <li>Importing & analyzing user games</li>
+            <li>Game Database for storing games played against engine</li>
+        </ul>
+    </div>
+</section>
+<section class="block">
+    <h2>How It Works: A High-Level Technical Overview</h2>
+    <p>
+        This chess engine is designed around efficient bitboard representations and immutable board
+        states to support fast move generation, rule enforcement, and game state evaluation. The
+        following sections break down the key components:
+    </p>
+
+    <h3>Core Data Structures</h3>
+    <p>
+        <strong>Board Representation:</strong> The engine uses a 64‐bit integer <a
+            href="https://www.chessprogramming.org/Bitboards" target="_blank">(bitboard)</a> to
+        represent the chess
+        board, where each bit corresponds to a square. The overall game state is encapsulated in an
+        immutable <code>BoardState</code> object which includes:
+    </p>
+    <ul>
+        <li><strong>piece_locations:</strong> A mapping from each piece type to its corresponding
+            bitboard.
+        </li>
+        <li><strong>is_whites_turn:</strong> A flag indicating the current player.</li>
+        <li><strong>en_passant_square:</strong> A bitboard indicating en passant targets.</li>
+        <li><strong>fifty_move_rule:</strong> A counter for the 50-move draw rule.</li>
+        <li><strong>move_number:</strong> A counter of the moves played.</li>
+        <li><strong>castling_rights:</strong> Encoded rights for castling for both sides.</li>
+    </ul>
+
+    <h3>Move Generation</h3>
+    <p>
+        The engine employs bitboard operations to generate moves for each piece type:
+    </p>
+    <ul>
+        <li><strong>Pawns:</strong> Generate single and double moves, capture moves (including en
+            passant) and handle promotions.
+        </li>
+        <li><strong>Sliding Pieces (Rook, Bishop, Queen):</strong> Utilizes <a
+                href="https://www.chessprogramming.org/Magic_Bitboards#How_it_works"
+                target="_blank">magic
+            bitboards</a> to efficiently generate all moves for sliding pieces in any position.
+        </li>
+        <li><strong>Knights:</strong> Utilize jump masks for their unique L-shaped movement.</li>
+        <li><strong>Kings:</strong> Generate moves while ensuring that moves do not leave the king
+            in check. Special castling moves are handled separately.
+        </li>
+    </ul>
+
+    <h3>Move Execution and Rule Enforcement</h3>
+    <p>
+        <code>ChessBoard</code> is responsible for move validation and updating the
+        <code>BoardState</code>. The <code>move_piece()</code> method is responsible for executing
+        moves. It:
+    </p>
+    <ul>
+        <li>Validates the move against the current board state.</li>
+        <li>Updates the bitboards to reflect piece movement and captures.</li>
+        <li>Handles special moves such as castling, en passant, and pawn promotion.</li>
+        <li>Simulates moves to ensure that the king does not remain in check.</li>
+        <li>Updates <code>BoardState</code> variables to ensure game state is updated.</li>
+    </ul>
+
+    <h3>Game State Evaluation</h3>
+    <p>
+        The server continuously evaluates the game state to detect conditions like checkmate,
+        stalemate, and draw by the 50-move rule (as well as other draw conditions). This ensures
+        that the game terminates correctly when one of these conditions is met.
+    </p>
+
+    <h3>Engine and Move Generation</h3>
+    <p>
+        An integrated engine component leverages the move generation logic from
+        <code>ChessBoard</code> to select random legal
+        moves from the list of valid moves, providing a simple AI opponent.
+    </p>
+
+    <h3>PGN and FEN Handling</h3>
+    <ul>
+        <li><strong>FEN:</strong> The engine parses FEN strings to initialize board states and
+            serializes board states back into FEN format. This allows for efficient passing of
+            information between the server and client.
+        </li>
+        <li><strong>PGN:</strong> Moves are converted into standard algebraic notation for human
+            readability and game recording. PGN is also utilized to create buttons that allow
+            players to view previous board states in the game.
+        </li>
+    </ul>
+
+    <h3>Web API Integration</h3>
+    <p>
+        The engine is wrapped in a Flask-based web API, allowing users to interact with the game via
+        HTTP requests. Endpoints are available for moving pieces, generating engine moves, undoing
+        moves, and setting up new games.
+    </p>
+    </section>
+    {% endblock %}
+
+    {% block rightbar %}
+
+    {% endblock%}
+
+
+    {% block scripts %}
+
+    {% endblock %}
