@@ -190,10 +190,11 @@ function createPGNButton(text) {
     button.fenIndex = fenIndex;
     fenIndex++;
     localStorage.setItem("fenIndex", fenIndex);
+    button.textContent !== "—"
     button.onclick = function () {
-        fen = getFENs()[this.fenIndex];
+        const fen = button.textContent !== "—" ? getFENs()[this.fenIndex] : getFENs().at(-1);
         // If current move allow pieces to be moved else can't move in the past board states.
-        if (fen === currentFen) {
+        if (fen === localStorage.getItem("currentFen")) {
             board = Chessboard('board', getBoardConfig());
         } else {
             board = createStaticBoard();
@@ -264,7 +265,7 @@ async function setFen() {
 
 async function undo() {
     try {
-        const response = await fetch ('/undo', {
+        const response = await fetch('/undo', {
             method: 'GET'
         });
         const data = await response.json();
