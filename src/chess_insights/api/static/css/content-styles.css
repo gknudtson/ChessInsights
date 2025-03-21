@@ -1,11 +1,13 @@
 .block {
-    width: 100%;
+    position: relative;
+    width: 50vw;
     text-align: center;
     padding: 60px 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .block:first-child {
-    height: 77vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,6 +35,13 @@
     margin-bottom: 10px;
 }
 
+.block h3 {
+    font-size: 1.5rem;
+    margin-bottom: 7.5px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
 .block p {
     font-size: 1.2rem;
     margin-bottom: 20px;
@@ -54,32 +63,37 @@
     background: #cc5200;
 }
 
-.features ul, .future ul {
+.block ul {
     list-style-type: none;
     padding: 0;
     max-width: 700px;
     margin: 0 auto;
 }
 
-.features ul li, .future ul li {
+.block ul li {
+    display: block;
+    align-items: start;
+    gap: 10px;
+    text-align: left;
     font-size: 1.2rem;
     margin: 10px 0;
-    display: grid;
-    grid-template-columns: 30px auto;
-    align-items: start;
-    gap: 15px;
-    text-align: left;
 }
 
-.features ul li::before, .future ul li::before {
-    content: "✔";
+
+.block ul li::before {
+    content: "•";
     color: #ff6600;
     font-weight: bold;
-    text-align: center;
+    font-size: 1.5rem;
     display: inline-block;
     width: 30px;
 }
 
+.feature ul li::before {
+    content: "✔";
+}
+
 .future ul li::before {
     content: "🔜";
+    padding-right: 10px;
 }
