@@ -193,7 +193,7 @@ function createPGNButton(text) {
     button.onclick = function () {
         fen = getFENs()[this.fenIndex];
         // If current move allow pieces to be moved else can't move in the past board states.
-        if (fen === currentFen) {
+        if (fen === localStorage.getItem("currentFen")) {
             board = Chessboard('board', getBoardConfig());
         } else {
             board = createStaticBoard();
