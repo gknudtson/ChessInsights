@@ -43,3 +43,6 @@ htmlcov/
 .coverage
 .coverage.*
 .pytest_cache/
+
+# Security
+.env
