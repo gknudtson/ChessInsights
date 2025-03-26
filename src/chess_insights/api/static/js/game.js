@@ -102,7 +102,7 @@ async function handleDrop(source, target) {
         updateGameState(data, prev_fen);
 
         if (data.status === 'ok') {
-            setTimeout(makeEngineMove, 1);
+            setTimeout(makeEngineMove, 300);
         }
     } catch (error) {
         console.error("Error processing move:", error);

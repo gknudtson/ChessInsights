@@ -36,12 +36,25 @@ async function setFen() {
     }
 }
 
-function renderGame(color) {
+async function renderGame(color) {
     if (color === 'random') {
         color = Math.random() < 0.5 ? "white" : "black";
     }
 
-    localStorage.setItem("playerColor", color);
+    const response = await fetch('/start_game', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ side: color })
+    });
 
-    window.location.href = "/game";
+    if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("playerColor", data.color);
+        localStorage.setItem("currentFen", data.fen);
+        window.location.href = "/game";
+    } else {
+        const error = await response.json();
+        alert("Failed to start game: " + error.message);
+    }
 }
+
