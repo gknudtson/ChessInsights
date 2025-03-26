@@ -45,12 +45,6 @@ def set_game(chess_game):
     session["pgn"] = chess_game.pgn
 
 
-@app.route('/test-session')
-def test_session():
-    session['test_key'] = 'test_value'
-    return f"Stored in session: {session['test_key']}"
-
-
 def execute_move(from_square,
                  to_square
                  ):
