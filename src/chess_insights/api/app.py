@@ -1,24 +1,61 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+import redis, os
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+
+from flask_session import Session
 from collections import deque
+from dotenv import load_dotenv
 
 from chess_insights.engine.engine import Engine
-from chess_insights.game.chess_board import ChessBoard  # Import your class
+from chess_insights.game.chess_board import ChessBoard
 from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.enum_square import Square
-from chess_insights.util.fen import fen_from_board
+from chess_insights.util.fen import fen_from_board, board_from_fen
+from chess_insights.util.flask_session_JSON_serializer import FlaskSessionJSONSerializer
 
 app = Flask(__name__)
-chess_game = ChessBoard()
-engine = Engine()
-board_states = deque(maxlen=10)
-board_states.append((chess_game.board_state, chess_game.pgn))
+
+# Configure Flask-Session
+load_dotenv()
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True
+
+app.config["SESSION_REDIS"] = redis.Redis(
+    host=os.getenv("REDIS_HOST"),
+    port=int(os.getenv("REDIS_PORT")),
+    username=os.getenv("REDIS_USERNAME"),
+    password=os.getenv("REDIS_PASSWORD"),
+    decode_responses=True,
+)
+
+Session(app)
+app.session_interface.serializer = FlaskSessionJSONSerializer()
+
+
+def get_game():
+    fen = session.get("fen")
+    pgn = session.get("pgn", "")
+    board = board_from_fen(fen) if fen else ChessBoard().board_state
+    return ChessBoard(board_state=board, pgn=pgn)
+
+
+def set_game(chess_game):
+    session["fen"] = fen_from_board(chess_game.board_state)
+    session["pgn"] = chess_game.pgn
+
+
+@app.route('/test-session')
+def test_session():
+    session['test_key'] = 'test_value'
+    return f"Stored in session: {session['test_key']}"
 
 
 def execute_move(from_square,
                  to_square
                  ):
     """Helper function to execute a move and return the response JSON."""
-    global chess_game
+    chess_game = get_game()
 
     try:
         chess_game.move_piece(from_square, to_square)
@@ -26,19 +63,22 @@ def execute_move(from_square,
 
         # Check game status after the move
         game_status = chess_game.check_game_status(chess_game.board_state)
+        set_game(chess_game)
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
                 'game_status': game_status.value,
                 'fen': fen,
-                'pgn': chess_game.pgn
+                'pgn': chess_game.pgn,
             }
 
         return {'status': 'ok', 'fen': fen, 'pgn': chess_game.pgn}
 
     except Exception as e:
-        return {'error': str(e), 'fen': fen_from_board(chess_game.board_state),
-                'pgn': chess_game.pgn}, 400
+        return {
+            'error': str(e), 'fen': fen_from_board(chess_game.board_state),
+            'pgn': chess_game.pgn
+        }, 400
 
 
 @app.route('/', methods=['GET'])
@@ -54,59 +94,76 @@ def about():
 @app.route('/play', methods=['GET'])
 def play():
     """Render the play page with the current board state."""
-    new_game()
-    fen = fen_from_board(chess_game.board_state)
-    return render_template('play.html', fen=fen)
+    return render_template('play.html', fen=session.get("fen"))
 
 
 @app.route('/game', methods=['GET'])
 def game():
+    chess_game = get_game()
     fen = fen_from_board(chess_game.board_state)
     pgn = chess_game.pgn
     return render_template('game.html', fen=fen, pgn=pgn)
 
 
-@app.route('/new_game', methods=['GET'])
-def new_game():
-    global chess_game, board_states
-    chess_game = ChessBoard()
-    new_fen = fen_from_board(chess_game.board_state)
-    board_states = deque(maxlen=10)
-    board_states.append((chess_game.board_state, chess_game.pgn))
+@app.route('/start_game', methods=['POST'])
+def start_game():
+    data = request.get_json()
+    side = data.get('side', 'white')
 
-    return jsonify({"message": "New game started!", "fen": new_fen})
+    chess_game = ChessBoard()
+
+    if side == 'black':
+        engine = Engine(board_state=chess_game.board_state)
+        from_square, to_square = engine.generate_move()
+        chess_game.move_piece(from_square, to_square)
+
+    set_game(chess_game)
+    session["history"] = [(fen_from_board(chess_game.board_state), chess_game.pgn)]
+
+    return jsonify({
+        "fen": fen_from_board(chess_game.board_state),
+        "pgn": chess_game.pgn,
+        "color": side
+    })
 
 
 @app.route('/move', methods=['POST'])
 def move():
     """Validate and execute a move."""
-    global board_states
+    chess_game = get_game()
+    history = session.get("history", [])
     data = request.get_json()
 
     try:
         from_square = Square[data.get('fromSquare')].value
         to_square = Square[data.get('toSquare')].value
-        state_pgn_tuple = (chess_game.board_state.copy(), chess_game.pgn)
         response = execute_move(from_square, to_square)
         return jsonify(response)
 
     except KeyError as e:
-        return jsonify({'error': f'Invalid move data: {str(e)}',
-                        'fen': fen_from_board(chess_game.board_state)}), 400
+        return jsonify({
+            'error': f'Invalid move data: {str(e)}',
+            'fen': fen_from_board(chess_game.board_state),
+        }), 400
     except ValueError as e:
-        return jsonify({'error': f'Illegal move attempted: {str(e)}',
-                        'fen': fen_from_board(chess_game.board_state)}), 400
+        return jsonify({
+            'error': f'Illegal move attempted: {str(e)}',
+            'fen': fen_from_board(chess_game.board_state),
+        }), 400
     except Exception as e:
-        return jsonify({'error': f'Unexpected error: {str(e)}',
-                        'fen': fen_from_board(chess_game.board_state)}), 500
+        return jsonify({
+            'error': f'Unexpected error: {str(e)}',
+            'fen': fen_from_board(chess_game.board_state),
+        }), 500
     finally:
-        board_states.append(state_pgn_tuple)
+        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
+        session["history"] = history
 
 
 @app.route('/end_game', methods=['POST'])
 def end_game():
     """Display appropriate end-game message and reset the game."""
-    global chess_game
+    chess_game = get_game()
     game_status = chess_game.check_game_status(chess_game.board_state)
 
     if game_status == GameStatus.ONGOING:
@@ -122,8 +179,7 @@ def end_game():
 @app.route('/engine_move', methods=['GET'])
 def engine_move():
     """Get engine move and execute it."""
-    global engine, chess_game
-
+    chess_game = get_game()
     try:
         engine = Engine(board_state=chess_game.board_state)
         # Get the engine's move
@@ -133,13 +189,15 @@ def engine_move():
         return jsonify(response)
 
     except Exception as e:
-        return jsonify({'error': f'Unexpected error: {str(e)}',
-                        'fen': fen_from_board(chess_game.board_state)}), 500
+        return jsonify({
+            'error': f'Unexpected error: {str(e)}',
+            'fen': fen_from_board(chess_game.board_state)
+        }), 500
 
 
 @app.route('/set_fen', methods=['POST'])
 def set_fen():
-    global chess_game
+    chess_game = get_game()
     try:
         fen = request.get_json().get('fen')
 
@@ -155,17 +213,18 @@ def set_fen():
                         'fen': fen_from_board(chess_game.board_state)}), 500
 
 
-@app.route('/undo', methods=['GET'])
+@app.route('/undo')
 def undo():
-    global chess_game, board_states
-    if len(board_states) <= 1:
-        return jsonify(
-            {'error': 'No moves to undo', 'fen': fen_from_board(chess_game.board_state)}), 400
-    state = board_states.pop()
-    chess_game = ChessBoard(board_state=state[0])
-    chess_game.pgn = state[1]
-    return jsonify(
-        {'status': 'ok', 'fen': fen_from_board(chess_game.board_state), 'pgn': chess_game.pgn})
+    history = session.get("history", [])
+    if len(history) <= 1:
+        return jsonify({"error": "No moves to undo"}), 400
+
+    fen, pgn = history.pop()
+    session["history"] = history
+
+    session["fen"] = fen
+    session["pgn"] = pgn
+    return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
 
 
 if __name__ == '__main__':
