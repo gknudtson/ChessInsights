@@ -188,9 +188,11 @@ function createPGNButton(text) {
     button.classList.add("pgn-button");
     button.textContent = text;
     button.fenIndex = fenIndex;
-    fenIndex++;
+
+    if (text !== "—") {
+        fenIndex++;
+    }
     localStorage.setItem("fenIndex", fenIndex);
-    button.textContent !== "—"
     button.onclick = function () {
         const fen = button.textContent !== "—" ? getFENs()[this.fenIndex] : getFENs().at(-1);
         // If current move allow pieces to be moved else can't move in the past board states.
