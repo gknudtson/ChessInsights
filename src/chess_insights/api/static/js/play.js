@@ -4,6 +4,9 @@ localStorage.removeItem("fenList");
 localStorage.removeItem("fenIndex");
 var currentPGN = '';
 
+/**
+ * Sets the board to a user-inputted FEN.
+ */
 async function setFen() {
     const fenInput = document.getElementById("userInput").value.trim();
     const color = fenInput.includes(" w ") ? "white" : "black";
@@ -44,7 +47,7 @@ async function renderGame(color) {
     const response = await fetch('/start_game', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ side: color })
+        body: JSON.stringify({side: color})
     });
 
     if (response.ok) {
