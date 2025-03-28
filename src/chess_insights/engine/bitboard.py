@@ -1,8 +1,10 @@
+import math
 import numpy as np
 
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 from chess_insights.util.enum_file_and_rank import Rank, File
 from chess_insights.util.enum_ray_direction import Direction
+from chess_insights.util.enum_square import chebyshev_distance
 
 
 class BitBoard:
@@ -30,6 +32,15 @@ class BitBoard:
             raise ValueError("Square must be between 0 and 63.")
         self.board &= ~(1 << square)
 
+    def serialize_board(self) -> list[int]:
+        board = self.board
+        squares = []
+        while board != 0:
+            square = board & -board
+            squares.append(int(math.log2(square)))
+            board = board ^ square
+        return squares
+
     def mirror(self) -> 'BitBoard':
         return self.mirror_vertical().mirror_horizontal()
 
@@ -45,7 +56,17 @@ class BitBoard:
                                   dtype=np.uint8)
         # Combine the reversed bytes back into a 64-bit integer
         mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
-        return BitBoard(mirrored_bitboard.item(), self.board_type)
+        return BitBoard(int(mirrored_bitboard.item()), self.board_type)
+
+
+def serialize_bit(bit: int) -> int:
+    if bit == 0:
+        raise ValueError("Cannot serialize bit: no bits are set.")
+    if bit & (bit - 1) != 0:
+        raise ValueError("Input must have only one bit set.")
+    square = bit & -bit
+    square = int(math.log2(square))
+    return square
 
 
 def reverse_bits(byte):
@@ -82,7 +103,9 @@ def generate_diagonal_path_to_edge_of_board(origin_square: int, offset: int) -> 
             current_square = current_square << abs_offset
         else:
             current_square = current_square >> abs_offset
-        if current_square & edges > 0 and prev_square & edges > 0:
+        if (not current_square == 0 and
+                not prev_square == 0 and
+                chebyshev_distance(serialize_bit(prev_square), serialize_bit(current_square)) > 1):
             break
         if current_square > 2 ** 63 or current_square == 0:
             break
