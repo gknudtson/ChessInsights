@@ -190,16 +190,16 @@ def engine_move():
 
 @app.route('/set_fen', methods=['POST'])
 def set_fen():
-    chess_game = get_game()
     try:
         fen = request.get_json().get('fen')
 
         # Validate FEN before setting the board
         if not fen or len(fen.split()) != 6:
             return jsonify(
-                {'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
+                {'error': 'Invalid FEN format', 'fen': fen}), 400
 
         chess_game = ChessBoard(fen)
+        set_game(chess_game)
         return redirect(url_for('game'))
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}',
