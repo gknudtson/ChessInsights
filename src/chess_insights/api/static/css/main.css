@@ -1,10 +1,18 @@
 @import "buttons.css";
 @import "navbar.css";
+
 :root {
     --dark-background: #161512;
     --light-background: #262421;
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,8 +30,8 @@ body {
     grid-template-areas:
         "leftbar content rightbar";
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 0px;
-    padding: 0px;
+    gap: 0;
+    padding: 0;
 }
 
 .leftbar {
@@ -41,4 +49,10 @@ body {
     grid-area: rightbar;
     padding-top: 10px;
 
+}
+
+@media (max-width: 800px) {
+    .basic-grid {
+        display: block;
+    }
 }

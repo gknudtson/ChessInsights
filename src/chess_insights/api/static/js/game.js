@@ -2,7 +2,7 @@ let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem(
 let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
 document.addEventListener("DOMContentLoaded", () => {
     playerColor = localStorage.getItem("playerColor") || "white";
-    localStorage.setItem("currentFen", localStorage.getItem("currentFen") || "start");
+
     initializeBoard();
     setupEventListeners();
 });
@@ -14,8 +14,12 @@ function initializeBoard() {
     let isPlay = document.body.classList.contains("play");
     window.board = isPlay ? createStaticBoard() : Chessboard("board", getBoardConfig());
     setPGNMoves(currentPGN);
-    if (playerColor === "black" && localStorage.getItem("currentFen") === "start") {
-        setTimeout(makeEngineMove, 1);
+    // Add initial fen to fenList for pgn buttons on black start.
+    if (
+        playerColor === "black" &&
+        localStorage.getItem("currentFen")?.split(" ").at(-1) === "1"
+    ) {
+        addFEN(localStorage.getItem("currentFen"));
     }
 }
 
@@ -188,13 +192,15 @@ function createPGNButton(text) {
     button.classList.add("pgn-button");
     button.textContent = text;
     button.fenIndex = fenIndex;
-    fenIndex++;
+
+    if (text !== "—") {
+        fenIndex++;
+    }
     localStorage.setItem("fenIndex", fenIndex);
-    button.textContent !== "—"
     button.onclick = function () {
         const fen = button.textContent !== "—" ? getFENs()[this.fenIndex] : getFENs().at(-1);
-        // If current move allow pieces to be moved else can't move in the past board states.
-        if (fen === localStorage.getItem("currentFen")) {
+        // If current move allow pieces to be moved else can't move in the past board states or mate.
+        if (fen === localStorage.getItem("currentFen") && !button.textContent.includes("#")) {
             board = Chessboard('board', getBoardConfig());
         } else {
             board = createStaticBoard();
@@ -229,40 +235,8 @@ function clearFenList() {
 }
 
 /**
- * Sets the board to a user-inputted FEN.
+ * Undos most recent player and engine move.
  */
-async function setFen() {
-    const fenInput = document.getElementById("userInput").value.trim();
-    if (!fenInput) {
-        alert("Please enter a valid FEN string.");
-        return;
-    }
-
-    try {
-        const response = await fetch('/set_fen', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({fen: fenInput})
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.status === "ok") {
-            board = Chessboard('board', getBoardConfig());
-            board.position(fenInput);
-            clearPGN();
-            clearFenList();
-            document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
-        } else {
-            alert(`Error: ${data.error || "Invalid FEN entered!"}`);
-            console.error("Server error:", data.error);
-        }
-    } catch (error) {
-        console.error("Error setting FEN:", error);
-        alert("Failed to update board. Please check your FEN.");
-    }
-}
-
 async function undo() {
     try {
         const response = await fetch('/undo', {
@@ -270,8 +244,11 @@ async function undo() {
         });
         const data = await response.json();
         if (response.ok && data.status === "ok") {
+            fenList = fenList.slice(0, -2);
+            localStorage.setItem("fenList", JSON.stringify(fenList));
             board = Chessboard('board', getBoardConfig());
             currentFen = data.fen;
+            localStorage.setItem("currentFen", currentFen);
             board.position(currentFen);
             clearPGN();
             setPGNMoves(data.pgn);

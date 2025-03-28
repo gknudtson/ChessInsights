@@ -49,11 +49,9 @@ class TestMoveGenerators(unittest.TestCase):
         )
 
     def test_generate_queen_attacks_with_collisions_2(self):
-        self.assertEqual(
-            get_sliding_attacks(BitBoard(18432952556033470455, ColorChessPiece.ALL_PIECES),
-                                BitBoard(549755813888, ColorChessPiece.WHITE_QUEEN)).board,
-            1198169022661693448
-        )
+        attacks = get_sliding_attacks(BitBoard(18432952556033470455, ColorChessPiece.ALL_PIECES),
+                                      BitBoard(549755813888, ColorChessPiece.WHITE_QUEEN)).board
+        self.assertEqual(attacks, 1198169022661693448)
 
     def test_generate_pawn_attacks_white(self):
         self.assertEqual(
@@ -216,6 +214,13 @@ class TestMoveGenerators(unittest.TestCase):
 
         moves = generate_all_moves(board_state)
         self.assertGreater(len(moves), 0, "Move generation should still function in check")
+
+    def test_queen_capture_rook_h2(self):
+        fen = "rnb1k1nr/pppp1ppp/8/2P1p3/1b5P/P1N5/1P1PPP1R/R1BQKBq1 b Qkq - 1 8"
+        board_state = board_from_fen(fen)
+        moves = generate_moves(BitBoard(64, ColorChessPiece.BLACK_QUEEN), board_state)
+        self.assertEqual(70644700078240, moves.board)
+
 
 if __name__ == '__main__':
     unittest.main()

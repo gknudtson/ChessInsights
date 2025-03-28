@@ -45,12 +45,6 @@ def set_game(chess_game):
     session["pgn"] = chess_game.pgn
 
 
-@app.route('/test-session')
-def test_session():
-    session['test_key'] = 'test_value'
-    return f"Stored in session: {session['test_key']}"
-
-
 def execute_move(from_square,
                  to_square
                  ):
@@ -64,6 +58,9 @@ def execute_move(from_square,
         # Check game status after the move
         game_status = chess_game.check_game_status(chess_game.board_state)
         set_game(chess_game)
+        history = session.get("history", [])
+        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
+        session["history"] = history
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
@@ -111,19 +108,18 @@ def start_game():
     side = data.get('side', 'white')
 
     chess_game = ChessBoard()
-
     if side == 'black':
         engine = Engine(board_state=chess_game.board_state)
         from_square, to_square = engine.generate_move()
         chess_game.move_piece(from_square, to_square)
 
     set_game(chess_game)
-    session["history"] = [(fen_from_board(chess_game.board_state), chess_game.pgn)]
+    session["history"] = [(fen_from_board(chess_game.board_state), "")]
 
     return jsonify({
         "fen": fen_from_board(chess_game.board_state),
         "pgn": chess_game.pgn,
-        "color": side
+        "color": side,
     })
 
 
@@ -131,7 +127,6 @@ def start_game():
 def move():
     """Validate and execute a move."""
     chess_game = get_game()
-    history = session.get("history", [])
     data = request.get_json()
 
     try:
@@ -155,9 +150,6 @@ def move():
             'error': f'Unexpected error: {str(e)}',
             'fen': fen_from_board(chess_game.board_state),
         }), 500
-    finally:
-        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
-        session["history"] = history
 
 
 @app.route('/end_game', methods=['POST'])
@@ -197,16 +189,16 @@ def engine_move():
 
 @app.route('/set_fen', methods=['POST'])
 def set_fen():
-    chess_game = get_game()
     try:
         fen = request.get_json().get('fen')
 
         # Validate FEN before setting the board
         if not fen or len(fen.split()) != 6:
             return jsonify(
-                {'error': 'Invalid FEN format', 'fen': fen_from_board(chess_game.board_state)}), 400
+                {'error': 'Invalid FEN format', 'fen': fen}), 400
 
         chess_game = ChessBoard(fen)
+        set_game(chess_game)
         return redirect(url_for('game'))
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}',
@@ -218,12 +210,14 @@ def undo():
     history = session.get("history", [])
     if len(history) <= 1:
         return jsonify({"error": "No moves to undo"}), 400
-
-    fen, pgn = history.pop()
+    history = history[:-2]
+    fen, pgn = history[-1]
+    chess_game = ChessBoard(fen)
+    chess_game.pgn = pgn
     session["history"] = history
 
-    session["fen"] = fen
-    session["pgn"] = pgn
+    set_game(chess_game)
+
     return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
 
 

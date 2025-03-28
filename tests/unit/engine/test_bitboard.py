@@ -82,6 +82,9 @@ class TestBitBoard(unittest.TestCase):
         with self.assertRaises(ValueError):
             BitBoard(-(1 << 65))
 
+    def test_serialize_board(self):
+        assert BitBoard.serialize_board(BitBoard(72057594037928065, None)) == [0, 7, 56]
+
 
 if __name__ == "__main__":
     unittest.main()

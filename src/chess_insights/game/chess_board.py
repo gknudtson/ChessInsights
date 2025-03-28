@@ -13,9 +13,8 @@ from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
 from chess_insights.engine.move_generators import generate_moves, generate_attacks_by_color, \
     generate_all_moves
 from chess_insights.util.enum_game_status import GameStatus
-from chess_insights.util.fen import board_from_fen, fen_from_board
+from chess_insights.util.fen import board_from_fen
 from chess_insights.util.pgn import convert_move_pgn
-from chess_insights.util.serializers import serialize_board
 
 
 class ChessBoard:
@@ -117,7 +116,7 @@ class ChessBoard:
             return []
 
         piece_board = BitBoard(1 << square, piece_type)
-        candidate_moves = serialize_board(generate_moves(piece_board, self._board_state))
+        candidate_moves = BitBoard.serialize_board(generate_moves(piece_board, self._board_state))
 
         # Validate moves using a copied board state
         valid_moves = self._validate_moves(candidate_moves, piece_type, square)
