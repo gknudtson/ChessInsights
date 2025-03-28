@@ -235,40 +235,8 @@ function clearFenList() {
 }
 
 /**
- * Sets the board to a user-inputted FEN.
+ * Undos most recent player and engine move.
  */
-async function setFen() {
-    const fenInput = document.getElementById("userInput").value.trim();
-    if (!fenInput) {
-        alert("Please enter a valid FEN string.");
-        return;
-    }
-
-    try {
-        const response = await fetch('/set_fen', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({fen: fenInput})
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.status === "ok") {
-            board = Chessboard('board', getBoardConfig());
-            board.position(fenInput);
-            clearPGN();
-            clearFenList();
-            document.getElementById("statusEl").textContent = "Board updated to custom FEN.";
-        } else {
-            alert(`Error: ${data.error || "Invalid FEN entered!"}`);
-            console.error("Server error:", data.error);
-        }
-    } catch (error) {
-        console.error("Error setting FEN:", error);
-        alert("Failed to update board. Please check your FEN.");
-    }
-}
-
 async function undo() {
     try {
         const response = await fetch('/undo', {
