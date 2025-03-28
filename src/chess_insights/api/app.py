@@ -73,6 +73,10 @@ def execute_move(from_square,
             'error': str(e), 'fen': fen_from_board(chess_game.board_state),
             'pgn': chess_game.pgn
         }, 400
+    finally:
+        history = session.get("history", [])
+        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
+        session["history"] = history
 
 
 @app.route('/', methods=['GET'])
@@ -105,7 +109,6 @@ def start_game():
     side = data.get('side', 'white')
 
     chess_game = ChessBoard()
-
     if side == 'black':
         engine = Engine(board_state=chess_game.board_state)
         from_square, to_square = engine.generate_move()
@@ -115,9 +118,9 @@ def start_game():
     session["history"] = [(fen_from_board(chess_game.board_state), chess_game.pgn)]
 
     return jsonify({
-        "fen": fen_from_board(chess_game.board_state),
+        "fen": "start",
         "pgn": chess_game.pgn,
-        "color": side
+        "color": side,
     })
 
 
@@ -125,7 +128,6 @@ def start_game():
 def move():
     """Validate and execute a move."""
     chess_game = get_game()
-    history = session.get("history", [])
     data = request.get_json()
 
     try:
@@ -149,9 +151,6 @@ def move():
             'error': f'Unexpected error: {str(e)}',
             'fen': fen_from_board(chess_game.board_state),
         }), 500
-    finally:
-        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
-        session["history"] = history
 
 
 @app.route('/end_game', methods=['POST'])
