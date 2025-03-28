@@ -244,8 +244,11 @@ async function undo() {
         });
         const data = await response.json();
         if (response.ok && data.status === "ok") {
+            fenList = fenList.slice(0, -2);
+            localStorage.setItem("fenList", JSON.stringify(fenList));
             board = Chessboard('board', getBoardConfig());
             currentFen = data.fen;
+            localStorage.setItem("currentFen", currentFen);
             board.position(currentFen);
             clearPGN();
             setPGNMoves(data.pgn);
