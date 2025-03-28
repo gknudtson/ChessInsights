@@ -2,24 +2,12 @@ from chess_insights.util.enum_chess_piece_type import ColorChessPiece, ChessPiec
     get_pieces_by_color
 from chess_insights.util.enum_file_and_rank import Rank, File
 from chess_insights.util.enum_ray_direction import Direction
-from chess_insights.util.serializers import serialize_board
 from .bitboard import BitBoard, generate_mask
 from chess_insights.game.castling import get_castling_moves
 from chess_insights.game.pawn import is_pawn_starting_rank, pawn_movement
 from ..game.board_state import BoardState
 
 
-
-# XHRPOST
-# http: // 127.0
-# .0
-# .1: 5000 / move
-# [HTTP / 1.1 400 BAD REQUEST 8ms]
-#
-# error
-# "update_castling_rights() missing 1 required positional argument: 'square'"
-# fen
-# "1nb4r/2ppkppp/r2R4/pp1Pp3/4P3/1B3QP1/PPP2PP1/RNB1K1N1 w q - 1 19"
 def generate_all_moves(board_state: BoardState) -> list[tuple[list[int], ColorChessPiece, int]]:
     """Generate all moves for a given BoardState based on turn."""
 
@@ -28,11 +16,11 @@ def generate_all_moves(board_state: BoardState) -> list[tuple[list[int], ColorCh
 
     # Generate all moves
     return [
-        (serialize_board(generate_moves(BitBoard(1 << square, board.board_type), board_state)),
+        (BitBoard.serialize_board(generate_moves(BitBoard(1 << square, board.board_type), board_state)),
          board.board_type, square)
         for piece in get_pieces_by_color(color)
         for board in [board_state.piece_locations[piece]]
-        for square in serialize_board(board)
+        for square in BitBoard.serialize_board(board)
     ]
 
 
@@ -93,7 +81,7 @@ def generate_pawn_moves(piece_board: BitBoard, board_state: BoardState) -> BitBo
     opposite_color = color.opposite()
     opposite_color_pieces = board_state.piece_locations[opposite_color.get_piece_group()]
     attack_board &= (opposite_color_pieces.board | board_state.en_passant_square.board)
-    square = serialize_board(piece_board)[0]
+    square = BitBoard.serialize_board(piece_board)[0]
     pawn_pushes = pawn_movement(color, square)
     single_push_board = BitBoard()
     double_push_board = BitBoard()
@@ -128,7 +116,7 @@ def generate_king_moves(piece_board: BitBoard, board_state: BoardState) -> BitBo
 
 
 def get_sliding_attacks(collisions: BitBoard, piece_board: BitBoard) -> BitBoard:
-    squares = serialize_board(piece_board)
+    squares = BitBoard.serialize_board(piece_board)
     directions = Direction.get_directions(piece_board.board_type)
 
     attacks = generate_sliding_attacks(collisions, squares, directions)
