@@ -57,4 +57,3 @@ async function renderGame(color) {
         alert("Failed to start game: " + error.message);
     }
 }
-
