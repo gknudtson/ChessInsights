@@ -58,6 +58,9 @@ def execute_move(from_square,
         # Check game status after the move
         game_status = chess_game.check_game_status(chess_game.board_state)
         set_game(chess_game)
+        history = session.get("history", [])
+        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
+        session["history"] = history
         if game_status != GameStatus.ONGOING:
             return {
                 'status': 'game_over',
@@ -73,10 +76,6 @@ def execute_move(from_square,
             'error': str(e), 'fen': fen_from_board(chess_game.board_state),
             'pgn': chess_game.pgn
         }, 400
-    finally:
-        history = session.get("history", [])
-        history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
-        session["history"] = history
 
 
 @app.route('/', methods=['GET'])
@@ -115,7 +114,7 @@ def start_game():
         chess_game.move_piece(from_square, to_square)
 
     set_game(chess_game)
-    session["history"] = [(fen_from_board(chess_game.board_state), chess_game.pgn)]
+    session["history"] = [(fen_from_board(chess_game.board_state), "")]
 
     return jsonify({
         "fen": fen_from_board(chess_game.board_state),
@@ -211,12 +210,14 @@ def undo():
     history = session.get("history", [])
     if len(history) <= 1:
         return jsonify({"error": "No moves to undo"}), 400
-
-    fen, pgn = history.pop()
+    history = history[:-2]
+    fen, pgn = history[-1]
+    chess_game = ChessBoard(fen)
+    chess_game.pgn = pgn
     session["history"] = history
 
-    session["fen"] = fen
-    session["pgn"] = pgn
+    set_game(chess_game)
+
     return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
 
 
