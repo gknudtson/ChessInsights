@@ -14,9 +14,6 @@ function initializeBoard() {
     let isPlay = document.body.classList.contains("play");
     window.board = isPlay ? createStaticBoard() : Chessboard("board", getBoardConfig());
     setPGNMoves(currentPGN);
-    if (playerColor === "black" && localStorage.getItem("currentFen") === "start") {
-        setTimeout(makeEngineMove, 1);
-    }
 }
 
 /**
@@ -195,8 +192,8 @@ function createPGNButton(text) {
     localStorage.setItem("fenIndex", fenIndex);
     button.onclick = function () {
         const fen = button.textContent !== "—" ? getFENs()[this.fenIndex] : getFENs().at(-1);
-        // If current move allow pieces to be moved else can't move in the past board states.
-        if (fen === localStorage.getItem("currentFen")) {
+        // If current move allow pieces to be moved else can't move in the past board states or mate.
+        if (fen === localStorage.getItem("currentFen") && !button.textContent.includes("#")) {
             board = Chessboard('board', getBoardConfig());
         } else {
             board = createStaticBoard();
