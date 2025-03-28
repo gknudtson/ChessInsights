@@ -118,7 +118,7 @@ def start_game():
     session["history"] = [(fen_from_board(chess_game.board_state), chess_game.pgn)]
 
     return jsonify({
-        "fen": "start",
+        "fen": fen_from_board(chess_game.board_state),
         "pgn": chess_game.pgn,
         "color": side,
     })
