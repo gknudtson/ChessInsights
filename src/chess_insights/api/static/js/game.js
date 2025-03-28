@@ -2,7 +2,7 @@ let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem(
 let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
 document.addEventListener("DOMContentLoaded", () => {
     playerColor = localStorage.getItem("playerColor") || "white";
-    localStorage.setItem("currentFen", localStorage.getItem("currentFen") || "start");
+
     initializeBoard();
     setupEventListeners();
 });
@@ -14,6 +14,13 @@ function initializeBoard() {
     let isPlay = document.body.classList.contains("play");
     window.board = isPlay ? createStaticBoard() : Chessboard("board", getBoardConfig());
     setPGNMoves(currentPGN);
+    // Add initial fen to fenList for pgn buttons on black start.
+    if (
+        playerColor === "black" &&
+        localStorage.getItem("currentFen")?.split(" ").at(-1) === "1"
+    ) {
+        addFEN(localStorage.getItem("currentFen"));
+    }
 }
 
 /**
