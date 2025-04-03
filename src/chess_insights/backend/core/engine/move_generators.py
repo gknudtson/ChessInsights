@@ -1,10 +1,10 @@
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece, ChessPieceType, Color, \
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece, ChessPieceType, Color, \
     get_pieces_by_color
-from chess_insights.util.enum_file_and_rank import Rank, File
-from chess_insights.util.enum_ray_direction import Direction
+from chess_insights.backend.core.util.enum_file_and_rank import Rank, File
+from chess_insights.backend.core.util.enum_ray_direction import Direction
 from .bitboard import BitBoard, generate_mask
-from chess_insights.game.castling import get_castling_moves
-from chess_insights.game.pawn import is_pawn_starting_rank, pawn_movement
+from chess_insights.backend.core.game.castling import get_castling_moves
+from chess_insights.backend.core.game.pawn import is_pawn_starting_rank, pawn_movement
 from ..game.board_state import BoardState
 
 

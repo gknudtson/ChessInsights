@@ -1,6 +1,6 @@
 from enum import Enum
 
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece
 
 
 # Second value is the change in square number based on movement direction

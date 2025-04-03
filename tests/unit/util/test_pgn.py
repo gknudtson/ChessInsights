@@ -1,6 +1,6 @@
 import unittest
-from chess_insights.game.chess_board import ChessBoard
-from chess_insights.util.enum_square import Square
+from chess_insights.backend.core.game.chess_board import ChessBoard
+from chess_insights.backend.core.util.enum_square import Square
 
 
 class TestPGN(unittest.TestCase):

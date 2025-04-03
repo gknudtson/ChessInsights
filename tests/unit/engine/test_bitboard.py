@@ -1,6 +1,6 @@
 import unittest
-from chess_insights.engine.bitboard import BitBoard, reverse_bits
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
+from chess_insights.backend.core.engine.bitboard import BitBoard, reverse_bits
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece
 
 
 class TestBitBoard(unittest.TestCase):

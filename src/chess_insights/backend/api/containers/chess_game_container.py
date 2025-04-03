@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
 
-from chess_insights.game.chess_board import ChessBoard
+from chess_insights.backend.core.game.chess_board import ChessBoard
 
 
 class ChessGameContainer(containers.DeclarativeContainer):

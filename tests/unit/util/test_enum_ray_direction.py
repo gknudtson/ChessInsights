@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
-from chess_insights.util.enum_ray_direction import Direction
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
+from chess_insights.backend.core.util.enum_ray_direction import Direction
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece
 
 
 class TestDirection(unittest.TestCase):

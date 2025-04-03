@@ -1,9 +1,9 @@
 import unittest
 
-from chess_insights.game.chess_board import ChessBoard
-from chess_insights.util.enum_chess_piece_type import Color, ChessPieceType
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.game.pawn import pawn_promotion, pawn_movement, \
+from chess_insights.backend.core.game.chess_board import ChessBoard
+from chess_insights.backend.core.util.enum_chess_piece_type import Color, ChessPieceType
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.game.pawn import pawn_promotion, pawn_movement, \
     is_pawn_starting_rank, handle_en_passant, handle_en_passant_capture
 
 

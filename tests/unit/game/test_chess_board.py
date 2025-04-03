@@ -3,11 +3,11 @@ from dataclasses import replace
 
 from parameterized import parameterized
 
-from chess_insights.game.chess_board import ChessBoard
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece, ChessPieceType, Color
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.util.enum_game_status import GameStatus
-from chess_insights.util.enum_square import Square
+from chess_insights.backend.core.game.chess_board import ChessBoard
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece, ChessPieceType, Color
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.util.enum_game_status import GameStatus
+from chess_insights.backend.core.util.enum_square import Square
 
 
 class TestChessBoard(unittest.TestCase):

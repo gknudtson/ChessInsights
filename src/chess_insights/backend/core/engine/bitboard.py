@@ -1,10 +1,10 @@
 import math
 import numpy as np
 
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
-from chess_insights.util.enum_file_and_rank import Rank, File
-from chess_insights.util.enum_ray_direction import Direction
-from chess_insights.util.enum_square import chebyshev_distance
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece
+from chess_insights.backend.core.util.enum_file_and_rank import Rank, File
+from chess_insights.backend.core.util.enum_ray_direction import Direction
+from chess_insights.backend.core.util.enum_square import chebyshev_distance
 
 
 class BitBoard:

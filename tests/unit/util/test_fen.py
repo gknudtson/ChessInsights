@@ -1,4 +1,4 @@
-from chess_insights.util.fen import board_from_fen, fen_from_board
+from chess_insights.backend.core.util.fen import board_from_fen, fen_from_board
 import unittest
 
 

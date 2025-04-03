@@ -1,10 +1,10 @@
 from types import MappingProxyType
 
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.game.board_state import BoardState
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece, get_chess_piece_by_fen, \
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.game.board_state import BoardState
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece, get_chess_piece_by_fen, \
     ChessPieceType
-from chess_insights.util.enum_square import Square
+from chess_insights.backend.core.util.enum_square import Square
 
 
 def board_from_fen(

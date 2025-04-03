@@ -1,8 +1,8 @@
 import unittest
 from parameterized import parameterized
 
-from chess_insights.engine.move_generators import *
-from chess_insights.util.fen import board_from_fen
+from chess_insights.backend.core.engine.move_generators import *
+from chess_insights.backend.core.util.fen import board_from_fen
 
 
 class TestMoveGenerators(unittest.TestCase):

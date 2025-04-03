@@ -1,5 +1,5 @@
-from chess_insights.engine.move_generators import generate_all_moves
-from chess_insights.game.chess_board import ChessBoard
+from chess_insights.backend.core.engine.move_generators import generate_all_moves
+from chess_insights.backend.core.game.chess_board import ChessBoard
 
 import random
 

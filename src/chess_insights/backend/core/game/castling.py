@@ -1,6 +1,6 @@
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.util.enum_chess_piece_type import Color, ColorChessPiece, ChessPieceType
-from chess_insights.util.enum_square import Square, chebyshev_distance
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.util.enum_chess_piece_type import Color, ColorChessPiece, ChessPieceType
+from chess_insights.backend.core.util.enum_square import Square, chebyshev_distance
 
 
 def update_castling_rights(castling_rights: int,

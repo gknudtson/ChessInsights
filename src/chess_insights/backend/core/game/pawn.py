@@ -1,7 +1,7 @@
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.game.board_state import BoardState
-from chess_insights.util.enum_chess_piece_type import Color, ChessPieceType, ColorChessPiece
-from chess_insights.util.enum_file_and_rank import Rank
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.game.board_state import BoardState
+from chess_insights.backend.core.util.enum_chess_piece_type import Color, ChessPieceType, ColorChessPiece
+from chess_insights.backend.core.util.enum_file_and_rank import Rank
 
 
 def handle_pawn_movement(board_state: BoardState,

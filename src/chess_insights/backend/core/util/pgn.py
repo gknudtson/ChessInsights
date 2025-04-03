@@ -1,5 +1,5 @@
-from chess_insights.game.board_state import BoardState
-from chess_insights.util.enum_game_status import GameStatus
+from chess_insights.backend.core.game.board_state import BoardState
+from chess_insights.backend.core.util.enum_game_status import GameStatus
 from .enum_chess_piece_type import ChessPieceType, Color, ColorChessPiece
 from .enum_square import Square, chebyshev_distance
 

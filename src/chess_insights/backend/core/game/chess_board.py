@@ -2,19 +2,19 @@ from dataclasses import replace
 
 from types import MappingProxyType
 
-from chess_insights.game.castling import handle_castling, \
+from chess_insights.backend.core.game.castling import handle_castling, \
     update_castling_rights
-from chess_insights.game.pawn import handle_pawn_movement
-from chess_insights.engine.bitboard import BitBoard
-from chess_insights.game.board_state import BoardState
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
+from chess_insights.backend.core.game.pawn import handle_pawn_movement
+from chess_insights.backend.core.engine.bitboard import BitBoard
+from chess_insights.backend.core.game.board_state import BoardState
+from chess_insights.backend.core.util.enum_chess_piece_type import ColorChessPiece, Color, \
     ChessPieceType
 
-from chess_insights.engine.move_generators import generate_moves, generate_attacks_by_color, \
+from chess_insights.backend.core.engine.move_generators import generate_moves, generate_attacks_by_color, \
     generate_all_moves
-from chess_insights.util.enum_game_status import GameStatus
-from chess_insights.util.fen import board_from_fen
-from chess_insights.util.pgn import convert_move_pgn
+from chess_insights.backend.core.util.enum_game_status import GameStatus
+from chess_insights.backend.core.util.fen import board_from_fen
+from chess_insights.backend.core.util.pgn import convert_move_pgn
 
 
 class ChessBoard:

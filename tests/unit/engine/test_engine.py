@@ -1,8 +1,8 @@
 import pytest
-from chess_insights.engine.move_generators import generate_all_moves
-from chess_insights.game.chess_board import ChessBoard
-from chess_insights.engine.engine import Engine
-from chess_insights.util.enum_square import Square
+from chess_insights.backend.core.engine.move_generators import generate_all_moves
+from chess_insights.backend.core.game.chess_board import ChessBoard
+from chess_insights.backend.core.engine.engine import Engine
+from chess_insights.backend.core.util.enum_square import Square
 
 
 @pytest.fixture
