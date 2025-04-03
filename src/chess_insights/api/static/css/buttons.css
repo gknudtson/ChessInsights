@@ -49,9 +49,8 @@ button.btn-danger:hover {
 
     background-color: var(--light-background);
     border-radius: 5px;
-
     height: var(--board-size);
-    width: calc(var(--board-size) *0.5);
+    width: calc(var(--board-size) * 0.5);
     min-width: min-content;
     align-self: center;
     margin-left: 10px;
