@@ -1,8 +1,11 @@
-# ChessInsights
+# ChessInsights 
 
-ChessInsights is a full-stack chess application powered by a custom Python chess engine. The engine uses **bitboards** to efficiently generate legal moves, while a responsive web interface allows users to play games, explore positions, and review move history.
+**Live Demo:** [chessinsights.app](https://chessinsights.app) • **Video Demo:** [YouTube](https://youtu.be/Mtr6qh0kysw)
 
-The current engine selects a random move from all valid moves in a given position. Ongoing development focuses on implementing a stronger evaluation system to enable more strategic move selection and deeper analysis.
+
+ChessInsights is a full-stack chess application that allows users to play games, explore positions, and review move history through a responsive web interface backed by a custom Python chess engine.
+
+The engine uses **bitboards** for efficient move generation and currently selects a random legal move as a baseline strategy. Ongoing development focuses on implementing a stronger evaluation function and search algorithms to enable more strategic play and deeper analysis.
 
 ---
 
