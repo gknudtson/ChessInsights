@@ -76,13 +76,15 @@ REDIS_PORT=6379
 REDIS_PASSWORD=
 ```
 
-### 4. Run the Application
+First, ensure your Redis server is running (in its own terminal window):
+```bash
+redis-server
+```
 
-First, ensure your Redis server is running. Then, start the Flask application:
-
+Then, in a **new terminal window**, start the Flask application:
 ```bash
 poetry shell
-python src/chess_insights/backend/api/app.py
+python src/chess_insights/api/app.py
 ```
 The app will be available at http://127.0.0.1:5000.
 
