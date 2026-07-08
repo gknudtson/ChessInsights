@@ -1,23 +1,27 @@
-[tool.poetry]
+[project]
 name = "chess_insights"
-version = "1.0"
+version = "1.0.0"
 description = "A ChessInsights learning tool."
-authors= ["Gabriel Knudtson"]
-readme= "README.md"
+authors = [
+    { name = "Gabriel Knudtson" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask (>=3.1.0,<3.2.0)",
+    "numpy (>=2.2.0,<2.3.0)",
+    "python-dotenv (>=1.1.0,<2.0.0)",
+    "redis (>=5.2.1,<6.0.0)",
+    "flask-session (>=0.8.0,<0.9.0)"
+]
 
-[tool.poetry.dependencies]
-python = ">= 3.10"
-flask = "~3.1.0"
-numpy = "~2.2.0"
-python-dotenv = "^1.1.0"
-redis = "^5.2.1"
-flask-session = "^0.8.0"
+[tool.poetry]
+packages = [{ include = "chess_insights" }]
 
 [tool.poetry.group.dev.dependencies]
 pytest-cov = "^6.0.0"
 parameterized = "^0.9.0"
 pytest = "^8.3.4"
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
