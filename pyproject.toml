@@ -15,8 +15,6 @@ dependencies = [
     "flask-session (>=0.8.0,<0.9.0)"
 ]
 
-[tool.poetry]
-packages = [{ include = "chess_insights" }]
 
 [tool.poetry.group.dev.dependencies]
 pytest-cov = "^6.0.0"
