@@ -46,3 +46,4 @@ htmlcov/
 
 # Security
 .env
+/node_modules/
