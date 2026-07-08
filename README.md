@@ -38,6 +38,7 @@ The engine uses **bitboards** for efficient move generation and currently select
 Ensure you have the following installed
 * **Python 3.10+:** [Download here](https://www.python.org/downloads/)
 * **Poetry:** Install via `pip install poetry`
+* **NPM:** [Install NPM](https://docs.npmjs.com/cli/v11/configuring-npm/install)
 * **Redis:** [Install locally](https://redis.io/docs/latest/get-started/)
 
 
@@ -49,10 +50,13 @@ Clone the repository and enter the directory:
 git clone https://github.com/gknudtson/ChessInsights
 cd ChessInsights
 ```
-Install dependencies:
-
+Install Python dependencies:
 ```bash
 poetry install
+```
+Install JavaScript dependencies:
+```bash
+npm install
 ```
 ---
 
