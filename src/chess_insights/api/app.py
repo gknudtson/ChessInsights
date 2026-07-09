@@ -1,4 +1,4 @@
-import redis, os
+import redis, os, logging
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 
 from flask_session import Session
@@ -13,6 +13,12 @@ from chess_insights.util.fen import fen_from_board, board_from_fen
 from chess_insights.util.flask_session_JSON_serializer import FlaskSessionJSONSerializer
 
 app = Flask(__name__)
+
+class Suppress304Filter(logging.Filter):
+    def filter(self, record):
+        return '304' not in record.getMessage()
+
+logging.getLogger('werkzeug').addFilter(Suppress304Filter())
 
 # Configure Flask-Session
 load_dotenv()
