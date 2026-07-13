@@ -7,6 +7,8 @@ export default defineConfig({
         manifest: true,
         rollupOptions: {
             input: {
+                main:'frontend/js/main.js',
+                contentStyles:'frontend/js/contentStyles.js',
                 game: 'frontend/js/game.js',
                 play: 'frontend/js/play.js',
                 demo: 'frontend/js/demo.js'
