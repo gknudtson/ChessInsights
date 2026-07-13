@@ -8,8 +8,28 @@ localStorage.setItem("playerColor", "white");
 localStorage.setItem("currentFen", "start");
 localStorage.removeItem("fenList");
 localStorage.removeItem("fenIndex");
-var currentPGN = '';
-Chessground(document.getElementById('board'), {viewOnly: true});
+
+document.addEventListener("DOMContentLoaded", initPage);
+function initPage() {
+    //Create initial static chessboard
+    Chessground(document.getElementById('board'), {viewOnly: true});
+    //Attach event listeners to sidebar buttons
+    document
+        .getElementById("setFen")
+        .addEventListener("click", setFen);
+
+    document
+      .getElementById("white")
+      .addEventListener("click", () => renderGame("white"));
+
+    document
+      .getElementById("black")
+      .addEventListener("click", () => renderGame("black"));
+
+    document
+      .getElementById("random")
+      .addEventListener("click", () => renderGame("random"));
+}
 /**
  * Sets the board to a user-inputted FEN.
  */
