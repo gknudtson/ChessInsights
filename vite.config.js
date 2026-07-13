@@ -4,14 +4,16 @@ export default defineConfig({
     build: {
         outDir: 'src/chess_insights/api/static/dist',
         emptyOutDir: true,
+        manifest: true,
         rollupOptions: {
             input: {
-                game: 'frontend/game.js',
-                play: 'frontend/play.js'
+                game: 'frontend/js/game.js',
+                play: 'frontend/js/play.js',
+                demo: 'frontend/js/demo.js'
             },
             output: {
-                entryFileNames: '[name].js',
-                assetFileNames: '[name][extname]'
+                entryFileNames: '[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash][extname]',
             }
         }
     }
