@@ -2,7 +2,6 @@ import redis, os, logging
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 
 from flask_session import Session
-from collections import deque
 from dotenv import load_dotenv
 
 from chess_insights.engine.engine import Engine
@@ -11,9 +10,10 @@ from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.enum_square import Square
 from chess_insights.util.fen import fen_from_board, board_from_fen
 from chess_insights.util.flask_session_JSON_serializer import FlaskSessionJSONSerializer
+from chess_insights.api.vite import vite_asset
 
 app = Flask(__name__)
-
+app.jinja_env.globals['vite_asset'] = vite_asset
 class Suppress304Filter(logging.Filter):
     def filter(self, record):
         return '304' not in record.getMessage()
@@ -225,6 +225,10 @@ def undo():
     set_game(chess_game)
 
     return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
+
+@app.route('/demo', methods=['GET'])
+def demo():
+    return render_template('demo.html')
 
 
 if __name__ == '__main__':
