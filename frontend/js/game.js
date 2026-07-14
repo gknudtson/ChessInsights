@@ -1,8 +1,8 @@
 import { Chessground } from '@lichess-org/chessground';
 import '@lichess-org/chessground/assets/chessground.base.css';
 import '@lichess-org/chessground/assets/chessground.brown.css';
-// Piece set — swap the filename below if you're using a different theme.
 import '@lichess-org/chessground/assets/chessground.cburnett.css';
+import '../css/game.css';
 
 let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem("fenIndex")) : 0;
 let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
@@ -10,24 +10,24 @@ let playerColor = "white";
 let currentFen = "start";
 let currentPGN = "";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", initPage);
+
+function initPage() {
     playerColor = window.playerColor || localStorage.getItem("playerColor") || "white";
-    currentFen = localStorage.getItem("currentFen") || window.currentFen || "start";
+    currentFen = boardFen(localStorage.getItem("currentFen") || window.currentFen || "start");
     currentPGN = window.currentPGN || "";
 
     initializeBoard();
     setupEventListeners();
-});
-
+}
 /**
- * Extracts the piece-placement field from a full FEN string.
- * Chessground's `fen` config option only wants this part.
+ * Returns a complete fen string if start is passed or no fen set.
  */
 function boardFen(fen) {
     if (!fen || fen === "start") {
-        return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
-    return fen.split(" ")[0];
+    return fen;
 }
 
 /**
@@ -46,9 +46,9 @@ function turnColorFromFen(fen) {
  */
 function getMovableConfig() {
     return {
-        free: true,
         color: playerColor,
-        showDests: false,
+        free: true,
+        showDests: true,
         events: {
             after: handleMove
         }
