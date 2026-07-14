@@ -38,6 +38,7 @@ The engine uses **bitboards** for efficient move generation and currently select
 Ensure you have the following installed
 * **Python 3.10+:** [Download here](https://www.python.org/downloads/)
 * **Poetry:** Install via `pip install poetry`
+* **NPM:** [Install NPM](https://docs.npmjs.com/cli/v11/configuring-npm/install)
 * **Redis:** [Install locally](https://redis.io/docs/latest/get-started/)
 
 
@@ -49,10 +50,13 @@ Clone the repository and enter the directory:
 git clone https://github.com/gknudtson/ChessInsights
 cd ChessInsights
 ```
-Install dependencies:
-
+Install Python dependencies:
 ```bash
 poetry install
+```
+Install JavaScript dependencies:
+```bash
+npm install
 ```
 ---
 
@@ -75,7 +79,7 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=
 ```
-
+### 4. Running the App
 First, ensure your Redis server is running (in its own terminal window):
 ```bash
 redis-server
@@ -89,8 +93,25 @@ python src/chess_insights/api/app.py
 The app will be available at http://127.0.0.1:5000.
 
 ---
+## Development
 
-## Testing
+When modifying any files in the `frontend` folder, Vite needs to rebuild the CSS and JS assets served to Flask.
+
+**One-off changes:**
+```bash
+npm run build
+```
+
+**Active development** (rebuilds automatically on file changes):
+```bash
+npm run dev
+```
+
+> **Note:** In dev mode, Flask must be relaunched after each file edit. This is because Flask only reads the manifest file on startup, so it won't pick up new builds otherwise.
+
+If you add a new JS or CSS file to the `frontend` folder, be sure to add its entry point in `vite.config.js`.
+
+### Testing
 
 Unit tests are written using **Pytest** to validate core engine logic.
 
@@ -120,4 +141,4 @@ This produces an HTML coverage report that can be opened locally for detailed in
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+GNU GENERAL PUBLIC LICENSE 3.0. See the [LICENSE](LICENSE) file for details.

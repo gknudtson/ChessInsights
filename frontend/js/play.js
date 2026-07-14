@@ -1,9 +1,36 @@
-localStorage.setItem("playerColor", "white");
-localStorage.setItem("currentFen", "start");
-localStorage.removeItem("fenList");
-localStorage.removeItem("fenIndex");
-var currentPGN = '';
+import { Chessground } from '@lichess-org/chessground';
+import '@lichess-org/chessground/assets/chessground.base.css';
+import '@lichess-org/chessground/assets/chessground.brown.css';
+import '@lichess-org/chessground/assets/chessground.cburnett.css';
+import '../css/game.css';
 
+
+document.addEventListener("DOMContentLoaded", initPage);
+function initPage() {
+    //Set/reset variables
+    localStorage.setItem("playerColor", "white");
+    localStorage.setItem("currentFen", "");
+    localStorage.removeItem("fenList");
+    localStorage.removeItem("fenIndex");
+    //Create initial static chessboard
+    Chessground(document.getElementById('board'), {viewOnly: true});
+    //Attach event listeners to sidebar buttons
+    document
+        .getElementById("setFen")
+        .addEventListener("click", setFen);
+
+    document
+      .getElementById("white")
+      .addEventListener("click", () => renderGame("white"));
+
+    document
+      .getElementById("black")
+      .addEventListener("click", () => renderGame("black"));
+
+    document
+      .getElementById("random")
+      .addEventListener("click", () => renderGame("random"));
+}
 /**
  * Sets the board to a user-inputted FEN.
  */

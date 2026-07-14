@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
 {% block head_imports %}
+    {{ vite_asset('frontend/js/contentStyles.js') | safe }}
 {% endblock %}
 
 {% block styles %}
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/content-styles.css') }}">
-<style>
-    body {
-        background-image: url("{{ url_for('static', filename='images/background.webp') }}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/background.webp') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
     }</style>
 {% endblock %}
 

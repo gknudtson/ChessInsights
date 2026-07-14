@@ -3,20 +3,7 @@
 {% block title %}ChessInsights{% endblock %}
 
 {% block head_imports %}
-<!-- jQuery (Required for Chessboard.js) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Chessboard.js for board representation and movement-->
-<script src="{{ url_for('static', filename='chessboardjs-1.0.0/js/chessboard-1.0.0.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/game.js') }}"></script>
-<script src="{{ url_for('static', filename='js/play.js') }}"></script>
-{% endblock %}
-
-{% block styles %}
-<!-- Chessboard.js CSS -->
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='chessboardjs-1.0.0/css/chessboard-1.0.0.min.css') }}">
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/game.css') }}">
+    {{ vite_asset('frontend/js/play.js') | safe }}
 {% endblock %}
 
 {% block content %}
@@ -38,14 +25,14 @@
     <div class="button-group">
 
         <div class="action-buttons">
-            <button class="btn-primary" id="white" onclick="renderGame('white')">White</button>
-            <button class="btn-primary" id="random" onclick="renderGame('random')">Random</button>
-            <button class="btn-primary" id="black" onclick="renderGame('black')">Black</button>
+            <button class="btn-primary" id="white">White</button>
+            <button class="btn-primary" id="random">Random</button>
+            <button class="btn-primary" id="black">Black</button>
         </div>
 
         <div class="fen-input-container">
             <input type="text" id="userInput" placeholder="Enter Custom FEN">
-            <button class="btn-primary" type="button" onclick="setFen()">Set FEN</button>
+            <button class="btn-primary" type="button" id="setFen">Set FEN</button>
         </div>
     </div>
 </div>
