@@ -4,13 +4,14 @@ import '@lichess-org/chessground/assets/chessground.brown.css';
 import '@lichess-org/chessground/assets/chessground.cburnett.css';
 import '../css/game.css';
 
-localStorage.setItem("playerColor", "white");
-localStorage.setItem("currentFen", "start");
-localStorage.removeItem("fenList");
-localStorage.removeItem("fenIndex");
 
 document.addEventListener("DOMContentLoaded", initPage);
 function initPage() {
+    //Set/reset variables
+    localStorage.setItem("playerColor", "white");
+    localStorage.setItem("currentFen", "");
+    localStorage.removeItem("fenList");
+    localStorage.removeItem("fenIndex");
     //Create initial static chessboard
     Chessground(document.getElementById('board'), {viewOnly: true});
     //Attach event listeners to sidebar buttons
