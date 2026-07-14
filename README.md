@@ -141,4 +141,4 @@ This produces an HTML coverage report that can be opened locally for detailed in
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+GNU GENERAL PUBLIC LICENSE 3.0. See the [LICENSE](LICENSE) file for details.
