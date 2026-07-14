@@ -6,8 +6,8 @@
     <title>{% block title %}ChessInsights{% endblock %}</title>
     <link rel="icon" type="image/webp"
           href="{{ url_for('static', filename='images/favicon.webp') }}">
+    {{ vite_asset('frontend/js/main.js') | safe }}
     {% block head_imports %}{% endblock %}  <!-- Custom imports (CSS/JS libraries) -->
-        {{ vite_asset('frontend/js/main.js') | safe }}
     {% block styles %}{% endblock %}  <!-- Custom styles for specific pages -->
 </head>
 <body>
