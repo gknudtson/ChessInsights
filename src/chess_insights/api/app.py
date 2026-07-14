@@ -226,10 +226,6 @@ def undo():
 
     return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
 
-@app.route('/demo', methods=['GET'])
-def demo():
-    return render_template('demo.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
