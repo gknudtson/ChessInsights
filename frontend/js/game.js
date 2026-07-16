@@ -143,8 +143,8 @@ async function undo() {
             window.board.set({
                 fen: boardFen(currentFen),
                 turnColor: turnColorFromFen(currentFen),
-                movable: getMovableConfig()
-            });
+                movable: {dests: new Map(Object.entries(data.dests))
+            }});
 
             clearPGN();
             setPGNMoves(data.pgn);
