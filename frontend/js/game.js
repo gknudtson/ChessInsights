@@ -124,8 +124,6 @@ async function makeEngineMove() {
     }
 }
 
-
-
 /**
  * Undoes the most recent player and engine move.
  */
