@@ -153,6 +153,7 @@ function updateGameState(data, prevFen = null, prevDests = null) {
  */
 async function handleMove(orig, dest) {
     const prevFen = currentFen;
+    const prevDests = window.board.state['movable']['dests']
     disableMovement();
 
     try {
