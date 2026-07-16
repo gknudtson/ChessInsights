@@ -194,7 +194,7 @@ def engine_move():
         from_square, to_square = engine.generate_move()
         # Execute the move
         response = execute_move(from_square, to_square)
-        return jsonify(response)
+        return response
 
     except Exception as e:
         return jsonify({
