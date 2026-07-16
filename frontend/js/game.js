@@ -156,7 +156,6 @@ async function undo() {
         console.error("Error UNDOING:", error);
     }
 }
-
 // Exposed for inline onclick="" handlers in game.html
 window.startNewGame = startNewGame;
 window.undo = undo;
