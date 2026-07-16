@@ -23,69 +23,6 @@ function initPage() {
     initializeBoard(handleMove, new Map(Object.entries(window.dests)));
     setupEventListeners();
 }
-/**
- * Returns a complete fen string if start is passed or no fen set.
- */
-function boardFen(fen) {
-    if (!fen || fen === "start") {
-        return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    }
-    return fen;
-}
-
-/**
- * Reads whose turn it is from a full FEN string ("w"/"b" field).
- * Falls back to "white" if it can't be determined.
- */
-function turnColorFromFen(fen) {
-    if (!fen) return "white";
-    const parts = fen.split(" ");
-    if (parts.length < 2) return "white";
-    return parts[1] === "b" ? "black" : "white";
-}
-
-/**
- * Base movable config shared between interactive and static boards.
- */
-function getMovableConfig() {
-    return {
-        color: playerColor,
-        free: true,
-        showDests: true,
-        events: {
-            after: handleMove
-        }
-    };
-}
-
-/**
- * Initializes the chessground board.
- */
-function initializeBoard() {
-    const boardElement = document.getElementById("board");
-    const config = {
-        fen: boardFen(currentFen),
-        orientation: playerColor,
-        turnColor: turnColorFromFen(currentFen),
-        movable: getMovableConfig()
-    };
-    window.board = Chessground(boardElement, config);
-}
-
-/**
- * Locks the board so no pieces can be dragged (used while waiting on the
- * server, and permanently once the game is over).
- */
-function disableMovement() {
-    window.board.set({ movable: { color: undefined } });
-}
-
-/**
- * Re-enables dragging for the player's pieces.
- */
-function enableMovement() {
-    window.board.set({ movable: { color: playerColor } });
-}
 
 /**
  * Sets up event listeners for various UI interactions.
