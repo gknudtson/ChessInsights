@@ -24,15 +24,19 @@ export function turnColorFromFen(fen) {
 /**
  * Base movable config shared between interactive and static boards.
  */
-export function getMovableConfig(moveHandler, dests={}) {
+export function getMovableConfig(moveHandler = null, dests = null) {
     return {
         color: playerColor,
         free: false,
         showDests: true,
-        dests: dests,
-        events: {
-            after: moveHandler
-        }
+
+        ...(dests !== null && { dests }),
+
+        ...(moveHandler !== null && {
+            events: {
+                after: moveHandler
+            }
+        })
     };
 }
 
