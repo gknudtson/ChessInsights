@@ -7,7 +7,8 @@ import {
     initializeBoard, disableMovement, enableMovement, boardFen, turnColorFromFen
 } from './board.js'
 import {
-    addFEN, currentFen, fenList, removeLastTwoFENs, setCurrentFEN, setCurrentPGN, setPlayerColor
+    addFEN, currentFen, fenList,
+    playerColor, removeLastTwoFENs, setCurrentFEN, setCurrentPGN, setPlayerColor
 } from './state.js'
 import { clearPGN, setPGNMoves } from './pgn.js';
 import { postMove, fetchEngineMove as apiFetchEngineMove, postUndo } from './api.js';
