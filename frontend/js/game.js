@@ -182,9 +182,8 @@ async function handleMove(orig, dest) {
  */
 async function makeEngineMove() {
     try {
-        const response = await fetch('/engine_move', { method: 'GET' });
-        const data = await response.json();
-        updateGameState(data);
+        const data = await apiFetchEngineMove()
+        updateGameState(data, currentFen);
     } catch (error) {
         console.error("Error processing engine move:", error);
         document.getElementById('statusEl').textContent = "Server error.";
