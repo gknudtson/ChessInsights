@@ -5,6 +5,7 @@ from flask_session import Session
 from dotenv import load_dotenv
 
 from chess_insights.engine.engine import Engine
+from chess_insights.engine.move_generators import generate_all_moves
 from chess_insights.game.chess_board import ChessBoard
 from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.enum_square import Square
