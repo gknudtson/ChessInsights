@@ -82,15 +82,7 @@ def execute_move(from_square,
         history = session.get("history", [])
         history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
         session["history"] = history
-        if game_status != GameStatus.ONGOING:
-            return {
-                'status': 'game_over',
-                'game_status': game_status.value,
-                'fen': fen,
-                'pgn': chess_game.pgn,
-            }
-
-        return {'status': 'ok', 'fen': fen, 'pgn': chess_game.pgn}
+        return get_state_response(chess_game)
 
     except Exception as e:
         return {
