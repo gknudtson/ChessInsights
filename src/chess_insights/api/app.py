@@ -12,6 +12,7 @@ from chess_insights.util.enum_square import Square
 from chess_insights.util.fen import fen_from_board, board_from_fen
 from chess_insights.util.flask_session_JSON_serializer import FlaskSessionJSONSerializer
 from chess_insights.api.vite import vite_asset
+from chess_insights.util.chessground import moves_to_dests
 
 app = Flask(__name__)
 app.jinja_env.globals['vite_asset'] = vite_asset
