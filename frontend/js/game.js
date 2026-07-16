@@ -137,7 +137,7 @@ async function undo() {
             removeLastTwoFENs()
             localStorage.setItem("fenList", JSON.stringify(fenList));
 
-            currentFen = data.fen;
+            setCurrentFEN(data.fen);
             localStorage.setItem("currentFen", currentFen);
 
             window.board.set({
