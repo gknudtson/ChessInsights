@@ -1,6 +1,7 @@
 from dataclasses import replace
 
 from types import MappingProxyType
+from typing import Any
 
 from chess_insights.game.castling import handle_castling, \
     update_castling_rights
