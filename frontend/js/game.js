@@ -144,7 +144,6 @@ function updateGameState(data, prevFen = null, prevDests = null) {
             enableMovement();
             return false;
     }
-    enableMovement();
 }
 
 /**
