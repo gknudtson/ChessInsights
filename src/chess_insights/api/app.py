@@ -149,7 +149,7 @@ def move():
         from_square = Square[data.get('fromSquare')].value
         to_square = Square[data.get('toSquare')].value
         response = execute_move(from_square, to_square)
-        return jsonify(response)
+        return response
 
     except KeyError as e:
         return jsonify({
