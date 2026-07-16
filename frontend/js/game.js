@@ -101,41 +101,48 @@ function startNewGame() {
     window.location.href = "/play";
 }
 
-/**
- * Updates the board/PGN/status based on a server response.
- */
-function updateGameState(data, prevFen = null) {
-    if (data.status === 'ok') {
-        addFEN(data.fen);
-        window.board.set({
-            fen: boardFen(data.fen),
-            turnColor: turnColorFromFen(data.fen)
-        });
-        currentFen = data.fen;
-        setPGNMoves(data.pgn);
-        document.getElementById('statusEl').textContent = "Move successful!";
-        localStorage.setItem("currentFen", data.fen);
-    } else if (data.status === 'game_over') {
-        addFEN(data.fen);
-        window.board.set({
-            fen: boardFen(data.fen),
-            turnColor: turnColorFromFen(data.fen),
-            movable: { free: false, color: undefined }
-        });
-        currentFen = data.fen;
-        setPGNMoves(data.pgn);
-        document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
-        localStorage.setItem("currentFen", data.fen);
-        return;
-    } else {
-        if (prevFen) {
-            window.board.set({
-                fen: boardFen(prevFen),
-                turnColor: turnColorFromFen(prevFen)
+function updateGameState(data, prevFen = null, prevDests = null) {
+    switch (data.status) {
+        case "ok":
+            addFEN(data.fen);
+            setCurrentFEN(data.fen);
+            window.board.set({ fen: boardFen(data.fen),
+                turnColor: turnColorFromFen(data.fen),
+                movable: {dests: new Map(Object.entries(data.dests))}
             });
-            currentFen = prevFen;
-        }
-        document.getElementById('statusEl').textContent = "Move rejected or engine move failed.";
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = "Move successful!";
+            localStorage.setItem("currentFen", data.fen);
+            enableMovement();
+            return true;
+
+        case "game_over":
+            addFEN(data.fen);
+            window.board.set({
+                fen: boardFen(data.fen),
+                turnColor: turnColorFromFen(data.fen),
+                movable: {color: undefined }
+            });
+            setCurrentFEN(data.fen);
+            setPGNMoves(data.pgn);
+            document.getElementById('statusEl').textContent = `Game Over: ${data.game_status}`;
+            localStorage.setItem("currentFen", data.fen);
+            return false;
+
+        default:
+            if (prevFen) {
+                window.board.set({
+                    fen: boardFen(prevFen),
+                    turnColor: turnColorFromFen(prevFen),
+                    movable: {
+                        dests: prevDests,
+                    },
+                });
+                setCurrentFEN(prevFen);
+            }
+            document.getElementById('statusEl').textContent = "Move rejected or engine move failed.";
+            enableMovement();
+            return false;
     }
     enableMovement();
 }
