@@ -20,6 +20,7 @@ function initPage() {
     setCurrentFEN(localStorage.getItem("currentFen") || window.currentFen || "start");
     setCurrentPGN(window.currentPGN || "");
     initializeBoard(handleMove, new Map(Object.entries(window.dests)));
+    if (playerColor === "black") addFEN(currentFen)
     setupEventListeners();
 }
 
