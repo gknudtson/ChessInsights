@@ -298,10 +298,9 @@ function clearFenList() {
  */
 async function undo() {
     try {
-        const response = await fetch('/undo', { method: 'GET' });
-        const data = await response.json();
-        if (response.ok && data.status === "ok") {
-            fenList = fenList.slice(0, -2);
+        const data = await postUndo();
+        if (data.status === "ok") {
+            removeLastTwoFENs()
             localStorage.setItem("fenList", JSON.stringify(fenList));
 
             currentFen = data.fen;
