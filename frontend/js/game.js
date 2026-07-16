@@ -17,11 +17,10 @@ import { postMove, fetchEngineMove as apiFetchEngineMove, postUndo } from './api
 document.addEventListener("DOMContentLoaded", initPage);
 
 function initPage() {
-    playerColor = window.playerColor || localStorage.getItem("playerColor") || "white";
-    currentFen = boardFen(localStorage.getItem("currentFen") || window.currentFen || "start");
-    currentPGN = window.currentPGN || "";
-
-    initializeBoard();
+    setPlayerColor(window.playerColor || localStorage.getItem("playerColor") || "white");
+    setCurrentFEN(localStorage.getItem("currentFen") || window.currentFen || "start");
+    setCurrentPGN(window.currentPGN || "");
+    initializeBoard(handleMove, new Map(Object.entries(window.dests)));
     setupEventListeners();
 }
 /**
