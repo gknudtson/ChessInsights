@@ -56,10 +56,11 @@ def set_game(chess_game):
 def get_state_response(chess_game: ChessBoard):
     """Standard  server response containing board information."""
     game_status = chess_game.check_game_status(chess_game.board_state)
+    valid_moves = chess_game.get_valid_moves()
     return {
         "status": 'ok' if game_status == GameStatus.ONGOING else 'game_over',
         "fen": fen_from_board(chess_game.board_state),
-        "dests": moves_to_dests(generate_all_moves(chess_game.board_state)),
+        "dests": moves_to_dests(valid_moves),
         "color": 'white' if chess_game.board_state.is_whites_turn else 'black',
         'game_status': game_status.value,
         'pgn': chess_game.pgn,
@@ -229,12 +230,12 @@ def undo():
     session["history"] = history
 
     set_game(chess_game)
-
+    valid_moves = chess_game.get_valid_moves()
     return {
         "status": "ok",
         "fen": fen,
         "pgn": pgn,
-        "dests": moves_to_dests(generate_all_moves(chess_game.board_state)),
+        "dests": moves_to_dests(valid_moves),
     }
 
 
