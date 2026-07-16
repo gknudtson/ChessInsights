@@ -134,12 +134,9 @@ def start_game():
 
     set_game(chess_game)
     session["history"] = [(fen_from_board(chess_game.board_state), "")]
-
-    return jsonify({
-        "fen": fen_from_board(chess_game.board_state),
-        "pgn": chess_game.pgn,
-        "color": side,
-    })
+    response = get_state_response(chess_game)
+    response['color'] = side
+    return response
 
 
 @app.route('/move', methods=['POST'])
