@@ -1,24 +1,21 @@
-from chess_insights.util.enum_chess_piece_type import ColorChessPiece
-
+from collections import defaultdict
 
 def moves_to_dests(
-    moves: list[tuple[list[int], ColorChessPiece, int]]
+    moves: list[tuple[int, int]]
 ) -> dict[str, list[str]]:
+    dests: dict[str, list[str]] = defaultdict(list)
     """
-    Convert generate_all_moves() output into chessground's `dests` format:
+    Convert get_valid_moves() output into chessground's `dests` format:
 
         { "e2": ["e3", "e4"], "b1": ["a3", "c3"], ... }
 
     On the JS side, chessground wants a Map, so build it with:
         new Map(Object.entries(destsFromPython))
     """
-    dests: dict[str, list[str]] = {}
-    for destinations, _piece, from_square in moves:
-        from_coord = square_to_coord(from_square)
-        dests.setdefault(from_coord, []).extend(
-            square_to_coord(dst) for dst in destinations
-        )
-    return dests
+    for origin, target in moves:
+        dests[square_to_coord(origin)].append(square_to_coord(target))
+
+    return dict(dests)
 
 FILES = "abcdefgh"
 def square_to_coord(square: int) -> str:
