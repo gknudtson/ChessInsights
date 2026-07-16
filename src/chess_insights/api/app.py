@@ -234,7 +234,12 @@ def undo():
 
     set_game(chess_game)
 
-    return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
+    return {
+        "status": "ok",
+        "fen": fen,
+        "pgn": pgn,
+        "dests": moves_to_dests(generate_all_moves(chess_game.board_state)),
+    }
 
 
 if __name__ == '__main__':
