@@ -147,6 +147,7 @@ async function undo() {
 
             clearPGN();
             setPGNMoves(data.pgn);
+            enableMovement();
             document.getElementById("statusEl").textContent = "Undo Successful.";
         } else {
             alert(data.error || "Something went wrong when UNDOING.");
