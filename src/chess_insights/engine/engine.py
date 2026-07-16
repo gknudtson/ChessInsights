@@ -1,4 +1,3 @@
-from chess_insights.engine.move_generators import generate_all_moves
 from chess_insights.game.chess_board import ChessBoard
 
 import random
