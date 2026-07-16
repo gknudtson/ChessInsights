@@ -157,21 +157,9 @@ async function handleMove(orig, dest) {
     disableMovement();
 
     try {
-        const response = await fetch('/move', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fromSquare: orig, toSquare: dest })
-        });
-
-        const data = await response.json();
-
-        if (data.status === 'ok') {
-            addFEN(data.fen);
-            currentFen = data.fen;
-            window.board.set({ fen: boardFen(data.fen), turnColor: turnColorFromFen(data.fen) });
-            setPGNMoves(data.pgn);
-            document.getElementById('statusEl').textContent = "Move successful!";
-            localStorage.setItem("currentFen", data.fen);
+        const data = await postMove(orig, dest);
+        const shouldMakeEngineMove = updateGameState(data, prevFen, prevDests);
+        if (shouldMakeEngineMove) {
             setTimeout(makeEngineMove, 300);
         } else {
             updateGameState(data, prevFen);
