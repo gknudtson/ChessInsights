@@ -4,11 +4,15 @@ import '@lichess-org/chessground/assets/chessground.brown.css';
 import '@lichess-org/chessground/assets/chessground.cburnett.css';
 import '../css/game.css';
 
-let fenIndex = localStorage.getItem("fenIndex") ? parseInt(localStorage.getItem("fenIndex")) : 0;
-let fenList = localStorage.getItem("fenList") ? JSON.parse(localStorage.getItem("fenList")) : [];
-let playerColor = "white";
-let currentFen = "start";
-let currentPGN = "";
+import {
+    initializeBoard, disableMovement, enableMovement, boardFen, turnColorFromFen
+} from './board.js'
+import {
+    addFEN, currentFen, fenList, removeLastTwoFENs, setCurrentFEN, setCurrentPGN, setPlayerColor
+} from './state.js'
+import { clearPGN, setPGNMoves } from './pgn.js';
+import { postMove, fetchEngineMove as apiFetchEngineMove, postUndo } from './api.js';
+
 
 document.addEventListener("DOMContentLoaded", initPage);
 
