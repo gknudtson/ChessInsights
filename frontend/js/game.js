@@ -166,8 +166,12 @@ async function handleMove(orig, dest) {
         }
     } catch (error) {
         console.error("Error processing move:", error);
-        window.board.set({ fen: boardFen(prevFen), turnColor: turnColorFromFen(prevFen) });
-        currentFen = prevFen;
+        window.board.set({
+            fen: boardFen(prevFen),
+            turnColor: turnColorFromFen(prevFen),
+            moveable: {dests: prevDests}
+        });
+        setCurrentFEN(prevFen);
         document.getElementById('statusEl').textContent = "Server error.";
         enableMovement();
     }
