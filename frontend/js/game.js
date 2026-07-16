@@ -161,8 +161,6 @@ async function handleMove(orig, dest) {
         const shouldMakeEngineMove = updateGameState(data, prevFen, prevDests);
         if (shouldMakeEngineMove) {
             setTimeout(makeEngineMove, 300);
-        } else {
-            updateGameState(data, prevFen);
         }
     } catch (error) {
         console.error("Error processing move:", error);
