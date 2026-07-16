@@ -192,20 +192,6 @@ async function makeEngineMove() {
 }
 
 
-/**
- * Return local storage fenList as a JS array.
- */
-function getFENs() {
-    return JSON.parse(localStorage.getItem("fenList")) || [];
-}
-
-/**
- * Empty fenList.
- */
-function clearFenList() {
-    fenList = [];
-    localStorage.setItem("fenList", JSON.stringify(fenList));
-}
 
 /**
  * Undoes the most recent player and engine move.
