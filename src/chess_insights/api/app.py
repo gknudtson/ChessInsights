@@ -53,6 +53,19 @@ def set_game(chess_game):
     session["pgn"] = chess_game.pgn
 
 
+def get_state_response(chess_game: ChessBoard):
+    """Standard  server response containing board information."""
+    game_status = chess_game.check_game_status(chess_game.board_state)
+    return {
+        "status": 'ok' if game_status == GameStatus.ONGOING else 'game_over',
+        "fen": fen_from_board(chess_game.board_state),
+        "dests": moves_to_dests(generate_all_moves(chess_game.board_state)),
+        "color": 'white' if chess_game.board_state.is_whites_turn else 'black',
+        'game_status': game_status.value,
+        'pgn': chess_game.pgn,
+    }
+
+
 def execute_move(from_square,
                  to_square
                  ):
