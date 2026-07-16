@@ -110,9 +110,15 @@ def play():
 @app.route('/game', methods=['GET'])
 def game():
     chess_game = get_game()
-    fen = fen_from_board(chess_game.board_state)
-    pgn = chess_game.pgn
-    return render_template('game.html', fen=fen, pgn=pgn)
+    state = get_state_response(chess_game)
+    return render_template(
+        'game.html',
+        fen=state['fen'],
+        pgn=state['pgn'],
+        dests=state['dests'],
+        color=state['color'],
+        game_status=state['game_status'],
+    )
 
 
 @app.route('/start_game', methods=['POST'])
