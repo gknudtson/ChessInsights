@@ -74,10 +74,6 @@ def execute_move(from_square,
 
     try:
         chess_game.move_piece(from_square, to_square)
-        fen = fen_from_board(chess_game.board_state)
-
-        # Check game status after the move
-        game_status = chess_game.check_game_status(chess_game.board_state)
         set_game(chess_game)
         history = session.get("history", [])
         history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
