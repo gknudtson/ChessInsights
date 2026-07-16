@@ -5,12 +5,14 @@ from flask_session import Session
 from dotenv import load_dotenv
 
 from chess_insights.engine.engine import Engine
+from chess_insights.engine.move_generators import generate_all_moves
 from chess_insights.game.chess_board import ChessBoard
 from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.enum_square import Square
 from chess_insights.util.fen import fen_from_board, board_from_fen
 from chess_insights.util.flask_session_JSON_serializer import FlaskSessionJSONSerializer
 from chess_insights.api.vite import vite_asset
+from chess_insights.util.chessground import moves_to_dests
 
 app = Flask(__name__)
 app.jinja_env.globals['vite_asset'] = vite_asset
@@ -51,6 +53,20 @@ def set_game(chess_game):
     session["pgn"] = chess_game.pgn
 
 
+def get_state_response(chess_game: ChessBoard):
+    """Standard  server response containing board information."""
+    game_status = chess_game.check_game_status(chess_game.board_state)
+    valid_moves = chess_game.get_valid_moves()
+    return {
+        "status": 'ok' if game_status == GameStatus.ONGOING else 'game_over',
+        "fen": fen_from_board(chess_game.board_state),
+        "dests": moves_to_dests(valid_moves),
+        "color": 'white' if chess_game.board_state.is_whites_turn else 'black',
+        'game_status': game_status.value,
+        'pgn': chess_game.pgn,
+    }
+
+
 def execute_move(from_square,
                  to_square
                  ):
@@ -59,23 +75,11 @@ def execute_move(from_square,
 
     try:
         chess_game.move_piece(from_square, to_square)
-        fen = fen_from_board(chess_game.board_state)
-
-        # Check game status after the move
-        game_status = chess_game.check_game_status(chess_game.board_state)
         set_game(chess_game)
         history = session.get("history", [])
         history.append((fen_from_board(chess_game.board_state), chess_game.pgn))
         session["history"] = history
-        if game_status != GameStatus.ONGOING:
-            return {
-                'status': 'game_over',
-                'game_status': game_status.value,
-                'fen': fen,
-                'pgn': chess_game.pgn,
-            }
-
-        return {'status': 'ok', 'fen': fen, 'pgn': chess_game.pgn}
+        return get_state_response(chess_game)
 
     except Exception as e:
         return {
@@ -103,9 +107,15 @@ def play():
 @app.route('/game', methods=['GET'])
 def game():
     chess_game = get_game()
-    fen = fen_from_board(chess_game.board_state)
-    pgn = chess_game.pgn
-    return render_template('game.html', fen=fen, pgn=pgn)
+    state = get_state_response(chess_game)
+    return render_template(
+        'game.html',
+        fen=state['fen'],
+        pgn=state['pgn'],
+        dests=state['dests'],
+        color=state['color'],
+        game_status=state['game_status'],
+    )
 
 
 @app.route('/start_game', methods=['POST'])
@@ -121,12 +131,9 @@ def start_game():
 
     set_game(chess_game)
     session["history"] = [(fen_from_board(chess_game.board_state), "")]
-
-    return jsonify({
-        "fen": fen_from_board(chess_game.board_state),
-        "pgn": chess_game.pgn,
-        "color": side,
-    })
+    response = get_state_response(chess_game)
+    response['color'] = side
+    return response
 
 
 @app.route('/move', methods=['POST'])
@@ -139,7 +146,7 @@ def move():
         from_square = Square[data.get('fromSquare')].value
         to_square = Square[data.get('toSquare')].value
         response = execute_move(from_square, to_square)
-        return jsonify(response)
+        return response
 
     except KeyError as e:
         return jsonify({
@@ -184,7 +191,7 @@ def engine_move():
         from_square, to_square = engine.generate_move()
         # Execute the move
         response = execute_move(from_square, to_square)
-        return jsonify(response)
+        return response
 
     except Exception as e:
         return jsonify({
@@ -223,8 +230,13 @@ def undo():
     session["history"] = history
 
     set_game(chess_game)
-
-    return jsonify({"status": "ok", "fen": fen, "pgn": pgn})
+    valid_moves = chess_game.get_valid_moves()
+    return {
+        "status": "ok",
+        "fen": fen,
+        "pgn": pgn,
+        "dests": moves_to_dests(valid_moves),
+    }
 
 
 if __name__ == '__main__':

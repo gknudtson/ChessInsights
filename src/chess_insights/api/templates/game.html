@@ -36,5 +36,6 @@
     var currentFen = "{{ fen|default('start') }}";
     var currentPGN = "{{ pgn|default('') }}";
     var playerColor = "{{ color }}"
+    var dests = {{ dests|tojson }}
 </script>
 {% endblock %}

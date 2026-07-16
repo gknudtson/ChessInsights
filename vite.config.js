@@ -11,7 +11,6 @@ export default defineConfig({
                 contentStyles:'frontend/js/contentStyles.js',
                 game: 'frontend/js/game.js',
                 play: 'frontend/js/play.js',
-                demo: 'frontend/js/demo.js'
             },
             output: {
                 entryFileNames: '[name]-[hash].js',
