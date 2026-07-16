@@ -1,4 +1,5 @@
 import { fenIndex, getFENs, setFENIndex } from './state.js'
+import { boardFen, getMovableConfig, turnColorFromFen } from './board'
 
 
 /**
