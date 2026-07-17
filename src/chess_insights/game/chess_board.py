@@ -3,7 +3,7 @@ from dataclasses import replace
 from types import MappingProxyType
 from typing import Any
 
-from chess_insights.game.castling import handle_castling, \
+from chess_insights.game.castling import handle_rook, \
     update_castling_rights
 from chess_insights.game.pawn import handle_pawn_movement
 from chess_insights.engine.bitboard import BitBoard
