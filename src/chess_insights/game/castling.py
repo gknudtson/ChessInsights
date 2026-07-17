@@ -10,25 +10,25 @@ def update_castling_rights(castling_rights: int,
     """Update castling rights when the king or rook moves."""
 
     if piece_type.piece_type == ChessPieceType.KING:
-        return castling_rights & (0b1100 if piece_type.color == Color.WHITE else 0b0011)
+        return castling_rights & (0b0011 if piece_type.color == Color.WHITE else 0b1100)
 
     if piece_type.piece_type == ChessPieceType.ROOK:
         rook_castling_map = {
-            Square['a1'].value: 0b1101,  # White queenside
-            Square['h1'].value: 0b1110,  # White kingside
-            Square['a8'].value: 0b0111,  # Black queenside
-            Square['h8'].value: 0b1011  # Black kingside
+            Square['a1'].value: 0b1011,  # White queenside
+            Square['h1'].value: 0b0111,  # White kingside
+            Square['a8'].value: 0b1110,  # Black queenside
+            Square['h8'].value: 0b1101  # Black kingside
         }
         return castling_rights & rook_castling_map.get(square, castling_rights)
 
     return castling_rights
 
 
-def handle_castling(piece_type: ColorChessPiece,
-                    origin_square: int,
-                    target_square: int,
-                    new_piece_locations: dict
-                    ) -> None:
+def handle_rook(piece_type: ColorChessPiece,
+                origin_square: int,
+                target_square: int,
+                new_piece_locations: dict
+                ) -> None:
     """Move the rook when castling."""
     if piece_type.piece_type == ChessPieceType.KING and chebyshev_distance(origin_square,
                                                                            target_square) > 1:
@@ -63,16 +63,17 @@ def get_castling_moves(color: Color,
     """Generate legal castling moves based on board state and castling rights."""
 
     if color == Color.WHITE:
-        castling_rights &= 0b0011
+        castling_rights = castling_rights >> 2
         enemy_attacks = enemy_attacks_board.board
         collisions = collisions_board.board
         return __get_castle_moves(castling_rights, enemy_attacks, collisions)
 
     elif color == Color.BLACK:
-        castling_rights = castling_rights >> 2
+        castling_rights &= 0b0011
         enemy_attacks = enemy_attacks_board.mirror_vertical().board
         collisions = collisions_board.mirror_vertical().board
         return __get_castle_moves(castling_rights, enemy_attacks, collisions).mirror_vertical()
+    return BitBoard()
 
 
 def __get_castle_moves(castling_rights: int,
@@ -88,9 +89,9 @@ def __get_castle_moves(castling_rights: int,
     rook_path_long = 14  # Queenside rook path
     castling_rights &= 0b11
 
-    castle_short = (enemy_attacks & king_path_short == 0 and castling_rights & 0b01 == 0b01
+    castle_short = (enemy_attacks & king_path_short == 0 and castling_rights & 0b10 == 0b10
                     and collisions & rook_path_short == 0)
-    castle_long = (enemy_attacks & king_path_long == 0 and castling_rights & 0b1 == 0b1
+    castle_long = (enemy_attacks & king_path_long == 0 and castling_rights & 0b01 == 0b01
                    and collisions & rook_path_long == 0)
     if castle_short:
         moves |= 64

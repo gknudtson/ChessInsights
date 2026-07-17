@@ -119,26 +119,26 @@ def fen_from_board(board_state: BoardState) -> str:
 def fen_to_castling_rights(fen: str) -> int:
     castling_rights = 0
     if 'K' in fen:
-        castling_rights |= 0b0001
-    if 'Q' in fen:
-        castling_rights |= 0b0010
-    if 'k' in fen:
         castling_rights |= 0b1000
-    if 'q' in fen:
+    if 'Q' in fen:
         castling_rights |= 0b0100
+    if 'k' in fen:
+        castling_rights |= 0b0010
+    if 'q' in fen:
+        castling_rights |= 0b0001
     return castling_rights
 
 
 def castling_rights_to_fen(castling_rights: int) -> str:
     fen_castling = []
 
-    if castling_rights & 0b0100:
-        fen_castling.append('K')
     if castling_rights & 0b1000:
+        fen_castling.append('K')
+    if castling_rights & 0b0100:
         fen_castling.append('Q')
-    if castling_rights & 0b0001:
-        fen_castling.append('k')
     if castling_rights & 0b0010:
+        fen_castling.append('k')
+    if castling_rights & 0b0001:
         fen_castling.append('q')
 
     # If no castling rights are available, return "-"

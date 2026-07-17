@@ -68,7 +68,7 @@ class TestChessBoard(unittest.TestCase):
         board = ChessBoard("1k6/8/8/8/8/8/8/R3K2R w KQ - 0 1")
         new_board = ChessBoard(
             board_state=board._generate_move_board_state(Square.h1.value, Square.h2.value))  # Move white rook
-        self.assertEqual(new_board.board_state.castling_rights, 0b0010)
+        self.assertEqual(new_board.board_state.castling_rights, 0b0100)
 
     @parameterized.expand([
         (Square.e2.value, [Square.e3.value, Square.e4.value]),  # Pawn move
