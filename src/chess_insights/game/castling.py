@@ -24,11 +24,11 @@ def update_castling_rights(castling_rights: int,
     return castling_rights
 
 
-def handle_castling(piece_type: ColorChessPiece,
-                    origin_square: int,
-                    target_square: int,
-                    new_piece_locations: dict
-                    ) -> None:
+def handle_rook(piece_type: ColorChessPiece,
+                origin_square: int,
+                target_square: int,
+                new_piece_locations: dict
+                ) -> None:
     """Move the rook when castling."""
     if piece_type.piece_type == ChessPieceType.KING and chebyshev_distance(origin_square,
                                                                            target_square) > 1:
