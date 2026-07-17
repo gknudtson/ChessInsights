@@ -1,5 +1,6 @@
 from chess_insights.util.fen import board_from_fen, fen_from_board
 import unittest
+from parameterized import parameterized
 
 
 class TestFenMethods(unittest.TestCase):
@@ -50,6 +51,19 @@ class TestFenMethods(unittest.TestCase):
         # Assert that an exception is raised for invalid FEN
         with self.assertRaises(ValueError):
             board_from_fen(invalid_fen)
+
+    @parameterized.expand([
+        ["K"], ["Q"], ["k"], ["q"], ["Kq"], ["Qk"],
+    ])
+    def test_asymmetric_castling_rights_round_trip(self, castling_letters):
+        # Each individual/partial castling right must round-trip to the same letter(s),
+        # not get relabeled as a different side (regression for K/Q, k/q bit mismatch).
+        custom_fen = f"8/8/8/8/8/8/8/8 w {castling_letters} - 0 1"
+
+        board_state = board_from_fen(custom_fen)
+        generated_fen = fen_from_board(board_state)
+
+        self.assertEqual(custom_fen, generated_fen)
 
     def test_en_passant_square(self):
         # Position with en passant square
