@@ -1,7 +1,6 @@
 from dataclasses import replace
 
 from types import MappingProxyType
-from typing import Any
 
 from chess_insights.game.castling import handle_rook, \
     update_castling_rights
@@ -153,7 +152,7 @@ class ChessBoard:
 
         return GameStatus.ONGOING
 
-    def get_valid_moves(self) -> list[tuple[Any, int]]:
+    def get_valid_moves(self) -> list[tuple[int, int]]:
         candidate_moves = generate_all_moves(self.board_state)
         return [(origin, target) for targets, _, origin in candidate_moves for target in
                 self._validate_moves(targets, _, origin)]
