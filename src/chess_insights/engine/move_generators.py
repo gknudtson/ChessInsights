@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece, ChessPieceType, Color, \
     get_pieces_by_color
 from chess_insights.util.enum_file_and_rank import Rank, File
@@ -65,6 +67,51 @@ def generate_attacks_by_color(board_state: BoardState, color: Color) -> BitBoard
     return BitBoard(attacks)
 
 
+_ROOK_DIRECTIONS = (Direction.N, Direction.E)
+_BISHOP_DIRECTIONS = (Direction.NE, Direction.NW)
+
+
+def is_square_attacked(board_state: BoardState, square: int, by_color: Color) -> bool:
+    """Return True if any piece of by_color attacks the given square.
+
+    Looks up attacks outward from the square instead of unioning every
+    attacker's moves, so it is much cheaper than generate_attacks_by_color.
+    """
+    piece_locations = board_state.piece_locations
+    square_board = BitBoard(1 << square)
+
+    knights = piece_locations[
+        by_color.get_color_piece_by_type(ChessPieceType.KNIGHT)].board
+    if generate_knight_attacks(square_board).board & knights:
+        return True
+
+    king = piece_locations[by_color.get_color_piece_by_type(ChessPieceType.KING)].board
+    if generate_king_attacks(square_board).board & king:
+        return True
+
+    # Pawn attacks are symmetric: a by_color pawn attacks `square` exactly when a
+    # defending-color pawn standing on `square` would attack the pawn's square.
+    pawns = piece_locations[by_color.get_color_piece_by_type(ChessPieceType.PAWN)].board
+    defender_pawn = BitBoard(
+        1 << square, by_color.opposite().get_color_piece_by_type(ChessPieceType.PAWN))
+    if generate_pawn_attacks(defender_pawn).board & pawns:
+        return True
+
+    collisions = piece_locations[ColorChessPiece.ALL_PIECES]
+    queens = piece_locations[by_color.get_color_piece_by_type(ChessPieceType.QUEEN)].board
+
+    rooks = piece_locations[by_color.get_color_piece_by_type(ChessPieceType.ROOK)].board
+    if generate_sliding_attacks(collisions, [square], _ROOK_DIRECTIONS).board & (rooks | queens):
+        return True
+
+    bishops = piece_locations[
+        by_color.get_color_piece_by_type(ChessPieceType.BISHOP)].board
+    if generate_sliding_attacks(collisions, [square], _BISHOP_DIRECTIONS).board & (bishops | queens):
+        return True
+
+    return False
+
+
 def generate_sliding_and_knight_moves(piece_board: BitBoard, board_state: BoardState, ) -> BitBoard:
     attack_board = generate_attacks(piece_board,
                                     board_state.piece_locations[ColorChessPiece.ALL_PIECES]).board
@@ -123,22 +170,32 @@ def get_sliding_attacks(collisions: BitBoard, piece_board: BitBoard) -> BitBoard
     return attacks
 
 
+@lru_cache(maxsize=None)
+def _mirrored_mask(square: int, direction: Direction) -> int:
+    return BitBoard(generate_mask(square, direction), None).mirror().board
+
+
+@lru_cache(maxsize=None)
+def _mirrored_square(square: int) -> int:
+    return BitBoard(1 << square, None).mirror().board
+
+
 def generate_sliding_attacks(
         collisions: BitBoard,
         squares: list[int],
         directions: list[Direction]
 ) -> BitBoard:
-    mirrored_collisions = collisions.mirror()
+    mirrored_collisions = collisions.mirror().board
     attacks = 0
     for square in squares:
         bit_square = 1 << square
-        mirrored_square = BitBoard(bit_square, None).mirror()
+        mirrored_square = _mirrored_square(square)
         for direction in directions:
             mask = generate_mask(square, direction)
-            mirrored_mask = BitBoard(mask, None).mirror()
+            mirrored_mask = _mirrored_mask(square, direction)
             positive_path = (collisions.board & mask) - 2 * bit_square
             negative_path = (BitBoard((
-                    (mirrored_collisions.board & mirrored_mask.board) - 2 * mirrored_square.board),
+                    (mirrored_collisions & mirrored_mask) - 2 * mirrored_square),
                 None)
                              .mirror())
             path = positive_path ^ negative_path.board

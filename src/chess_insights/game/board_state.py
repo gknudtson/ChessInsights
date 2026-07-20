@@ -1,4 +1,3 @@
-from copy import deepcopy
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 from chess_insights.engine.bitboard import BitBoard
 from dataclasses import dataclass, replace
@@ -19,6 +18,6 @@ class BoardState:
         return replace(
             self,
             piece_locations=MappingProxyType({
-                k: deepcopy(v) for k, v in self.piece_locations.items()
+                k: BitBoard(v.board, v.board_type) for k, v in self.piece_locations.items()
             })
         )

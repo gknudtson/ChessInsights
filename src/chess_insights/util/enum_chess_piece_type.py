@@ -1,4 +1,5 @@
 from enum import Enum
+from functools import lru_cache
 
 
 class ChessPieceType(Enum):
@@ -36,6 +37,7 @@ class Color(Enum):
             case _:
                 raise TypeError(f"No general board for {self}")
 
+    @lru_cache(maxsize=None)
     def get_color_piece_by_type(self, piece_type: ChessPieceType) -> "ColorChessPiece":
         """Retrieves the specific ColorChessPiece for the given color and type."""
         try:

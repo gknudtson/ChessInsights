@@ -1,5 +1,4 @@
-import math
-import numpy as np
+from functools import lru_cache
 
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece
 from chess_insights.util.enum_file_and_rank import Rank, File
@@ -37,7 +36,7 @@ class BitBoard:
         squares = []
         while board != 0:
             square = board & -board
-            squares.append(int(math.log2(square)))
+            squares.append(square.bit_length() - 1)
             board = board ^ square
         return squares
 
@@ -45,18 +44,15 @@ class BitBoard:
         return self.mirror_vertical().mirror_horizontal()
 
     def mirror_vertical(self) -> 'BitBoard':
-        bitboard_array = np.array([self.board], dtype=np.uint64)
-        return BitBoard(bitboard_array.byteswap().item(), self.board_type)
+        mirrored = int.from_bytes(self.board.to_bytes(8, 'little'), 'big')
+        return BitBoard(mirrored, self.board_type)
 
     def mirror_horizontal(self) -> 'BitBoard':
-        # Convert the 64-bit integer to an array of 8 bytes
-        bytes_array = np.array([self.board], dtype=np.uint64).view(np.uint8)
-        # Reverse the bits in each byte using bitwise operations
-        reversed_bytes = np.array([reverse_bits(byte) for byte in bytes_array],
-                                  dtype=np.uint8)
-        # Combine the reversed bytes back into a 64-bit integer
-        mirrored_bitboard = reversed_bytes.view(np.uint64)[0]
-        return BitBoard(int(mirrored_bitboard.item()), self.board_type)
+        board = self.board
+        mirrored = 0
+        for shift in range(0, 64, 8):
+            mirrored |= _REVERSED_BYTES[(board >> shift) & 0xFF] << shift
+        return BitBoard(mirrored, self.board_type)
 
 
 def serialize_bit(bit: int) -> int:
@@ -64,9 +60,7 @@ def serialize_bit(bit: int) -> int:
         raise ValueError("Cannot serialize bit: no bits are set.")
     if bit & (bit - 1) != 0:
         raise ValueError("Input must have only one bit set.")
-    square = bit & -bit
-    square = int(math.log2(square))
-    return square
+    return bit.bit_length() - 1
 
 
 def reverse_bits(byte):
@@ -76,6 +70,10 @@ def reverse_bits(byte):
     return byte
 
 
+_REVERSED_BYTES = [reverse_bits(byte) for byte in range(256)]
+
+
+@lru_cache(maxsize=None)
 def generate_mask(square: int, direction: Direction) -> int:
     if direction == Direction.N or direction == Direction.S:
         return 0x0101010101010101 << get_file(square)

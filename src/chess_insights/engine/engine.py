@@ -29,15 +29,15 @@ class Engine(ChessBoard):
         if depth == 0:
             return 1
         valid_moves = self.get_valid_moves()
-        current_board_state = self.board_state
+        if depth == 1:
+            return len(valid_moves)
         num_positions = 0
-        for move in valid_moves:
-            origin, target = move
-            self.__set_board_state(current_board_state)
-            self.move_piece(origin, target)
-            num_positions += self.perft(depth - 1, self.board_state)
+        for origin, target in valid_moves:
+            self.__set_board_state(board_state)
+            new_board_state = self._apply_move(origin, target)
+            num_positions += self.perft(depth - 1, new_board_state)
         return num_positions
 
 if __name__ == "__main__":
     engine = Engine()
-    print(engine.perft(3, engine.board_state))
+    print(engine.perft(2, engine.board_state))

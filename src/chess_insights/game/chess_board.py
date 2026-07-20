@@ -10,8 +10,8 @@ from chess_insights.game.board_state import BoardState
 from chess_insights.util.enum_chess_piece_type import ColorChessPiece, Color, \
     ChessPieceType
 
-from chess_insights.engine.move_generators import generate_moves, generate_attacks_by_color, \
-    generate_all_moves
+from chess_insights.engine.move_generators import generate_moves, generate_all_moves, \
+    is_square_attacked
 from chess_insights.util.enum_game_status import GameStatus
 from chess_insights.util.fen import board_from_fen
 from chess_insights.util.pgn import convert_move_pgn
@@ -46,6 +46,18 @@ class ChessBoard:
         """Move a piece from origin_square to target_square, and return the resulting BoardState."""
         piece_type = self.get_piece_on_square(origin_square)
         self.__validate_move(origin_square, target_square, piece_type)
+        return self._apply_move(origin_square, target_square)
+
+    def _apply_move(self,
+                    origin_square: int,
+                    target_square: int
+                    ) -> BoardState:
+        """Return the BoardState after playing an already-validated move.
+
+        Skips turn/legality validation, so callers must pass a legal move
+        (e.g. one produced by get_valid_moves).
+        """
+        piece_type = self.get_piece_on_square(origin_square)
 
         # Copy the board state instead of manually copying dictionaries
         temp_board_state = self._board_state.copy()
@@ -127,9 +139,13 @@ class ChessBoard:
                             square: int
                             ) -> ColorChessPiece | None:
         """Return ColorChessPieceType on square."""
+        bit_square = 1 << square
+        piece_locations = self._board_state.piece_locations
+        if piece_locations[ColorChessPiece.ALL_PIECES].board & bit_square == 0:
+            return None
         for piece in ColorChessPiece:
             if (piece.piece_type != ChessPieceType.ANY
-                    and (self._board_state.piece_locations[piece].board & (1 << square)) != 0):
+                    and (piece_locations[piece].board & bit_square) != 0):
                 return piece
         return None
 
@@ -164,12 +180,16 @@ class ChessBoard:
                         ) -> list[int]:
         """Filter out moves that would leave the king in check."""
         valid_moves = []
+        own_group = piece_type.color.get_piece_group()
+        enemy_group = piece_type.color.opposite().get_piece_group()
+        origin_bit = 1 << square
 
         for move in candidate_moves:
             temp_board_state = self._board_state.copy()
 
             # Copy the piece locations separately for modifications
             new_piece_locations = dict(temp_board_state.piece_locations)
+            target_bit = 1 << move
 
             # Simulate the move
             enemy_piece_type = self.get_piece_on_square(
@@ -179,7 +199,14 @@ class ChessBoard:
 
             new_piece_locations[piece_type].clear_bit(square)  # Remove moving piece
             new_piece_locations[piece_type].set_bit(move)  # Move piece to new square
-            new_piece_locations = self.__update_all_pieces(new_piece_locations)
+
+            # Update aggregate boards incrementally instead of rescanning every piece
+            own_board = (new_piece_locations[own_group].board & ~origin_bit) | target_bit
+            enemy_board = new_piece_locations[enemy_group].board & ~target_bit
+            new_piece_locations[own_group] = BitBoard(own_board, own_group)
+            new_piece_locations[enemy_group] = BitBoard(enemy_board, enemy_group)
+            new_piece_locations[ColorChessPiece.ALL_PIECES] = BitBoard(
+                own_board | enemy_board, ColorChessPiece.ALL_PIECES)
             simulated_board = replace(
                 temp_board_state,
                 piece_locations=MappingProxyType(new_piece_locations),
@@ -211,11 +238,11 @@ class ChessBoard:
                            color: Color
                            ) -> bool:
         """Return True if the color King is in check in board_state."""
-        king_square = board_state.piece_locations[
+        king_board = board_state.piece_locations[
             color.get_color_piece_by_type(ChessPieceType.KING)].board
-        attacks_by_opponent = generate_attacks_by_color(board_state,
-                                                        color.opposite()).board
-        return bool(attacks_by_opponent & king_square)
+        if king_board == 0:
+            return False
+        return is_square_attacked(board_state, king_board.bit_length() - 1, color.opposite())
 
     @staticmethod
     def __handle_capture(enemy_piece_type: ColorChessPiece,
